@@ -1,0 +1,77 @@
+{
+  "name": "blueprint-dashboard",
+  "displayName": "Blueprint Dashboard",
+  "description": "/blueprint 메타스킬의 진행도·트리거·산출물을 Antigravity 사이드바·webview에 영구 시각화",
+  "version": "0.0.1",
+  "publisher": "snu90",
+  "private": true,
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "main": "./out/extension.js",
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "blueprintDashboard",
+          "title": "Blueprint",
+          "icon": "resources/activity-icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "blueprintDashboard": [
+        {
+          "type": "webview",
+          "id": "blueprintState",
+          "name": "Process State"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "blueprint.showDashboard",
+        "title": "Blueprint: Show Dashboard",
+        "category": "Blueprint"
+      },
+      {
+        "command": "blueprint.refresh",
+        "title": "Blueprint: Refresh",
+        "category": "Blueprint",
+        "icon": "$(refresh)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "blueprint.refresh",
+          "when": "view == blueprintState",
+          "group": "navigation"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "build": "node esbuild.config.js",
+    "watch": "node esbuild.config.js --watch",
+    "package": "vsce package",
+    "vscode:prepublish": "npm run build"
+  },
+  "dependencies": {
+    "markdown-it": "^14.0.0"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "^14.0.0",
+    "@types/node": "^20.10.0",
+    "@types/vscode": "^1.80.0",
+    "@vscode/vsce": "^2.22.0",
+    "esbuild": "^0.19.8",
+    "typescript": "^5.3.2"
+  }
+}

@@ -1,0 +1,304 @@
+/**
+ * 가운데 Webview 패널 — 4페이지 멀티탭.
+ *
+ * 탭:
+ *  1. Plan    — plans/roadmap.md (state.md 현재 위치 강조)
+ *  2. Spec    — PRODUCT/DESIGN/ARCHITECTURE.md 풀-너비
+ *  3. Preview — Claude push한 HTML 1개
+ *  4. Errors  — docs/error.history.md (없으면 생성 버튼)
+ *
+ * 데이터 흐름:
+ *  extension.ts → setBlueprintState / setSpecArtifacts / setPreviewContent / setErrorHistory → refresh
+ *  사용자 탭 클릭 → postMessage('tab-click') → activeTab 변경 → refresh
+ *  사용자 "create-error-history" 클릭 → postMessage → onCreateErrorHistory 콜백
+ *
+ * 데이터 캐싱: 모든 페이지 데이터 메모리에 유지. 탭 전환 시 즉시 표시.
+ */
+
+import * as vscode from 'vscode';
+import * as fs from 'fs';
+import * as path from 'path';
+import { BlueprintState, PhaseId } from '../types';
+import { renderPlanPage } from './pages/plan';
+import { renderSpecPage, SpecArtifacts } from './pages/spec';
+import { renderPreviewPage, PreviewContent } from './pages/preview';
+import { renderErrorsPage } from './pages/errors';
+import { makeNonce, escapeHtml } from './shared';
+
+const VIEW_TYPE = 'blueprintDashboard';
+const PANEL_TITLE = 'Blueprint Dashboard';
+
+export type TabId = 'plan' | 'spec' | 'preview' | 'errors';
+
+const TAB_LABELS: Record<TabId, string> = {
+  plan: 'Plan',
+  spec: 'Spec',
+  preview: 'Preview',
+  errors: 'Errors',
+};
+
+const TAB_ORDER: TabId[] = ['plan', 'spec', 'preview', 'errors'];
+
+export interface BlueprintWebviewPanelCallbacks {
+  /** Errors 페이지에서 "에러 히스토리 시작" 버튼 클릭 시 호출 */
+  onCreateErrorHistory: () => Promise<void> | void;
+}
+
+export class BlueprintWebviewPanel {
+  private panel: vscode.WebviewPanel | null = null;
+  private activeTab: TabId = 'plan';
+
+  // 페이지별 데이터 캐시
+  private currentState: BlueprintState | null = null;
+  private roadmapMd: string | null = null;
+  private specArtifacts: SpecArtifacts = { product: null, design: null, architecture: null };
+  private specFocus?: 'product' | 'design' | 'architecture';
+  private preview: PreviewContent = { html: null, sourcePath: null, pushedAt: null };
+  private errorHistoryMd: string | null = null;
+
+  private disposables: vscode.Disposable[] = [];
+
+  constructor(
+    private context: vscode.ExtensionContext,
+    private workspaceFolder: vscode.WorkspaceFolder,
+    private callbacks: BlueprintWebviewPanelCallbacks,
+  ) {}
+
+  // ── Public API ──────────────────────────────────────────
+
+  show(initialTab?: TabId): void {
+    if (initialTab) this.activeTab = initialTab;
+
+    if (this.panel) {
+      this.panel.reveal(vscode.ViewColumn.Beside, true);
+      this.refresh();
+      return;
+    }
+
+    this.panel = vscode.window.createWebviewPanel(
+      VIEW_TYPE,
+      PANEL_TITLE,
+      { viewColumn: vscode.ViewColumn.Beside, preserveFocus: true },
+      {
+        enableScripts: true,
+        retainContextWhenHidden: true,
+        localResourceRoots: [
+          vscode.Uri.file(path.join(this.context.extensionPath, 'out', 'webview')),
+          this.workspaceFolder.uri, // 워크스페이스 이미지 (DESIGN.md 시안 등) 렌더링 위해
+        ],
+      },
+    );
+
+    this.panel.webview.onDidReceiveMessage(
+      msg => this.handleMessage(msg),
+      null,
+      this.disposables,
+    );
+
+    this.panel.onDidDispose(
+      () => {
+        this.panel = null;
+      },
+      null,
+      this.disposables,
+    );
+
+    this.refresh();
+  }
+
+  setBlueprintState(state: BlueprintState | null): void {
+    this.currentState = state;
+    if (this.panel) this.refresh();
+  }
+
+  setRoadmap(md: string | null): void {
+    this.roadmapMd = md;
+    if (this.panel && this.activeTab === 'plan') this.refresh();
+  }
+
+  setSpecArtifacts(artifacts: Partial<SpecArtifacts>): void {
+    this.specArtifacts = { ...this.specArtifacts, ...artifacts };
+    if (this.panel && this.activeTab === 'spec') this.refresh();
+  }
+
+  setErrorHistory(md: string | null): void {
+    this.errorHistoryMd = md;
+    if (this.panel && this.activeTab === 'errors') this.refresh();
+  }
+
+  /** Phase 클릭 시 — Spec 탭으로 이동 + 해당 섹션 강조 */
+  async showArtifact(phaseId: PhaseId): Promise<void> {
+    const section = artifactSectionForPhase(phaseId);
+    this.specFocus = section;
+    this.activeTab = 'spec';
+    this.show();
+  }
+
+  /** 채팅 명령으로 Preview push */
+  setPreviewContent(html: string, sourcePath: string): void {
+    this.preview = { html, sourcePath, pushedAt: new Date() };
+    this.activeTab = 'preview';
+    this.show();
+  }
+
+  switchTab(tab: TabId): void {
+    this.activeTab = tab;
+    this.refresh();
+  }
+
+  dispose(): void {
+    this.panel?.dispose();
+    this.panel = null;
+    for (const d of this.disposables) d.dispose();
+    this.disposables = [];
+  }
+
+  // ── Internal ─────────────────────────────────────────────
+
+  private async handleMessage(msg: any): Promise<void> {
+    if (!msg) return;
+    if (msg.type === 'tab-click' && typeof msg.tab === 'string') {
+      if (TAB_ORDER.includes(msg.tab as TabId)) {
+        this.switchTab(msg.tab as TabId);
+      }
+    } else if (msg.type === 'action' && msg.action === 'create-error-history') {
+      await this.callbacks.onCreateErrorHistory();
+    }
+  }
+
+  private refresh(): void {
+    if (!this.panel) return;
+    this.panel.webview.html = this.buildHtml();
+  }
+
+  private buildHtml(): string {
+    if (!this.panel) return '';
+
+    const cssOnDisk = vscode.Uri.file(
+      path.join(this.context.extensionPath, 'out', 'webview', 'styles.css'),
+    );
+    const cssUri = this.panel.webview.asWebviewUri(cssOnDisk);
+    const nonce = makeNonce();
+    const csp = `default-src 'none'; style-src ${this.panel.webview.cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}'; img-src ${this.panel.webview.cspSource} data:; frame-src data:; child-src data:;`;
+
+    const tabsHtml = this.renderTabs();
+    const pageHtml = this.rewriteImageUris(this.renderActivePage());
+
+    return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Content-Security-Policy" content="${csp}" />
+  <link rel="stylesheet" href="${cssUri}" />
+</head>
+<body>
+  <div class="dashboard">
+    <nav class="tab-nav">${tabsHtml}</nav>
+    <main class="page-container">
+      ${pageHtml}
+    </main>
+  </div>
+  <script nonce="${nonce}">
+    const vscode = acquireVsCodeApi();
+
+    document.querySelectorAll('[data-tab]').forEach(el => {
+      el.addEventListener('click', () => {
+        vscode.postMessage({ type: 'tab-click', tab: el.getAttribute('data-tab') });
+      });
+    });
+
+    document.querySelectorAll('[data-action]').forEach(el => {
+      el.addEventListener('click', () => {
+        vscode.postMessage({ type: 'action', action: el.getAttribute('data-action') });
+      });
+    });
+
+    // Spec 페이지 — anchor nav 클릭 시 탭처럼 섹션 전환 (스크롤 X)
+    const specSections = document.querySelectorAll('.spec-section-flat');
+    const anchorLinks = document.querySelectorAll('.anchor-link[data-spec-target]');
+    if (specSections.length > 0 && anchorLinks.length > 0) {
+      const switchSection = (targetId) => {
+        specSections.forEach(s => s.classList.toggle('active', s.id === targetId));
+        anchorLinks.forEach(link => {
+          link.classList.toggle('active', link.getAttribute('data-spec-target') === targetId);
+        });
+        // 스크롤 맨 위로
+        window.scrollTo({ top: 0, behavior: 'instant' });
+      };
+
+      anchorLinks.forEach(link => {
+        link.addEventListener('click', () => {
+          const target = link.getAttribute('data-spec-target');
+          if (target) switchSection(target);
+        });
+      });
+    }
+  </script>
+</body>
+</html>`;
+  }
+
+  private renderTabs(): string {
+    return TAB_ORDER.map(tab => {
+      const active = tab === this.activeTab ? 'active' : '';
+      const badge = this.tabBadge(tab);
+      return `<button class="tab ${active}" data-tab="${tab}">
+        <span class="tab-label">${TAB_LABELS[tab]}</span>
+        ${badge}
+      </button>`;
+    }).join('');
+  }
+
+  private tabBadge(tab: TabId): string {
+    if (tab === 'preview' && this.preview.html) return `<span class="tab-dot tab-dot-blue"></span>`;
+    if (tab === 'errors' && this.errorHistoryMd) {
+      const count = (this.errorHistoryMd.match(/^## \d{4}-\d{2}-\d{2}/gm) ?? []).length;
+      if (count > 0) return `<span class="tab-count">${count}</span>`;
+    }
+    return '';
+  }
+
+  private renderActivePage(): string {
+    switch (this.activeTab) {
+      case 'plan':
+        return renderPlanPage(this.currentState, this.roadmapMd);
+      case 'spec':
+        return renderSpecPage(this.specArtifacts, this.specFocus);
+      case 'preview':
+        return renderPreviewPage(this.preview);
+      case 'errors':
+        return renderErrorsPage(this.errorHistoryMd);
+    }
+  }
+
+  /**
+   * 마크다운 이미지의 상대 경로(예: docs/design/screenshots/sidebar.png)를
+   * webview에서 로드 가능한 vscode-webview-resource URI로 변환.
+   * 절대 URL (http/data/vscode-) 은 그대로 둠.
+   */
+  private rewriteImageUris(html: string): string {
+    if (!this.panel) return html;
+    const webview = this.panel.webview;
+    const folderFs = this.workspaceFolder.uri.fsPath;
+    return html.replace(
+      /<img\s+([^>]*?)src="([^"]+)"/g,
+      (match, attrs, src) => {
+        if (/^(https?:|data:|vscode-)/i.test(src)) return match;
+        const absPath = path.isAbsolute(src) ? src : path.join(folderFs, src);
+        const uri = webview.asWebviewUri(vscode.Uri.file(absPath));
+        return `<img ${attrs}src="${uri.toString()}"`;
+      },
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────
+
+function artifactSectionForPhase(phaseId: PhaseId): 'product' | 'design' | 'architecture' | undefined {
+  switch (phaseId) {
+    case 0: return 'product';
+    case 1: return 'design';
+    case 2: return 'architecture';
+    default: return undefined;
+  }
+}

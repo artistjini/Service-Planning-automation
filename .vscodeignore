@@ -1,0 +1,12 @@
+.vscode/**
+.gitignore
+docs/**
+plans/**
+.blueprint/**
+src/**
+tsconfig.json
+esbuild.config.js
+*.vsix
+node_modules/**
+out/extension.js.map
+**/*.map

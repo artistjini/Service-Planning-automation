@@ -1,0 +1,1015 @@
+/*
+ * Blueprint Dashboard — Center Webview styles
+ * 4페이지 멀티탭 (Plan / Spec / Preview / Errors)
+ * 사이드바와 일관된 디자인 (Notion + Apple 글래스 풍)
+ *
+ * 사이드바보다 큰 캔버스 — padding 더 큼, 폰트 더 큼.
+ */
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Pretendard", system-ui, sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  color: #1d1d1f;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  background:
+    radial-gradient(circle at 12% 8%, rgba(0, 122, 255, 0.18) 0%, transparent 35%),
+    radial-gradient(circle at 88% 18%, rgba(255, 45, 85, 0.16) 0%, transparent 35%),
+    radial-gradient(circle at 80% 75%, rgba(175, 82, 222, 0.16) 0%, transparent 35%),
+    radial-gradient(circle at 15% 88%, rgba(52, 199, 89, 0.16) 0%, transparent 35%),
+    radial-gradient(circle at 55% 50%, rgba(255, 149, 0, 0.12) 0%, transparent 30%),
+    linear-gradient(180deg, #f5f5f7 0%, #ececef 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+.dashboard {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 32px 48px 64px;
+}
+
+@media (max-width: 720px) {
+  .dashboard { padding: 24px 20px 48px; }
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * Tab nav (상단)
+ * ═══════════════════════════════════════════════════════════════ */
+
+.tab-nav {
+  position: sticky;
+  top: 16px;
+  z-index: 10;
+  display: flex;
+  gap: 6px;
+  padding: 6px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  border-radius: 16px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 6px 20px rgba(0, 0, 0, 0.08);
+  width: fit-content;
+  margin-bottom: 32px;
+}
+
+.tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  border: none;
+  background: transparent;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  color: #6e6e73;
+  cursor: pointer;
+  transition: all 180ms ease;
+  letter-spacing: -0.01em;
+}
+
+.tab:hover {
+  color: #1d1d1f;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.tab.active {
+  background: #1d1d1f;
+  color: #ffffff;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.tab-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.tab-dot-blue { background: #0066cc; box-shadow: 0 0 6px rgba(0, 102, 204, 0.6); }
+
+.tab-count {
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(0, 102, 204, 0.15);
+  color: #0066cc;
+  letter-spacing: 0;
+}
+
+.tab.active .tab-count {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * Page container
+ * ═══════════════════════════════════════════════════════════════ */
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * Page hero (각 페이지 상단)
+ * ═══════════════════════════════════════════════════════════════ */
+
+.page-hero {
+  padding: 8px 0 16px;
+}
+
+.page-hero.compact { padding: 8px 0; }
+
+.page-eyebrow {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #0066cc;
+  margin-bottom: 10px;
+}
+
+.page-title {
+  font-size: 52px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.05;
+  margin: 0 0 14px 0;
+  color: #1d1d1f;
+  word-break: keep-all;
+}
+
+.page-title-small {
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 0 0 6px 0;
+  color: #1d1d1f;
+  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+}
+
+.page-subtitle {
+  font-size: 17px;
+  font-weight: 500;
+  color: #424245;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.page-subtitle.small {
+  font-size: 13px;
+  color: #6e6e73;
+}
+
+.page-subtitle code {
+  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  background: rgba(0, 0, 0, 0.06);
+  padding: 2px 8px;
+  border-radius: 6px;
+  font-size: 14px;
+  color: #0066cc;
+  font-weight: 700;
+}
+
+/* Hero progress bar (Plan 페이지) */
+
+.hero-progress {
+  position: relative;
+  height: 12px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-top: 18px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.12);
+}
+
+.hero-progress-fill {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  background-image: linear-gradient(90deg, #34c759 0%, #aacc00 25%, #ffcc00 50%, #ff9500 75%, #ff3b30 100%);
+  background-repeat: no-repeat;
+  background-position: left center;
+  border-radius: 999px;
+  transition: width 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.5), 0 0 12px rgba(255, 149, 0, 0.3);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * Glass card (공통)
+ * ═══════════════════════════════════════════════════════════════ */
+
+.empty-card, .roadmap-container, .preview-frame-wrap, .errors-body {
+  position: relative;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(28px) saturate(170%);
+  -webkit-backdrop-filter: blur(28px) saturate(170%);
+  border-radius: 18px;
+  padding: 32px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 8px 24px rgba(0, 0, 0, 0.07),
+    0 32px 60px rgba(0, 0, 0, 0.05);
+  isolation: isolate;
+}
+
+.empty-card::before,
+.roadmap-container::before,
+.errors-body::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.empty-card > *,
+.roadmap-container > *,
+.errors-body > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * Spec page — 카드 없이 풀-너비 마크다운 (사용자 요청)
+ * ═══════════════════════════════════════════════════════════════ */
+
+/* Spec 섹션: 한 번에 한 섹션만 보임 (탭 형태) */
+.spec-section-flat {
+  display: none;
+  padding: 8px 0 32px;
+  animation: fadeIn 240ms ease;
+}
+
+.spec-section-flat.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.spec-section-flat .spec-section-eyebrow {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: #0066cc;
+  margin-bottom: 24px;
+}
+
+.spec-section-flat .markdown-body h1 {
+  font-size: 36px;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  margin: 0 0 24px 0;
+  color: #1d1d1f;
+  line-height: 1.15;
+}
+
+.spec-section-flat .markdown-body h2 {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 32px 0 14px 0;
+  color: #1d1d1f;
+}
+
+.spec-section-flat .markdown-body h3 {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 24px 0 12px 0;
+  color: #1d1d1f;
+}
+
+.spec-section-flat .markdown-body p {
+  margin: 0 0 14px 0;
+  line-height: 1.7;
+  color: #1d1d1f;
+}
+
+.spec-section-flat .markdown-body blockquote {
+  margin: 0 0 16px 0;
+  padding: 14px 20px;
+  border-left: 4px solid #0066cc;
+  background: rgba(0, 102, 204, 0.06);
+  border-radius: 0 12px 12px 0;
+  color: #424245;
+  font-style: italic;
+}
+
+.spec-section-flat .markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0;
+  font-size: 14px;
+}
+
+.spec-section-flat .markdown-body th {
+  text-align: left;
+  padding: 12px 14px;
+  background: rgba(0, 0, 0, 0.04);
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #424245;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.spec-section-flat .markdown-body td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  vertical-align: top;
+}
+
+.spec-section-flat .markdown-body tr:last-child td { border-bottom: none; }
+
+.spec-section-flat .markdown-body ul, .spec-section-flat .markdown-body ol {
+  margin: 0 0 14px 0;
+  padding-left: 24px;
+}
+
+.spec-section-flat .markdown-body li {
+  margin-bottom: 6px;
+  line-height: 1.65;
+}
+
+.spec-section-flat .markdown-body code {
+  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  background: rgba(0, 0, 0, 0.06);
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-size: 13px;
+  color: #d70015;
+  font-weight: 600;
+}
+
+.spec-section-flat .markdown-body pre {
+  background: rgba(0, 0, 0, 0.04);
+  padding: 18px 22px;
+  border-radius: 10px;
+  overflow-x: auto;
+  margin: 0 0 16px 0;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.spec-section-flat .markdown-body pre code {
+  background: transparent;
+  padding: 0;
+  color: #1d1d1f;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.spec-section-flat .markdown-body hr {
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  margin: 28px 0;
+}
+
+.spec-section-flat .markdown-body strong {
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * Plan page — checklist
+ * ═══════════════════════════════════════════════════════════════ */
+
+.roadmap-container h1,
+.errors-body h1,
+.spec-section h1 {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 24px 0;
+  color: #1d1d1f;
+}
+
+.roadmap-container h2,
+.errors-body h2,
+.spec-section h2 {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin: 32px 0 14px 0;
+  padding-top: 16px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  color: #1d1d1f;
+}
+
+.roadmap-container h2:first-of-type,
+.errors-body h2:first-of-type,
+.spec-section h2:first-of-type {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.roadmap-container h3,
+.errors-body h3,
+.spec-section h3 {
+  font-size: 17px;
+  font-weight: 700;
+  margin: 24px 0 12px 0;
+  color: #1d1d1f;
+}
+
+.roadmap-container p,
+.errors-body p,
+.spec-section p {
+  margin: 0 0 14px 0;
+  line-height: 1.7;
+  color: #1d1d1f;
+}
+
+.roadmap-container blockquote,
+.errors-body blockquote,
+.spec-section blockquote {
+  margin: 0 0 16px 0;
+  padding: 14px 20px;
+  border-left: 4px solid #0066cc;
+  background: rgba(0, 102, 204, 0.06);
+  border-radius: 0 12px 12px 0;
+  color: #424245;
+  font-style: italic;
+}
+
+.check-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin: 0 0 16px 0;
+}
+
+.check-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 500;
+  transition: background 150ms ease;
+}
+
+.check-row:hover { background: rgba(0, 0, 0, 0.03); }
+
+.check-row.pending { color: #424245; }
+.check-row.done { color: #1d1d1f; }
+
+.check-row.indent-1 { padding-left: 28px; }
+.check-row.indent-2 { padding-left: 46px; }
+.check-row.indent-3 { padding-left: 64px; }
+
+.check-box {
+  width: 18px;
+  height: 18px;
+  border-radius: 5px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: white;
+  margin-top: 3px;
+  transition: all 150ms ease;
+}
+
+.check-box.pending {
+  background: transparent;
+  border: 1.5px solid #c7c7cc;
+}
+
+.check-box.done {
+  background: #34c759;
+  box-shadow: 0 1px 3px rgba(52, 199, 89, 0.3);
+}
+
+.check-text {
+  flex: 1;
+  line-height: 1.5;
+}
+
+.check-row.done .check-text {
+  text-decoration: line-through;
+  text-decoration-color: rgba(0, 0, 0, 0.3);
+  opacity: 0.7;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * Spec page — anchor nav + sections
+ * ═══════════════════════════════════════════════════════════════ */
+
+.anchor-nav {
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  width: fit-content;
+  margin: 0 0 8px 0;
+}
+
+.anchor-link {
+  padding: 8px 16px;
+  border: none;
+  background: transparent;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-decoration: none;
+  color: #6e6e73;
+  transition: all 150ms ease;
+  cursor: pointer;
+}
+
+.anchor-link:hover {
+  color: #1d1d1f;
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.anchor-link.active {
+  background: #1d1d1f;
+  color: #ffffff;
+}
+
+.spec-section {
+  scroll-margin-top: 100px;
+}
+
+.spec-section-eyebrow {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: #0066cc;
+  margin-bottom: 20px;
+}
+
+/* Spec section table */
+
+.spec-section table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0;
+  font-size: 14px;
+}
+
+.spec-section th {
+  text-align: left;
+  padding: 12px 14px;
+  background: rgba(0, 0, 0, 0.04);
+  font-weight: 700;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #424245;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.08);
+}
+
+.spec-section td {
+  padding: 12px 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  vertical-align: top;
+}
+
+.spec-section tr:last-child td { border-bottom: none; }
+
+.spec-section ul, .spec-section ol {
+  margin: 0 0 14px 0;
+  padding-left: 24px;
+}
+
+.spec-section li {
+  margin-bottom: 6px;
+  line-height: 1.6;
+}
+
+.spec-section code {
+  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  background: rgba(0, 0, 0, 0.06);
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-size: 13px;
+  color: #d70015;
+  font-weight: 600;
+}
+
+.spec-section pre {
+  background: rgba(0, 0, 0, 0.04);
+  padding: 18px 22px;
+  border-radius: 10px;
+  overflow-x: auto;
+  margin: 0 0 16px 0;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.spec-section pre code {
+  background: transparent;
+  padding: 0;
+  color: #1d1d1f;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * Preview page — iframe
+ * ═══════════════════════════════════════════════════════════════ */
+
+.preview-frame-wrap {
+  padding: 0;
+  overflow: hidden;
+  min-height: 600px;
+}
+
+.preview-frame {
+  width: 100%;
+  min-height: 600px;
+  border: none;
+  background: white;
+  border-radius: 18px;
+  display: block;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * Empty/CTA card
+ * ═══════════════════════════════════════════════════════════════ */
+
+.empty-card {
+  text-align: center;
+  padding: 48px 32px;
+}
+
+.empty-card.cta-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(240, 245, 255, 0.7) 100%);
+}
+
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 28px;
+  background: linear-gradient(180deg, #0073e6 0%, #0066cc 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 18px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.25),
+    0 2px 4px rgba(0, 102, 204, 0.2),
+    0 8px 20px rgba(0, 102, 204, 0.25);
+  transition: all 180ms ease;
+  letter-spacing: -0.01em;
+}
+
+.cta-button:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    0 4px 8px rgba(0, 102, 204, 0.25),
+    0 12px 28px rgba(0, 102, 204, 0.3);
+}
+
+.cta-button:active { transform: translateY(0); }
+
+/* ═══════════════════════════════════════════════════════════════
+ * Errors body (markdown)
+ * ═══════════════════════════════════════════════════════════════ */
+
+.errors-body hr {
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  margin: 32px 0;
+}
+
+.errors-body strong {
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+.errors-body a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+.errors-body a:hover { text-decoration: underline; }
+
+/* ═══════════════════════════════════════════════════════════════
+ * Markdown body (공통)
+ * ═══════════════════════════════════════════════════════════════ */
+
+.markdown-body a {
+  color: #0066cc;
+  text-decoration: none;
+}
+
+.markdown-body a:hover { text-decoration: underline; }
+
+.markdown-body strong {
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+.markdown-body em { font-style: italic; }
+
+/* ═══════════════════════════════════════════════════════════════
+ * Dashboard card — ## 헤딩 자동 변환
+ * 각 ## 섹션이 독립 글래스 카드. 헤딩은 작은 파란 eyebrow 라벨.
+ * ═══════════════════════════════════════════════════════════════ */
+
+.ds-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(28px) saturate(170%);
+  -webkit-backdrop-filter: blur(28px) saturate(170%);
+  border-radius: 18px;
+  padding: 28px 32px;
+  margin: 0 0 18px 0;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 6px 18px rgba(0, 0, 0, 0.06),
+    0 24px 48px rgba(0, 0, 0, 0.05);
+  isolation: isolate;
+  transition: box-shadow 200ms ease, transform 200ms ease;
+}
+
+.ds-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.ds-card > * { position: relative; z-index: 2; }
+
+.ds-card:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 2px 4px rgba(0, 0, 0, 0.06),
+    0 12px 28px rgba(0, 0, 0, 0.08),
+    0 32px 64px rgba(0, 0, 0, 0.06);
+}
+
+.ds-eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #0066cc;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+}
+
+/* ds-card 안 마크다운 body — h1/h2는 첫줄/eyebrow에서 처리됐으니 h3부터 */
+
+.ds-card .markdown-body h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin: 20px 0 10px 0;
+  color: #1d1d1f;
+}
+
+.ds-card .markdown-body p {
+  margin: 0 0 12px 0;
+  line-height: 1.7;
+  color: #1d1d1f;
+  font-size: 15px;
+}
+
+.ds-card .markdown-body ul, .ds-card .markdown-body ol {
+  margin: 0 0 12px 0;
+  padding-left: 22px;
+}
+
+.ds-card .markdown-body li {
+  margin-bottom: 6px;
+  line-height: 1.65;
+}
+
+.ds-card .markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 12px 0;
+  font-size: 14px;
+}
+
+.ds-card .markdown-body th {
+  text-align: left;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.04);
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #424245;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.ds-card .markdown-body td {
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  vertical-align: top;
+}
+
+.ds-card .markdown-body tr:last-child td { border-bottom: none; }
+
+.ds-card .markdown-body code {
+  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  background: rgba(0, 0, 0, 0.06);
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-size: 13px;
+  color: #d70015;
+  font-weight: 600;
+}
+
+.ds-card .markdown-body pre {
+  background: rgba(0, 0, 0, 0.04);
+  padding: 16px 20px;
+  border-radius: 10px;
+  overflow-x: auto;
+  margin: 0 0 12px 0;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.ds-card .markdown-body pre code {
+  background: transparent;
+  padding: 0;
+  color: #1d1d1f;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.ds-card .markdown-body blockquote {
+  margin: 0 0 12px 0;
+  padding: 12px 18px;
+  border-left: 4px solid #0066cc;
+  background: rgba(0, 102, 204, 0.06);
+  border-radius: 0 10px 10px 0;
+  color: #424245;
+  font-style: italic;
+}
+
+.ds-card .markdown-body strong {
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+.ds-card .markdown-body hr {
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
+  margin: 24px 0;
+}
+
+/* 이미지 시안 — DESIGN.md의 디자인 시안 섹션 등 */
+.ds-card .markdown-body img,
+.markdown-body img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 6px 18px rgba(0, 0, 0, 0.08),
+    0 16px 36px rgba(0, 0, 0, 0.05);
+  margin: 16px 0;
+  background: linear-gradient(180deg, #f5f5f7 0%, #ececef 100%);
+  font-size: 12px;
+  color: #6e6e73;
+  font-style: italic;
+  /* 깨진 이미지일 때 alt text + 옅은 그레이 background로 placeholder 효과 */
+  min-height: 48px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * NON-GOALS grid — 빨간 ✗ 카드 (사용자 통증 직답)
+ * ═══════════════════════════════════════════════════════════════ */
+
+.non-goal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+
+.non-goal-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 18px;
+  background: linear-gradient(180deg, rgba(255, 245, 246, 0.85) 0%, rgba(255, 235, 237, 0.85) 100%);
+  border: 1px solid rgba(215, 0, 21, 0.25);
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.55;
+  color: #1d1d1f;
+  transition: transform 150ms ease, box-shadow 150ms ease;
+}
+
+.non-goal-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(215, 0, 21, 0.15);
+}
+
+.non-goal-icon {
+  color: #d70015;
+  font-weight: 800;
+  font-size: 18px;
+  line-height: 1.2;
+  flex-shrink: 0;
+}
+
+.non-goal-text {
+  flex: 1;
+}
+
+.non-goal-text code {
+  background: rgba(215, 0, 21, 0.1);
+  color: #d70015;
+}
+
+.non-goal-text strong { color: #d70015; }
+
+/* ═══════════════════════════════════════════════════════════════
+ * Color swatch — `<code>#hex</code>` 옆에 자동 삽입되는 색깔 박스
+ * ═══════════════════════════════════════════════════════════════ */
+
+.color-token {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  vertical-align: -3px;
+}
+
+.color-swatch {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.4),
+    0 1px 2px rgba(0, 0, 0, 0.08);
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * Spec page — anchor scroll-margin (sticky tab nav 가림 방지)
+ * ═══════════════════════════════════════════════════════════════ */
+
+.spec-section-flat {
+  scroll-margin-top: 100px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * Utility
+ * ═══════════════════════════════════════════════════════════════ */
+
+.muted {
+  color: #6e6e73;
+  font-size: 14px;
+  font-weight: 500;
+}

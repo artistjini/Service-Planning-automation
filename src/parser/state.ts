@@ -1,0 +1,234 @@
+/**
+ * .blueprint/state.md 파서.
+ *
+ * 입력: state.md 텍스트
+ * 출력: BlueprintState (immutable 객체)
+ *
+ * 스키마는 ~/.claude/skills/blueprint/templates/state.md.tmpl 기준.
+ * 스키마 변경 시 이 파일과 src/types.ts 같이 업데이트.
+ */
+
+import {
+  BlueprintState,
+  Phase,
+  PhaseId,
+  PhaseStatus,
+  Counters,
+  Settings,
+  DecisionEntry,
+  PHASE_NAMES,
+} from '../types';
+
+/**
+ * 섹션을 ## 헤딩 단위로 분할.
+ * 반환: { 헤딩이름: 본문 } 맵 (헤딩 라인 자체는 제외)
+ */
+function splitSections(md: string): Map<string, string> {
+  const sections = new Map<string, string>();
+  const lines = md.split(/\r?\n/);
+  let currentHeading: string | null = null;
+  let buffer: string[] = [];
+
+  const flush = () => {
+    if (currentHeading !== null) {
+      sections.set(currentHeading.toLowerCase(), buffer.join('\n').trim());
+    }
+  };
+
+  for (const line of lines) {
+    const headingMatch = line.match(/^##\s+(.+)$/);
+    if (headingMatch) {
+      flush();
+      currentHeading = headingMatch[1].trim();
+      buffer = [];
+    } else if (currentHeading !== null) {
+      buffer.push(line);
+    }
+  }
+  flush();
+  return sections;
+}
+
+/**
+ * 첫 # 헤딩에서 프로젝트명 추출.
+ * 형식: "# Blueprint State — {project}"
+ */
+function parseProjectName(md: string): string {
+  const m = md.match(/^#\s+Blueprint State\s*[—\-–]\s*(.+)$/m);
+  return m ? m[1].trim() : 'Unknown';
+}
+
+/**
+ * Progress 섹션 → Phase[]
+ * 형식 예:
+ *   - [x] Phase 0: PRODUCT (2026-05-22)
+ *   - [ ] Phase 1: DESIGN
+ *   - [ ] Phase 4: CHECKPOINT (0 runs)
+ *   - [ ] Phase 5: SHIP (0 ships)
+ *
+ * `[x]` = done, `[ ]` = pending, `[◐]` = in_progress
+ */
+function parsePhases(text: string): Phase[] {
+  const lines = text.split(/\r?\n/);
+  const phases: Phase[] = [];
+  const re = /^-\s*\[([ x◐])\]\s*Phase\s+(\d+):\s*([A-Z\-]+)(?:\s*\((.*?)\))?(?:\s+←.*)?$/;
+
+  for (const line of lines) {
+    const m = line.trim().match(re);
+    if (!m) continue;
+
+    const checkChar = m[1];
+    const id = parseInt(m[2], 10) as PhaseId;
+    const name = m[3];
+    const parenContent = m[4]; // e.g., "2026-05-22" or "0 runs"
+
+    let status: PhaseStatus;
+    if (checkChar === 'x') status = 'done';
+    else if (checkChar === '◐') status = 'in_progress';
+    else status = 'pending';
+
+    let completedAt: string | undefined;
+    let meta: string | undefined;
+    if (parenContent) {
+      // 날짜 형식이면 completedAt, 아니면 meta
+      if (/^\d{4}-\d{2}-\d{2}$/.test(parenContent)) {
+        completedAt = parenContent;
+      } else {
+        meta = parenContent;
+      }
+    }
+
+    if (id >= 0 && id <= 6) {
+      phases.push({
+        id,
+        name: name || PHASE_NAMES[id],
+        status,
+        completedAt,
+        meta,
+      });
+    }
+  }
+
+  // Phase 0~6 누락 보강 (state.md에 없으면 pending으로)
+  for (let i = 0; i <= 6; i++) {
+    if (!phases.find(p => p.id === i)) {
+      phases.push({
+        id: i as PhaseId,
+        name: PHASE_NAMES[i as PhaseId],
+        status: 'pending',
+      });
+    }
+  }
+  phases.sort((a, b) => a.id - b.id);
+  return phases;
+}
+
+/**
+ * Counters 섹션 → Counters
+ * 형식: "- key: value"
+ */
+function parseCounters(text: string): Counters {
+  const map = parseKeyValueList(text);
+  return {
+    ships_since_checkpoint: toInt(map.get('ships_since_checkpoint'), 0),
+    last_check: map.get('last_check') ?? '',
+    checkpoint_count: toInt(map.get('checkpoint_count'), 0),
+    plans_without_arch_read: toInt(map.get('plans_without_arch_read'), 0),
+  };
+}
+
+/**
+ * Settings 섹션 → Settings
+ * 형식: "- key: value"
+ * "(empty)" 또는 빈 값은 ''로 처리.
+ */
+function parseSettings(text: string): Settings {
+  const map = parseKeyValueList(text);
+  const quietRaw = map.get('quiet_until') ?? '';
+  return {
+    strict_mode: (map.get('strict_mode') ?? 'false').toLowerCase() === 'true',
+    quiet_until: quietRaw === '(empty)' ? '' : quietRaw,
+  };
+}
+
+/**
+ * "- key: value" 형식 라인을 Map으로.
+ * value 앞뒤 공백 제거.
+ */
+function parseKeyValueList(text: string): Map<string, string> {
+  const map = new Map<string, string>();
+  const lines = text.split(/\r?\n/);
+  for (const line of lines) {
+    const m = line.trim().match(/^-\s+([a-z_][a-z0-9_]*)\s*:\s*(.+?)\s*$/i);
+    if (m) {
+      map.set(m[1].toLowerCase(), m[2].trim());
+    }
+  }
+  return map;
+}
+
+function toInt(v: string | undefined, fallback: number): number {
+  if (v === undefined) return fallback;
+  const n = parseInt(v, 10);
+  return isNaN(n) ? fallback : n;
+}
+
+/**
+ * Triggers fired 섹션 → string[]
+ * "(empty)" 또는 빈 본문이면 빈 배열.
+ * 각 "- ..." 라인이 한 트리거.
+ */
+function parseTriggers(text: string): string[] {
+  if (!text || text.trim() === '(empty)') return [];
+  const triggers: string[] = [];
+  const lines = text.split(/\r?\n/);
+  for (const line of lines) {
+    const m = line.trim().match(/^-\s+(.+)$/);
+    if (m) triggers.push(m[1].trim());
+  }
+  return triggers;
+}
+
+/**
+ * Decisions log 섹션 → DecisionEntry[]
+ * 형식: "- YYYY-MM-DD: 내용"
+ * (상세는 docs/adr/) 같은 메타 라인은 무시.
+ */
+function parseDecisions(text: string): DecisionEntry[] {
+  if (!text) return [];
+  const decisions: DecisionEntry[] = [];
+  const lines = text.split(/\r?\n/);
+  const re = /^-\s+(\d{4}-\d{2}-\d{2}):\s*(.+)$/;
+  for (const line of lines) {
+    const m = line.trim().match(re);
+    if (m) {
+      decisions.push({ date: m[1], text: m[2].trim() });
+    }
+  }
+  return decisions;
+}
+
+/**
+ * Next action 섹션 — 본문 전체를 한 줄로 (개행 → 공백).
+ */
+function parseNextAction(text: string): string {
+  return (text || '').replace(/\s+/g, ' ').trim();
+}
+
+/**
+ * 메인 진입점.
+ */
+export function parseState(md: string): BlueprintState {
+  const project = parseProjectName(md);
+  const sections = splitSections(md);
+
+  return {
+    project,
+    phases: parsePhases(sections.get('progress') ?? ''),
+    nextAction: parseNextAction(sections.get('next action') ?? ''),
+    counters: parseCounters(sections.get('counters') ?? ''),
+    triggers: parseTriggers(sections.get('triggers fired') ?? ''),
+    settings: parseSettings(sections.get('settings') ?? ''),
+    decisions: parseDecisions(sections.get('decisions log') ?? ''),
+  };
+}

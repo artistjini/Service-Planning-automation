@@ -1,0 +1,470 @@
+/*
+ * Sidebar Webview styles — V0+ 최종 (Notion + iOS 글래스 풍).
+ *
+ * 폰트: 두껍고 선명하게. 헤딩 크게.
+ * 글래스: backdrop-filter + 컬러 blob 배경.
+ * 입체감: multi-layer shadow + inset highlight.
+ */
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Pretendard", system-ui, sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  color: #1d1d1f;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow-x: hidden;
+  /* 컬러풀 blobs — 카드의 backdrop-filter가 이걸 blur해서 글래스 효과 */
+  background:
+    radial-gradient(circle at 15% 10%, rgba(0, 122, 255, 0.32) 0%, transparent 35%),
+    radial-gradient(circle at 90% 25%, rgba(255, 45, 85, 0.26) 0%, transparent 35%),
+    radial-gradient(circle at 80% 70%, rgba(175, 82, 222, 0.26) 0%, transparent 35%),
+    radial-gradient(circle at 20% 90%, rgba(52, 199, 89, 0.26) 0%, transparent 35%),
+    radial-gradient(circle at 60% 50%, rgba(255, 149, 0, 0.22) 0%, transparent 30%),
+    linear-gradient(180deg, #f5f5f7 0%, #ececef 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+
+.sidebar {
+  padding: 16px 12px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * Hero
+ * ═══════════════════════════════════════════════════════════════ */
+
+.hero {
+  position: relative;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border-radius: 18px;
+  padding: 20px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.2),
+    0 1px 2px rgba(0, 0, 0, 0.06),
+    0 8px 24px rgba(0, 0, 0, 0.1),
+    0 32px 64px rgba(0, 0, 0, 0.08);
+  isolation: isolate;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.6) 0%, transparent 45%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.hero > * {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-folder {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #1d1d1f;
+  line-height: 1.45;
+  word-break: break-all;
+}
+
+.hero-folder-icon {
+  flex-shrink: 0;
+  font-size: 14px;
+  margin-top: -1px;
+}
+
+.hero-folder-path {
+  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-size: 11px;
+  color: #424245;
+  word-break: break-all;
+}
+
+.hero-divider {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.08);
+  margin: 14px 0;
+}
+
+.hero-phase-id {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #0066cc;
+  margin-bottom: 2px;
+}
+
+.hero-title {
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #1d1d1f;
+  margin: 0 0 16px 0;
+  line-height: 1.05;
+  word-break: keep-all;
+}
+
+/* Progress bar — track 회색 + fill 그라데이션 (background-size 동적) */
+
+.progress-bar {
+  position: relative;
+  height: 10px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 999px;
+  overflow: hidden;
+  box-shadow:
+    inset 0 1px 2px rgba(0, 0, 0, 0.14),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.5);
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background-image: linear-gradient(
+    90deg,
+    #34c759 0%,
+    #aacc00 25%,
+    #ffcc00 50%,
+    #ff9500 75%,
+    #ff3b30 100%
+  );
+  background-repeat: no-repeat;
+  background-position: left center;
+  border-radius: 999px;
+  transition: width 400ms cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.5),
+    0 0 8px rgba(255, 149, 0, 0.3);
+}
+
+.progress-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  font-weight: 700;
+  color: #6e6e73;
+  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * Card (공통)
+ * ═══════════════════════════════════════════════════════════════ */
+
+.card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(24px) saturate(170%);
+  -webkit-backdrop-filter: blur(24px) saturate(170%);
+  border-radius: 14px;
+  padding: 14px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 6px 16px rgba(0, 0, 0, 0.07),
+    0 16px 36px rgba(0, 0, 0, 0.04);
+  isolation: isolate;
+}
+
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.card > * {
+  position: relative;
+  z-index: 2;
+}
+
+.card-heading {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  color: #6e6e73;
+  margin: 0 0 12px 0;
+}
+
+.card-alert {
+  background: linear-gradient(180deg, rgba(255, 245, 246, 0.85) 0%, rgba(255, 230, 232, 0.85) 100%);
+  border-color: rgba(215, 0, 21, 0.3);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * Phases section
+ * ═══════════════════════════════════════════════════════════════ */
+
+.phase-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 8px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  margin: 0 -4px;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.phase-row:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.phase-row.pending {
+  opacity: 0.55;
+}
+
+.phase-row.in_progress {
+  background: rgba(0, 102, 204, 0.1);
+  font-weight: 700;
+}
+
+.phase-circle {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 9px;
+  font-weight: 800;
+  color: white;
+}
+
+.phase-circle.pending {
+  background: transparent;
+  border: 1.5px solid #c7c7cc;
+}
+
+.phase-circle.in_progress {
+  background: #0066cc;
+  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.25);
+}
+
+.phase-circle.done {
+  background: #34c759;
+}
+
+.phase-circle.done::before {
+  content: "✓";
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.phase-id {
+  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-size: 10px;
+  font-weight: 700;
+  color: #6e6e73;
+  font-variant-numeric: tabular-nums;
+}
+
+.phase-name {
+  flex: 1;
+  color: #1d1d1f;
+}
+
+.phase-meta {
+  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-size: 10px;
+  font-weight: 600;
+  color: #6e6e73;
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * Current focus
+ * ═══════════════════════════════════════════════════════════════ */
+
+.focus-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #0066cc;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+}
+
+.focus-text {
+  font-size: 13px;
+  font-weight: 500;
+  color: #1d1d1f;
+  line-height: 1.5;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * Triggers
+ * ═══════════════════════════════════════════════════════════════ */
+
+.triggers-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.triggers-list li {
+  padding: 10px 12px;
+  background: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(215, 0, 21, 0.3);
+  border-radius: 10px;
+  color: #d70015;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.triggers-empty {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6e6e73;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * Active file
+ * ═══════════════════════════════════════════════════════════════ */
+
+.active-file-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.active-file-path {
+  flex: 1;
+  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-size: 12px;
+  font-weight: 600;
+  color: #1d1d1f;
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.active-file-lang {
+  flex-shrink: 0;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #0066cc;
+  background: rgba(0, 102, 204, 0.1);
+  padding: 2px 7px;
+  border-radius: 6px;
+}
+
+.active-file-empty {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6e6e73;
+  font-style: italic;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * Recent changes
+ * ═══════════════════════════════════════════════════════════════ */
+
+.recent-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.recent-row {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+  font-size: 12px;
+  padding: 4px 0;
+}
+
+.recent-time {
+  flex-shrink: 0;
+  width: 52px;
+  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-size: 10px;
+  font-weight: 700;
+  color: #6e6e73;
+  font-variant-numeric: tabular-nums;
+}
+
+.recent-path {
+  flex: 1;
+  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-size: 11px;
+  font-weight: 600;
+  color: #1d1d1f;
+  word-break: break-all;
+  line-height: 1.4;
+}
+
+.recent-empty {
+  font-size: 12px;
+  font-weight: 500;
+  color: #6e6e73;
+  font-style: italic;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * Empty state
+ * ═══════════════════════════════════════════════════════════════ */
+
+.empty {
+  padding: 32px 16px;
+  text-align: center;
+  color: #6e6e73;
+}
+
+.empty-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1d1d1f;
+  margin-bottom: 8px;
+}
+
+.empty-sub {
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.empty code {
+  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  background: rgba(0, 0, 0, 0.08);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #0066cc;
+}
