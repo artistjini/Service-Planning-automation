@@ -3,7 +3,9 @@
  * 이벤트 버스의 payload 시그니처가 곧 도메인 간 계약.
  */
 
-export type PhaseId = 0 | 1 | 2 | 3 | 4 | 5 | 6;
+// CHECKPOINT는 cross-cutting trigger라 phase 리스트에서 제외 (ADR-009).
+// 사이드바의 별도 KPI 카드에서 carriage count만 표시.
+export type PhaseId = 0 | 1 | 2 | 3 | 4 | 5;
 export type PhaseStatus = 'pending' | 'in_progress' | 'done';
 
 export const PHASE_NAMES: Record<PhaseId, string> = {
@@ -11,9 +13,8 @@ export const PHASE_NAMES: Record<PhaseId, string> = {
   1: 'DESIGN',
   2: 'ARCHITECTURE',
   3: 'IMPLEMENT',
-  4: 'CHECKPOINT',
-  5: 'SHIP',
-  6: 'POST-SHIP',
+  4: 'SHIP',
+  5: 'POST-SHIP',
 };
 
 export interface Phase {

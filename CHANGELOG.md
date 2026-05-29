@@ -4,6 +4,21 @@
 
 형식: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](https://semver.org/).
 
+## [0.2.0] — 2026-05-24
+
+### Changed (Breaking)
+- **CHECKPOINT를 phase 리스트에서 제외** — phase 7개 → 6개 (PRODUCT/DESIGN/ARCHITECTURE/IMPLEMENT/SHIP/POST-SHIP). ADR-009.
+- 사이드바에 **별도 CHECKPOINTS KPI 카드** — runs / ships since / last check. `ships_since_checkpoint >= 5`면 빨간 카드로 점검 알림.
+- 진행도 계산 = 6개 phase 기준 (이전 7개).
+
+### Added
+- ADR-009 (CHECKPOINT as KPI)
+- `parser/state.ts`에 옛 7-phase state.md 호환 매핑 (Phase 5/6 → 4/5 자동 변환)
+
+### Files updated
+- `src/types.ts`, `src/parser/state.ts`, `src/sidebar/*`, `src/webview/panel.ts`
+- `.blueprint/state.md`, `~/.claude/skills/blueprint/templates/state.md.tmpl`
+
 ## [0.1.0] — 2026-05-24
 
 V0+ 첫 정식 출시. Antigravity에서 사용자 본인 dogfooding 완료.

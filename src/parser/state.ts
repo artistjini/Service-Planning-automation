@@ -78,9 +78,13 @@ function parsePhases(text: string): Phase[] {
     if (!m) continue;
 
     const checkChar = m[1];
-    const id = parseInt(m[2], 10) as PhaseId;
+    const rawId = parseInt(m[2], 10);
     const name = m[3];
-    const parenContent = m[4]; // e.g., "2026-05-22" or "0 runs"
+    const parenContent = m[4];
+
+    // CHECKPOINT는 phase 리스트에서 제외 (별도 KPI). state.md에 남아있을 수 있는
+    // 옛 Phase 4: CHECKPOINT 줄은 건너뜀.
+    if (name === 'CHECKPOINT') continue;
 
     let status: PhaseStatus;
     if (checkChar === 'x') status = 'done';
@@ -90,7 +94,6 @@ function parsePhases(text: string): Phase[] {
     let completedAt: string | undefined;
     let meta: string | undefined;
     if (parenContent) {
-      // 날짜 형식이면 completedAt, 아니면 meta
       if (/^\d{4}-\d{2}-\d{2}$/.test(parenContent)) {
         completedAt = parenContent;
       } else {
@@ -98,19 +101,32 @@ function parsePhases(text: string): Phase[] {
       }
     }
 
-    if (id >= 0 && id <= 6) {
-      phases.push({
-        id,
-        name: name || PHASE_NAMES[id],
-        status,
-        completedAt,
-        meta,
-      });
+    // 옛 schema (Phase 5 SHIP, Phase 6 POST-SHIP) → 새 schema (Phase 4, 5) 매핑.
+    // 새 schema의 .md를 쓰면 자연스럽게 0~5가 들어옴.
+    let id: PhaseId;
+    if (rawId >= 0 && rawId <= 3) {
+      id = rawId as PhaseId;
+    } else if (rawId === 5 || (rawId === 4 && name === 'SHIP')) {
+      id = 4;
+    } else if (rawId === 6 || (rawId === 5 && name === 'POST-SHIP')) {
+      id = 5;
+    } else if (rawId === 4) {
+      id = 4; // 새 schema의 SHIP
+    } else {
+      continue;
     }
+
+    phases.push({
+      id,
+      name: name || PHASE_NAMES[id],
+      status,
+      completedAt,
+      meta,
+    });
   }
 
-  // Phase 0~6 누락 보강 (state.md에 없으면 pending으로)
-  for (let i = 0; i <= 6; i++) {
+  // Phase 0~5 누락 보강 (state.md에 없으면 pending으로)
+  for (let i = 0; i <= 5; i++) {
     if (!phases.find(p => p.id === i)) {
       phases.push({
         id: i as PhaseId,

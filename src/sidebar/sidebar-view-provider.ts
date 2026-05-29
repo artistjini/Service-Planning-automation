@@ -127,6 +127,7 @@ export class SidebarViewProvider implements vscode.WebviewViewProvider {
       renderHero(state, workspaceFolderName, workspaceFolderPath),
       renderPhases(state.phases),
       renderCurrentFocus(state.nextAction, state.phases),
+      renderCheckpointKpi(state),
       renderTriggers(state.triggers),
       renderActiveFile(activeFile),
       renderRecentChanges(recentChanges),
@@ -199,6 +200,26 @@ function renderCurrentFocus(nextAction: string, phases: Phase[]): string {
       <div class="card-heading">CURRENT FOCUS</div>
       <div class="focus-label">${escapeHtml(label)}</div>
       <div class="focus-text">${escapeHtml(nextAction || '—')}</div>
+    </div>`;
+}
+
+function renderCheckpointKpi(state: NonNullable<SidebarPayload['state']>): string {
+  const { checkpoint_count, last_check, ships_since_checkpoint } = state.counters;
+  const dueSoon = ships_since_checkpoint >= 5;
+  return `
+    <div class="card ${dueSoon ? 'card-alert' : ''}">
+      <div class="card-heading">CHECKPOINTS</div>
+      <div class="kpi-row">
+        <div class="kpi-block">
+          <div class="kpi-value">${escapeHtml(String(checkpoint_count))}</div>
+          <div class="kpi-label">runs</div>
+        </div>
+        <div class="kpi-block">
+          <div class="kpi-value">${escapeHtml(String(ships_since_checkpoint))}</div>
+          <div class="kpi-label">ships since</div>
+        </div>
+      </div>
+      <div class="kpi-meta">last: ${escapeHtml(last_check || '—')}</div>
     </div>`;
 }
 

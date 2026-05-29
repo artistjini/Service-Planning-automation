@@ -305,6 +305,7 @@ export class BlueprintWebviewPanel {
 // ─────────────────────────────────────────────────────────────────
 
 function artifactSectionForPhase(phaseId: PhaseId): 'product' | 'design' | 'architecture' | undefined {
+  // Phase 0~2: 산출물 .md 명확. Phase 3 (IMPLEMENT) / 4 (SHIP) / 5 (POST-SHIP) 는 상세 .md 없음.
   switch (phaseId) {
     case 0: return 'product';
     case 1: return 'design';

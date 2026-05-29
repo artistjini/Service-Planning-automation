@@ -324,6 +324,50 @@ html, body {
 }
 
 /* ═══════════════════════════════════════════════════════════════
+ * Checkpoint KPI card
+ * ═══════════════════════════════════════════════════════════════ */
+
+.kpi-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.kpi-block {
+  text-align: center;
+  padding: 10px 8px;
+  background: rgba(0, 102, 204, 0.06);
+  border-radius: 10px;
+}
+
+.kpi-value {
+  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-size: 22px;
+  font-weight: 700;
+  color: #0066cc;
+  line-height: 1.1;
+  margin-bottom: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.kpi-label {
+  font-size: 10px;
+  font-weight: 600;
+  color: #6e6e73;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.kpi-meta {
+  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-size: 11px;
+  font-weight: 600;
+  color: #6e6e73;
+  text-align: right;
+}
+
+/* ═══════════════════════════════════════════════════════════════
  * Triggers
  * ═══════════════════════════════════════════════════════════════ */
 
