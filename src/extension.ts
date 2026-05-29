@@ -51,6 +51,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
   // ── Webview 패널 ──
   webviewPanel = new BlueprintWebviewPanel(context, currentFolder, {
     onCreateErrorHistory: () => createErrorHistory(),
+    onPreviewFileClick: (rel) => pushPreviewNoSwitch(rel),
   });
 
   // ── Sidebar Webview Provider ──
@@ -147,10 +148,12 @@ async function handleFileChange(event: FileChangeEvent): Promise<void> {
       await reloadErrorHistory();
       break;
     default:
-      // docs/design/screenshots/*.png 등 변경 시 DESIGN 페이지 다시 그림
-      // (DESIGN.md 자체는 안 바뀌지만 webview에서 image 다시 로드)
       if (rel.startsWith('docs/design/')) {
         await reloadArtifact('design');
+        // .html 파일 변경 시 design files listing도 다시
+        if (rel.endsWith('.html')) {
+          await reloadDesignFiles();
+        }
       }
       break;
   }
@@ -171,8 +174,40 @@ async function loadAll(): Promise<void> {
     reloadArtifact('design'),
     reloadArtifact('architecture'),
     reloadErrorHistory(),
+    reloadDesignFiles(),
   ]);
   refreshSidebar();
+}
+
+async function reloadDesignFiles(): Promise<void> {
+  if (!currentFolder) return;
+  const designDir = path.join(currentFolder.uri.fsPath, 'docs', 'design');
+  try {
+    const files = await collectHtmlFiles(designDir, currentFolder.uri.fsPath);
+    webviewPanel?.setDesignFiles(files);
+  } catch {
+    webviewPanel?.setDesignFiles([]);
+  }
+}
+
+async function collectHtmlFiles(dir: string, rootFs: string): Promise<{ relativePath: string; name: string }[]> {
+  const result: { relativePath: string; name: string }[] = [];
+  try {
+    const entries = await fs.promises.readdir(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) {
+        const sub = await collectHtmlFiles(full, rootFs);
+        result.push(...sub);
+      } else if (entry.isFile() && entry.name.toLowerCase().endsWith('.html')) {
+        const rel = path.relative(rootFs, full).replace(/\\/g, '/');
+        result.push({ relativePath: rel, name: entry.name });
+      }
+    }
+  } catch {
+    // 폴더 없거나 접근 불가 — 빈 리스트
+  }
+  return result.sort((a, b) => a.relativePath.localeCompare(b.relativePath));
 }
 
 async function reloadState(): Promise<void> {
@@ -206,8 +241,16 @@ async function reloadErrorHistory(): Promise<void> {
 // ─────────────────────────────────────────────────────────────────
 
 async function pushPreview(filePathInput: string): Promise<void> {
+  await pushPreviewInternal(filePathInput, true);
+}
+
+/** 사이드 listing 클릭 시: 탭 전환 없이 콘텐츠만 교체 (이미 Preview 탭 안) */
+async function pushPreviewNoSwitch(filePathInput: string): Promise<void> {
+  await pushPreviewInternal(filePathInput, false);
+}
+
+async function pushPreviewInternal(filePathInput: string, autoSwitch: boolean): Promise<void> {
   if (!currentFolder) return;
-  // 워크스페이스 상대 경로 또는 절대 경로 둘 다 허용
   let fullPath = filePathInput;
   if (!path.isAbsolute(filePathInput)) {
     fullPath = path.join(currentFolder.uri.fsPath, filePathInput);
@@ -215,7 +258,7 @@ async function pushPreview(filePathInput: string): Promise<void> {
   try {
     const html = await fs.promises.readFile(fullPath, 'utf-8');
     const rel = path.relative(currentFolder.uri.fsPath, fullPath).replace(/\\/g, '/');
-    webviewPanel?.setPreviewContent(html, rel);
+    webviewPanel?.setPreviewContent(html, rel, autoSwitch);
   } catch (err) {
     vscode.window.showErrorMessage(`Blueprint: 파일을 읽을 수 없음 — ${filePathInput}`);
   }

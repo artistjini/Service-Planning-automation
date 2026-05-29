@@ -18,41 +18,60 @@ export interface PreviewContent {
   pushedAt: Date | null;
 }
 
-export function renderPreviewPage(preview: PreviewContent): string {
-  if (!preview.html) {
-    return `
-      <div class="page-hero">
-        <div class="page-eyebrow">PREVIEW</div>
-        <h1 class="page-title">미리볼 게 없어요</h1>
-        <p class="page-subtitle">
-          채팅에서 <code>프리뷰에 [파일명] 띄와봐</code> 라고 해보세요.<br/>
-          예: <code>프리뷰에 docs/design/hero.html 띄와봐</code>
-        </p>
-      </div>
+export interface PreviewDesignFile {
+  /** 워크스페이스 기준 상대 경로 (예: docs/design/screenshots/spec-mockup-1-explorer.html) */
+  relativePath: string;
+  /** 파일명 (라벨) */
+  name: string;
+}
 
-      <div class="empty-card">
-        <p class="muted">push된 HTML은 적립되지 않고 *최근 한 개*만 표시됩니다.</p>
-        <p class="muted">디자인 적립은 Spec 페이지의 산출물 (DESIGN.md, docs/design/*.html)이 담당.</p>
-      </div>`;
-  }
+export function renderPreviewPage(
+  preview: PreviewContent,
+  designFiles: PreviewDesignFile[] = [],
+): string {
+  const hasContent = !!preview.html;
 
-  // iframe srcdoc으로 격리 — sandbox로 스크립트 차단 옵션
-  const escapedHtml = escapeHtml(preview.html);
-  const sourceLabel = preview.sourcePath
-    ? escapeHtml(preview.sourcePath)
-    : '(unknown source)';
-  const timeLabel = preview.pushedAt
-    ? formatTime(preview.pushedAt)
-    : '';
+  // 좌측 listing (파일들)
+  const listingHtml = designFiles.length === 0
+    ? `<div class="preview-empty-listing">docs/design/ 폴더에 .html 파일이 없어요.</div>`
+    : designFiles.map(f => {
+        const active = preview.sourcePath === f.relativePath ? 'active' : '';
+        return `<button type="button" class="preview-file-row ${active}" data-preview-file="${escapeHtml(f.relativePath)}">
+          <span class="preview-file-icon">📄</span>
+          <span class="preview-file-name">${escapeHtml(f.name)}</span>
+          <span class="preview-file-path">${escapeHtml(f.relativePath.replace(/^docs\/design\//, ''))}</span>
+        </button>`;
+      }).join('');
+
+  // 우측 미리보기 영역
+  const viewerHtml = hasContent
+    ? `<div class="preview-viewer-header">
+         <div class="preview-viewer-path">${escapeHtml(preview.sourcePath ?? '')}</div>
+         <div class="preview-viewer-time">${preview.pushedAt ? formatTime(preview.pushedAt) : ''}</div>
+       </div>
+       <iframe class="preview-frame" srcdoc="${escapeHtml(preview.html!)}" sandbox="allow-same-origin"></iframe>`
+    : `<div class="preview-viewer-empty">
+         <div class="preview-viewer-empty-title">왼쪽에서 시안을 골라주세요</div>
+         <div class="preview-viewer-empty-sub">
+           또는 채팅에서 <code>프리뷰에 [파일명] 띄와봐</code> 라고 명령
+         </div>
+       </div>`;
 
   return `
     <div class="page-hero compact">
-      <div class="page-eyebrow">PREVIEW</div>
-      <h1 class="page-title-small">${sourceLabel}</h1>
-      <p class="page-subtitle small">pushed at ${timeLabel}</p>
+      <div class="page-eyebrow">PREVIEW · 디자인 시안</div>
+      <h1 class="page-title-small">${designFiles.length}개 시안</h1>
+      <p class="page-subtitle small">docs/design/ 폴더의 .html 파일들 자동 listing · 클릭으로 미리보기</p>
     </div>
-    <div class="preview-frame-wrap">
-      <iframe class="preview-frame" srcdoc="${escapedHtml}" sandbox="allow-same-origin"></iframe>
+
+    <div class="preview-explorer">
+      <aside class="preview-listing">
+        <div class="preview-listing-header">DESIGN FILES</div>
+        ${listingHtml}
+      </aside>
+      <main class="preview-viewer">
+        ${viewerHtml}
+      </main>
     </div>`;
 }
 

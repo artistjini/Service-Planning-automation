@@ -4,6 +4,16 @@
 
 형식: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] — 2026-05-24
+
+### Added
+- **Preview 페이지 자동 listing**: 좌측에 `docs/design/**/*.html` 파일들 자동 표시. 클릭으로 미리보기. 채팅 명령 (`프리뷰에 X 띄와봐`)도 그대로 동작.
+- **시안 3개** 추가: `docs/design/screenshots/spec-mockup-{1-explorer,2-notion,3-columns}.html` — Spec 페이지 폴더 탐색기 UX 시안.
+
+### Changed
+- `setPreviewContent(html, sourcePath, autoSwitch)` — 사이드 클릭 시 탭 전환 없이 콘텐츠만 교체. 채팅 명령 시엔 자동 탭 전환.
+- file-watcher: `docs/design/**/*.html` 변경 시 design files listing도 자동 reload.
+
 ## [0.2.0] — 2026-05-24
 
 ### Changed (Breaking)

@@ -69,3 +69,7 @@
    - markdown-it 토큰 처리로 후처리 안정성 ↑
    - Generic mode 분리 (V4 — 임의 마크다운 design preview)
    - 실제 디자인 시안 캡처 + docs/design/screenshots/ 채우기
+   - **Reviews 통합**: `/code-review`, `/review`, `/codex review`, `/qa`, `/retro` 결과를
+     `docs/reviews/YYYY-MM-DD-*.md` 에 저장 → 우리 extension이 watch → 새 webview 탭
+     "Reviews" + 사이드바 KPI ("Reviews: N runs, last YYYY-MM-DD"). 검수 자체는
+     사용자 채팅에서 Claude가, 시각화만 우리. 단방향 .md → UI 원칙 유지.

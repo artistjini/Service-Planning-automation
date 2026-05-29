@@ -81,4 +81,21 @@
 - **재발 방지**: 에러 다시 뜨면 → 알림 내용 스크린샷 캡처 후 무시. 정말 거슬리면 Antigravity 설정에서 Go 관련 extension/feature 비활성화.
 - **참조**: 없음
 
+---
+
+## 2026-05-24 — Go 바이너리 못 찾음 알림 재발 ("Failed to find go binary")
+
+- **Status**: IGNORED (Antigravity 자체 문제 — 무관)
+- **Phase**: V0.2 SHIP 후 dogfooding 중
+- **상황**: 작업 중 화면에 빨간 알림 박스 — "Failed to find the 'go' binary in either GOROOT() or PATH". PATH 전체 보여줌. 우리 코드 전혀 무관.
+- **에러 메시지**:
+  ```
+  Failed to find the "go" binary in either GOROOT() or PATH(...)
+  Check PATH, or Install Go and reload the window.
+  ```
+- **원인**: 같은 (이전 Go 알림과 동일). Antigravity의 내장 Go 관련 기능 (vscode-go extension 등)이 Go 1.x 설치 요구. 우리 extension은 TypeScript 기반이라 Go 사용 0%.
+- **해결**: 무시. X로 닫음. Go 설치 *불필요*.
+- **재발 방지**: 영구. Antigravity 자체 설정에서 Go-related extension 끄는 옵션 있는지 검토 — 우선순위 낮음.
+- **참조**: 위의 동일 에러 (2026-05-22) 참조
+
 (과거 에러는 아래에 시간순으로 누적)

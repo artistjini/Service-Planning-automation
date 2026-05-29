@@ -21,7 +21,7 @@ import * as path from 'path';
 import { BlueprintState, PhaseId } from '../types';
 import { renderPlanPage } from './pages/plan';
 import { renderSpecPage, SpecArtifacts } from './pages/spec';
-import { renderPreviewPage, PreviewContent } from './pages/preview';
+import { renderPreviewPage, PreviewContent, PreviewDesignFile } from './pages/preview';
 import { renderErrorsPage } from './pages/errors';
 import { makeNonce, escapeHtml } from './shared';
 
@@ -42,6 +42,8 @@ const TAB_ORDER: TabId[] = ['plan', 'spec', 'preview', 'errors'];
 export interface BlueprintWebviewPanelCallbacks {
   /** Errors 페이지에서 "에러 히스토리 시작" 버튼 클릭 시 호출 */
   onCreateErrorHistory: () => Promise<void> | void;
+  /** Preview listing에서 파일 클릭 시 호출 (file path = 워크스페이스 상대 경로) */
+  onPreviewFileClick: (relativePath: string) => Promise<void> | void;
 }
 
 export class BlueprintWebviewPanel {
@@ -54,6 +56,7 @@ export class BlueprintWebviewPanel {
   private specArtifacts: SpecArtifacts = { product: null, design: null, architecture: null };
   private specFocus?: 'product' | 'design' | 'architecture';
   private preview: PreviewContent = { html: null, sourcePath: null, pushedAt: null };
+  private designFiles: PreviewDesignFile[] = [];
   private errorHistoryMd: string | null = null;
 
   private disposables: vscode.Disposable[] = [];
@@ -124,6 +127,11 @@ export class BlueprintWebviewPanel {
     if (this.panel && this.activeTab === 'spec') this.refresh();
   }
 
+  setDesignFiles(files: PreviewDesignFile[]): void {
+    this.designFiles = files;
+    if (this.panel && this.activeTab === 'preview') this.refresh();
+  }
+
   setErrorHistory(md: string | null): void {
     this.errorHistoryMd = md;
     if (this.panel && this.activeTab === 'errors') this.refresh();
@@ -137,11 +145,15 @@ export class BlueprintWebviewPanel {
     this.show();
   }
 
-  /** 채팅 명령으로 Preview push */
-  setPreviewContent(html: string, sourcePath: string): void {
+  /** 채팅 명령으로 Preview push 또는 사이드 클릭으로 표시 */
+  setPreviewContent(html: string, sourcePath: string, autoSwitch = true): void {
     this.preview = { html, sourcePath, pushedAt: new Date() };
-    this.activeTab = 'preview';
-    this.show();
+    if (autoSwitch) {
+      this.activeTab = 'preview';
+      this.show();
+    } else if (this.panel && this.activeTab === 'preview') {
+      this.refresh();
+    }
   }
 
   switchTab(tab: TabId): void {
@@ -166,6 +178,8 @@ export class BlueprintWebviewPanel {
       }
     } else if (msg.type === 'action' && msg.action === 'create-error-history') {
       await this.callbacks.onCreateErrorHistory();
+    } else if (msg.type === 'preview-file-click' && typeof msg.path === 'string') {
+      await this.callbacks.onPreviewFileClick(msg.path);
     }
   }
 
@@ -213,6 +227,12 @@ export class BlueprintWebviewPanel {
     document.querySelectorAll('[data-action]').forEach(el => {
       el.addEventListener('click', () => {
         vscode.postMessage({ type: 'action', action: el.getAttribute('data-action') });
+      });
+    });
+
+    document.querySelectorAll('[data-preview-file]').forEach(el => {
+      el.addEventListener('click', () => {
+        vscode.postMessage({ type: 'preview-file-click', path: el.getAttribute('data-preview-file') });
       });
     });
 
@@ -275,7 +295,7 @@ export class BlueprintWebviewPanel {
       case 'spec':
         return renderSpecPage(this.specArtifacts, this.specFocus);
       case 'preview':
-        return renderPreviewPage(this.preview);
+        return renderPreviewPage(this.preview, this.designFiles);
       case 'errors':
         return renderErrorsPage(this.errorHistoryMd);
     }
