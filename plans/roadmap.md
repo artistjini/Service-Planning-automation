@@ -37,22 +37,23 @@
 - [x] 단위 5: extension.ts orchestrator
 - [x] 단위 6: 빌드 + .vsix 설치 검증
 - [x] 단위 7: 사이드바 디자인 iteration (Notion + 글래스, 6섹션 재구조)
-- [ ] **단위 8: 가운데 webview 4페이지 멀티탭** ← 현재
+- [x] **단위 8: 가운데 webview 4페이지 멀티탭** (2026-05-24)
   - [x] 8a: roadmap.md + 블루프린트 스킬 템플릿 + DESIGN UI Composition
-  - [ ] 8b: panel.ts 멀티탭 재작성 (탭 라우팅)
-  - [ ] 8c: Plan 페이지 (roadmap.md + state.md 현재 위치)
-  - [ ] 8d: Spec 페이지 (PRODUCT/DESIGN/ARCH 풀-너비 + 디자인 시각화)
-  - [ ] 8e: Preview 페이지 (Claude push HTML)
-  - [ ] 8f: Errors 페이지 (error.history.md 렌더 / 없으면 생성)
-  - [ ] 8g: styles.css 4페이지 + 탭 시스템
-  - [ ] 8h: extension.ts blueprint.preview 명령 추가
-  - [ ] 8i: 빌드 + .vsix 재설치
-- [ ] 단위 9: V0+ 최종 동작 검증 (4페이지 다 동작, 디자인 일관성)
+  - [x] 8b: panel.ts 멀티탭 재작성 (탭 라우팅)
+  - [x] 8c: Plan 페이지 (roadmap.md + state.md 현재 위치)
+  - [x] 8d: Spec 페이지 (PRODUCT/DESIGN/ARCH 풀-너비 + 색 swatch + ## 카드 가공)
+  - [x] 8e: Preview 페이지 (Claude push HTML 명령)
+  - [x] 8f: Errors 페이지 (error.history.md 렌더 / 없으면 생성)
+  - [x] 8g: styles.css 4페이지 + 탭 시스템 + 글래스 카드
+  - [x] 8h: extension.ts blueprint.preview 명령 + onCreateErrorHistory
+  - [x] 8i: 빌드 + .vsix 재설치 + 사이드바/webview 동작 검증
+- [x] 단위 9: 디자인 iteration — Notion + 글래스, 색 swatch, NON-GOALS grid, 디자인 시안 그리드, 이미지 placeholder (2026-05-24)
 
 ## Phase 4 — CHECKPOINT
-- [ ] /code-review 실행
-- [ ] ADR 누적 검토 (필요 시 ADR-006 박음)
-- [ ] checkpoint-2026-XX-XX.md 작성
+- [x] /code-review 수동 실행 — unused 파일 2개 삭제 (tree-data-provider, renderer)
+- [x] ADR-006~008 작성 (멀티탭 webview, 사이드바 webview 전환, 자동 가공)
+- [x] checkpoint-2026-05-24.md 작성
+- [x] ARCHITECTURE.md ADR log 갱신
 
 ## Phase 5 — SHIP
 - [ ] /qa (V0+ 동작 검증)

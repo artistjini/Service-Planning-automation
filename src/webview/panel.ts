@@ -70,7 +70,8 @@ export class BlueprintWebviewPanel {
     if (initialTab) this.activeTab = initialTab;
 
     if (this.panel) {
-      this.panel.reveal(vscode.ViewColumn.Beside, true);
+      // 이미 떠있으면 사용자가 둔 위치 그대로 reveal (드래그로 옮긴 위치 유지)
+      this.panel.reveal(undefined, true);
       this.refresh();
       return;
     }
@@ -78,6 +79,8 @@ export class BlueprintWebviewPanel {
     this.panel = vscode.window.createWebviewPanel(
       VIEW_TYPE,
       PANEL_TITLE,
+      // Antigravity 채팅이 첫 Editor Group을 차지하는 환경 대응 — Beside로 두면
+      // 활성 에디터 옆에 split됨. 사용자가 드래그로 위치 자유롭게 조정 가능.
       { viewColumn: vscode.ViewColumn.Beside, preserveFocus: true },
       {
         enableScripts: true,
@@ -211,6 +214,13 @@ export class BlueprintWebviewPanel {
       el.addEventListener('click', () => {
         vscode.postMessage({ type: 'action', action: el.getAttribute('data-action') });
       });
+    });
+
+    // Design gallery — img 깨지면 placeholder만 보이게 (img 자체 hide)
+    document.querySelectorAll('.gallery-image[data-fallback="show"]').forEach(img => {
+      img.addEventListener('error', () => img.classList.add('hidden'));
+      // 이미 로드 실패한 경우도 처리 (cache 등)
+      if (img.complete && img.naturalWidth === 0) img.classList.add('hidden');
     });
 
     // Spec 페이지 — anchor nav 클릭 시 탭처럼 섹션 전환 (스크롤 X)

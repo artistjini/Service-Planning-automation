@@ -146,6 +146,13 @@ async function handleFileChange(event: FileChangeEvent): Promise<void> {
     case RELATIVE_PATHS.errorHistory:
       await reloadErrorHistory();
       break;
+    default:
+      // docs/design/screenshots/*.png 등 변경 시 DESIGN 페이지 다시 그림
+      // (DESIGN.md 자체는 안 바뀌지만 webview에서 image 다시 로드)
+      if (rel.startsWith('docs/design/')) {
+        await reloadArtifact('design');
+      }
+      break;
   }
 
   // 사이드바는 모든 변경마다 refresh (recent changes 갱신)

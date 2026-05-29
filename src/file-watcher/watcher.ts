@@ -21,6 +21,7 @@ const PATTERNS = [
   '.blueprint/state.md',
   'docs/**/*.md',
   'docs/design/**/*.html',
+  'docs/design/screenshots/**/*.{png,jpg,jpeg,gif,webp,svg}',
   'plans/**/*.md',
   // Recent changes 트래킹용 — 모든 소스 파일
   'src/**/*',

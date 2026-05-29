@@ -177,8 +177,11 @@ V0~V3은 `resume` 모드만 실제 동작. 나머지 두 모드는 안내 메시
 | 003 | 2026-05-22 | 단방향 데이터 (.md → UI). UI에서 .md 수정 안 함 |
 | 004 | 2026-05-22 | 이벤트 버스 기반 도메인 간 통신, 직접 import 금지 |
 | 005 | 2026-05-22 | Generic mode 분리 = V4 이후 별도 결정. V0~V3은 blueprint 전용 |
+| 006 | 2026-05-22 | 가운데 webview 4페이지 멀티탭 (Plan/Spec/Preview/Errors) |
+| 007 | 2026-05-22 | 사이드바 TreeView → WebviewViewProvider 전환 (디자인 자유) |
+| 008 | 2026-05-24 | 마크다운 자동 가공 파이프라인 (swatch/NON-GOALS/디자인 시안/카드) |
 
-세부는 `docs/adr/ADR-{NNN}.md` (현재 다 한 줄 — 필요 시 풀 ADR 작성)
+세부는 `docs/adr/ADR-{NNN}.md` 풀 파일 (006~008은 별도 파일 작성됨)
 
 ## V0 진입 체크리스트
 

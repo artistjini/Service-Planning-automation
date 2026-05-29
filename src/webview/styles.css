@@ -898,25 +898,115 @@ html, body {
   margin: 24px 0;
 }
 
-/* 이미지 시안 — DESIGN.md의 디자인 시안 섹션 등 */
+/* 일반 이미지 (갤러리 외) */
 .ds-card .markdown-body img,
 .markdown-body img {
   display: block;
   max-width: 100%;
   height: auto;
   border-radius: 14px;
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  margin: 16px 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+ * Design gallery — DESIGN.md 의 ## 디자인 시안 자동 변환
+ * Airbnb 풍 grid + placeholder (시안 없을 때)
+ * ═══════════════════════════════════════════════════════════════ */
+
+.design-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  margin: 24px 0 16px 0;
+}
+
+.gallery-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.06);
   box-shadow:
     0 1px 2px rgba(0, 0, 0, 0.04),
-    0 6px 18px rgba(0, 0, 0, 0.08),
-    0 16px 36px rgba(0, 0, 0, 0.05);
-  margin: 16px 0;
-  background: linear-gradient(180deg, #f5f5f7 0%, #ececef 100%);
+    0 4px 12px rgba(0, 0, 0, 0.06),
+    0 16px 32px rgba(0, 0, 0, 0.04);
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.gallery-card:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.05),
+    0 8px 20px rgba(0, 0, 0, 0.08),
+    0 24px 48px rgba(0, 0, 0, 0.06);
+}
+
+.gallery-image-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f5f5f7 0%, #ececef 100%);
+}
+
+.gallery-image {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+  border: none;
+  /* 깨졌을 때 alt text 숨김 (placeholder가 보이게) */
+  font-size: 0;
+  color: transparent;
+}
+
+.gallery-image.hidden { display: none; }
+
+.gallery-placeholder {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 24px;
+  text-align: center;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(0, 122, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 70% 70%, rgba(255, 45, 85, 0.08) 0%, transparent 50%),
+    linear-gradient(135deg, #f5f5f7 0%, #ececef 100%);
+}
+
+.gallery-placeholder-label {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1d1d1f;
+  letter-spacing: -0.01em;
+}
+
+.gallery-placeholder-sub {
   font-size: 12px;
+  font-weight: 500;
   color: #6e6e73;
   font-style: italic;
-  /* 깨진 이미지일 때 alt text + 옅은 그레이 background로 placeholder 효과 */
-  min-height: 48px;
+}
+
+.gallery-label {
+  padding: 14px 18px;
+  background: #ffffff;
+  border-top: 1px solid rgba(0, 0, 0, 0.04);
+  font-size: 14px;
+  font-weight: 700;
+  color: #1d1d1f;
+  letter-spacing: -0.01em;
 }
 
 /* ═══════════════════════════════════════════════════════════════

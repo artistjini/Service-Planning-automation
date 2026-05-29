@@ -15,8 +15,65 @@ export function renderMarkdown(markdown: string): string {
   let html = md.render(markdown);
   html = injectColorSwatches(html);
   html = transformNonGoals(html);
+  html = transformDesignGallery(html);  // ## 디자인 시안 → 카드 그리드
   html = transformHeadingsToCards(html);
   return html;
+}
+
+/**
+ * "## 디자인 시안" 헤딩 다음의 (h3 + img) 쌍들을 자동으로 카드 그리드로 변환.
+ *
+ * 원본:
+ *   <h2>디자인 시안 ...</h2>
+ *   ...
+ *   <h3>Sidebar</h3>
+ *   <p><img src="..." alt="..."></p>
+ *   <h3>Webview Plan</h3>
+ *   <p><img src="..." alt="..."></p>
+ *
+ * 변환 후:
+ *   <h2>디자인 시안 ...</h2>
+ *   ...
+ *   <div class="design-gallery">
+ *     <div class="gallery-card">
+ *       <div class="gallery-image-wrap">
+ *         <img src="..." alt="...">
+ *         <div class="gallery-placeholder">Sidebar — 시안 추가 예정</div>
+ *       </div>
+ *       <div class="gallery-label">Sidebar</div>
+ *     </div>
+ *     ...
+ *   </div>
+ *
+ * placeholder는 img 뒤에 z-index 깔림 — img 깨지면 (또는 onerror) 보임.
+ */
+function transformDesignGallery(html: string): string {
+  // h2 "디자인 시안" 또는 "Design Gallery" 다음부터 다음 h2 직전까지의 콘텐츠 추출
+  const re = /(<h2[^>]*>\s*디자인\s*시안[\s\S]*?<\/h2>)([\s\S]*?)(?=<h2|$)/i;
+  return html.replace(re, (match, heading, body) => {
+    // body 안에서 (h3 + p>img) 쌍들 추출
+    const cardRe = /<h3[^>]*>([\s\S]*?)<\/h3>\s*<p>\s*<img\s+([^>]*?)>\s*<\/p>/g;
+    const cards: string[] = [];
+    let m: RegExpExecArray | null;
+    while ((m = cardRe.exec(body)) !== null) {
+      const label = stripTags(m[1]).trim();
+      const imgAttrs = m[2];
+      const altMatch = imgAttrs.match(/alt="([^"]*)"/);
+      const alt = altMatch ? altMatch[1] : label;
+      cards.push(`<div class="gallery-card">
+  <div class="gallery-image-wrap">
+    <div class="gallery-placeholder">
+      <div class="gallery-placeholder-label">${escapeHtml(label)}</div>
+      <div class="gallery-placeholder-sub">시안 추가 예정</div>
+    </div>
+    <img ${imgAttrs} class="gallery-image" data-fallback="show">
+  </div>
+  <div class="gallery-label">${escapeHtml(label)}</div>
+</div>`);
+    }
+    if (cards.length === 0) return match;
+    return `${heading}\n<div class="design-gallery">${cards.join('\n')}</div>`;
+  });
 }
 
 /**
