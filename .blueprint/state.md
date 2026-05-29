@@ -6,11 +6,12 @@
 - [x] Phase 2: ARCHITECTURE (2026-05-22)
 - [x] Phase 3: IMPLEMENT (2026-05-24)
 - [x] Phase 4: CHECKPOINT (1 run, 2026-05-24)
-- [ ] Phase 5: SHIP ← 진입 가능
-- [ ] Phase 6: POST-SHIP
+- [x] Phase 5: SHIP (v0.1.0, 2026-05-24)
+- [x] Phase 6: POST-SHIP (2026-05-24)
 
 ## Next action
-Phase 5 SHIP — v0.1.0 정식 버전 태깅 + CHANGELOG.md 작성 + git tag + GitHub Release (.vsix 첨부).
+V0+ 전체 phase 완료. 1주 dogfooding 후 V1 결정. 
+GitHub Release 페이지에서 v0.1.0 release 만들기 (수동, 선택): https://github.com/snu9026-Chris/SERVICE-PLANNING/releases/new?tag=v0.1.0
 
 ## Decisions log
 - 2026-05-22: 산출물 = Antigravity extension, 시각화·알림 레이어 (단방향 .md → UI, AI 호출 X)
@@ -22,7 +23,7 @@ Phase 5 SHIP — v0.1.0 정식 버전 태깅 + CHANGELOG.md 작성 + git tag + G
 - 2026-05-24: Phase 4 checkpoint 1회 완료 — checkpoint-2026-05-24.md
 
 ## Counters
-- ships_since_checkpoint: 0
+- ships_since_checkpoint: 1
 - last_check: 2026-05-24
 - checkpoint_count: 1
 - plans_without_arch_read: 0

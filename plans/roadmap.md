@@ -55,14 +55,18 @@
 - [x] checkpoint-2026-05-24.md 작성
 - [x] ARCHITECTURE.md ADR log 갱신
 
-## Phase 5 — SHIP
-- [ ] /qa (V0+ 동작 검증)
-- [ ] /review (diff)
-- [ ] /ship — 최종 .vsix 패키지 (v0.1.0)
-- [ ] CHANGELOG.md 작성
+## Phase 5 — SHIP (2026-05-24)
+- [x] CHANGELOG.md 작성
+- [x] package.json v0.0.1 → v0.1.0
+- [x] /ship 수동 — 최종 .vsix 빌드 (blueprint-dashboard-0.1.0.vsix, 91KB)
+- [x] git commit + push
+- [x] git tag v0.1.0 + push tag
+- [ ] (선택) GitHub Release 페이지 만들기 — https://github.com/snu9026-Chris/SERVICE-PLANNING/releases/new?tag=v0.1.0
 
-## Phase 6 — POST-SHIP
-- [ ] /document-release (README, ARCHITECTURE.md 동기화)
-- [ ] /retro (회고: V0+에서 배운 것, V1에서 잡을 마찰점)
-- [ ] dogfooding 1주
-- [ ] V1 계획 (디자인 시각화 자동 hex/폰트 추출, mermaid 다이어그램 등)
+## Phase 6 — POST-SHIP (2026-05-24 — 일부 Phase 5와 동시)
+- [x] README.md v0.1.0 반영 (설치/사용/dev 흐름)
+- [x] state.md 전체 Progress 체크
+- [x] roadmap.md 전체 체크
+- [ ] 1주 dogfooding (실제 작업에 사용)
+- [ ] V1 우선순위 결정 (V1 후보는 checkpoint-2026-05-24.md "Next focus" 참조)
+- [ ] /retro — 다음 정식 checkpoint 또는 V1 시작 시
