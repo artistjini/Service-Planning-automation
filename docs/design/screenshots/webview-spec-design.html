@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><title>Spec DESIGN</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;font-weight:500;color:#1d1d1f;background:radial-gradient(circle at 12% 8%,rgba(0,122,255,.18) 0%,transparent 35%),radial-gradient(circle at 88% 75%,rgba(175,82,222,.16) 0%,transparent 35%),linear-gradient(180deg,#f5f5f7 0%,#ececef 100%);min-height:100vh}
+.dashboard{max-width:1100px;margin:0 auto;padding:32px 48px 64px}
+.tabs{display:inline-flex;gap:6px;padding:6px;background:rgba(255,255,255,.7);backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,.6);border-radius:16px;margin-bottom:32px}
+.tab{padding:8px 18px;border:none;background:transparent;border-radius:12px;font-family:inherit;font-size:14px;font-weight:700;color:#6e6e73;cursor:pointer}.tab.active{background:#1d1d1f;color:#fff}
+.eyebrow{font-size:13px;font-weight:800;letter-spacing:.14em;color:#0066cc;margin-bottom:10px}
+.title{font-size:42px;font-weight:800;letter-spacing:-.025em;margin:0 0 28px 0}
+.exp{display:grid;grid-template-columns:280px 1fr;min-height:640px;background:rgba(255,255,255,.55);backdrop-filter:blur(28px) saturate(170%);border-radius:18px;border:1px solid rgba(255,255,255,.55);box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 8px 24px rgba(0,0,0,.07);overflow:hidden}
+.tree{background:rgba(245,245,247,.6);border-right:1px solid rgba(0,0,0,.06);padding:16px 6px;font-size:13px}
+.tree-head{font-size:11px;font-weight:800;letter-spacing:.14em;color:#6e6e73;padding:0 12px 10px;border-bottom:1px solid rgba(0,0,0,.05);margin-bottom:8px}
+.row{display:flex;align-items:center;gap:7px;padding:7px 10px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer}.row.active{background:rgba(0,102,204,.12);color:#0066cc;font-weight:700}
+.chevron{width:12px;font-size:9px;color:#6e6e73}.chevron.open{transform:rotate(90deg)}
+.icon{width:16px;text-align:center}.label{flex:1}.meta{font-size:10px;color:#6e6e73;font-family:ui-monospace,monospace;font-weight:600}
+.sub{padding-left:18px}
+.content{padding:28px 36px 40px;background:rgba(255,255,255,.5)}
+.bc{font-size:12px;color:#6e6e73;font-family:ui-monospace,monospace;font-weight:600;margin-bottom:22px}.bc-sep{margin:0 7px;color:rgba(0,0,0,.25)}.bc-leaf{color:#0066cc;font-weight:700}
+.cb h2{font-size:32px;font-weight:800;letter-spacing:-.02em;margin:0 0 22px 0}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;padding:11px 14px;background:rgba(0,0,0,.04);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:#424245;border-bottom:2px solid rgba(0,0,0,.1)}
+td{padding:11px 14px;border-bottom:1px solid rgba(0,0,0,.06);vertical-align:middle}
+.token{display:inline-flex;align-items:center;gap:7px;vertical-align:-3px}
+.swatch{display:inline-block;width:16px;height:16px;border-radius:5px;border:1px solid rgba(0,0,0,.15)}
+code{font-family:ui-monospace,monospace;background:rgba(0,0,0,.06);padding:2px 7px;border-radius:5px;font-size:13px;color:#d70015;font-weight:600}
+</style></head><body>
+<div class="dashboard">
+<div class="tabs"><button class="tab">Plan</button><button class="tab active">Spec</button><button class="tab">Preview</button><button class="tab">Errors</button></div>
+<div class="eyebrow">SPEC · EXPLORER</div>
+<h1 class="title">기획 명세 — 폴더 탐색</h1>
+<div class="exp">
+<aside class="tree"><div class="tree-head">DOCS</div>
+<div class="row" style="font-weight:700"><span class="chevron">▶</span><span class="icon">📁</span><span class="label">PRODUCT.md</span><span class="meta">7</span></div>
+<div class="row" style="font-weight:700"><span class="chevron open">▶</span><span class="icon">📁</span><span class="label">DESIGN.md</span><span class="meta">7</span></div>
+<div class="sub">
+<div class="row"><span class="chevron"></span><span class="icon">📄</span><span class="label">디자인 철학</span></div>
+<div class="row active"><span class="chevron"></span><span class="icon">🎨</span><span class="label">색</span></div>
+<div class="row"><span class="chevron"></span><span class="icon">📄</span><span class="label">입체감 룰</span></div>
+<div class="row"><span class="chevron"></span><span class="icon">🔤</span><span class="label">타이포그래피</span></div>
+<div class="row"><span class="chevron"></span><span class="icon">📄</span><span class="label">UI Composition</span></div>
+<div class="row"><span class="chevron"></span><span class="icon">🖼️</span><span class="label">디자인 시안</span></div></div>
+<div class="row" style="font-weight:700"><span class="chevron">▶</span><span class="icon">📁</span><span class="label">ARCHITECTURE.md</span><span class="meta">8</span></div>
+<div class="row" style="font-weight:700"><span class="chevron">▶</span><span class="icon">📁</span><span class="label">adr/</span><span class="meta">10</span></div>
+</aside>
+<main class="content">
+<div class="bc"><span>docs/</span><span class="bc-sep">›</span><span>DESIGN.md</span><span class="bc-sep">›</span><span class="bc-leaf">색</span></div>
+<div class="cb"><h2>색 (V0+ 확정)</h2>
+<table>
+<thead><tr><th>용도</th><th>값</th><th>비고</th></tr></thead>
+<tbody>
+<tr><td>페이지 배경</td><td><span class="token"><span class="swatch" style="background:#f5f5f7"></span><code>#f5f5f7</code></span></td><td>Apple 옅은 그레이</td></tr>
+<tr><td>카드 배경</td><td><span class="token"><span class="swatch" style="background:rgba(255,255,255,0.65)"></span><code>rgba(255,255,255,0.65)</code></span></td><td>반투명 — 글래스</td></tr>
+<tr><td>텍스트 메인</td><td><span class="token"><span class="swatch" style="background:#1d1d1f"></span><code>#1d1d1f</code></span></td><td>Apple 다크</td></tr>
+<tr><td>Accent</td><td><span class="token"><span class="swatch" style="background:#0066cc"></span><code>#0066cc</code></span></td><td>Apple blue</td></tr>
+<tr><td>Trigger 빨강</td><td><span class="token"><span class="swatch" style="background:#d70015"></span><code>#d70015</code></span></td><td>Apple red</td></tr>
+<tr><td>Done 초록</td><td><span class="token"><span class="swatch" style="background:#34c759"></span><code>#34c759</code></span></td><td>Apple green</td></tr>
+</tbody></table></div></main></div></div></body></html>

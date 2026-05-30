@@ -4,6 +4,26 @@
 
 형식: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](https://semver.org/).
 
+## [0.9.0] — 2026-05-30
+
+### Added
+- **6개 디자인 시안 HTML 완성** (총 7개 — sidebar 포함):
+  - `webview-plan.html` — Plan 페이지 (roadmap + progress bar)
+  - `webview-spec-product.html` — Spec/PRODUCT (NON-GOALS 빨간 ✗ grid)
+  - `webview-spec-design.html` — Spec/DESIGN (색 swatch 표)
+  - `webview-spec-architecture.html` — Spec/ARCHITECTURE (도메인 맵 카드)
+  - `webview-preview.html` — Preview (큰 카드 그리드)
+  - `webview-errors.html` — Errors (에러 히스토리)
+- DESIGN.md `## 디자인 시안` 섹션: img placeholder → .html 링크 list로 교체. 진짜 미리보기는 Spec → `design/screenshots/` 폴더 큰 카드에서.
+
+### Changed (`/blueprint` 스킬)
+- Phase 4 REVIEW **자동 호출 룰** 박음:
+  - SHIP 진입 시도 시 자동 차단 + REVIEW 먼저
+  - git diff 100줄+ 변경 감지 시 알림
+  - 결과 `docs/reviews/{YYYY-MM-DD}-code-review.md` 저장
+  - 영향있는 결정은 ADR-{NNN} 새로 작성
+- **Hard gate**: SHIP 진입 시 `docs/reviews/` 최근 30일 내 review 없으면 차단.
+
 ## [0.8.0] — 2026-05-30
 
 ### Removed (사이드바 정보 위계 정리)

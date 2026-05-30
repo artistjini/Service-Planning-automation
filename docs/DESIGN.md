@@ -111,27 +111,15 @@ V1 이후: 폰트 family 자동 샘플 렌더, mermaid 다이어그램, `docs/de
 >
 > 시안이 없으면 (파일 없을 때) 그냥 빈 자리. 캡처 후 추가하면 webview에 자동 렌더링.
 
-### Sidebar (왼쪽 패널, 항상 보임)
-실제 동작하는 HTML 시안: [design/screenshots/sidebar.html](design/screenshots/sidebar.html)
-(Spec 페이지의 `design/screenshots/` 폴더에서 클릭으로 미리보기 가능)
+실제 동작하는 HTML 시안 7개. **가운데 webview의 Spec → `design/screenshots/` 폴더에서 큰 카드로 미리보기**.
 
-### Center webview — Plan 탭
-![Plan 페이지 — roadmap + 현재 위치 마킹](design/screenshots/webview-plan.png)
-
-### Center webview — Spec 탭 (PRODUCT)
-![Spec/PRODUCT — 카드형 가공](design/screenshots/webview-spec-product.png)
-
-### Center webview — Spec 탭 (DESIGN)
-![Spec/DESIGN — 색 swatch 자동 시각화](design/screenshots/webview-spec-design.png)
-
-### Center webview — Spec 탭 (ARCHITECTURE)
-![Spec/ARCHITECTURE — 도메인 맵](design/screenshots/webview-spec-architecture.png)
-
-### Center webview — Preview 탭
-![Preview — Claude push한 디자인 HTML](design/screenshots/webview-preview.png)
-
-### Center webview — Errors 탭
-![Errors — error.history.md 렌더](design/screenshots/webview-errors.png)
+- [Sidebar — 왼쪽 패널 (Hero + Phases + Current focus + Recent)](design/screenshots/sidebar.html)
+- [Center webview — Plan (roadmap + 현재 phase 위치)](design/screenshots/webview-plan.html)
+- [Center webview — Spec / PRODUCT (NON-GOALS 빨간 ✗ grid)](design/screenshots/webview-spec-product.html)
+- [Center webview — Spec / DESIGN (색 swatch 자동 시각화)](design/screenshots/webview-spec-design.html)
+- [Center webview — Spec / ARCHITECTURE (도메인 맵 카드)](design/screenshots/webview-spec-architecture.html)
+- [Center webview — Preview (디자인 시안 큰 카드 그리드)](design/screenshots/webview-preview.html)
+- [Center webview — Errors (error.history.md 렌더)](design/screenshots/webview-errors.html)
 
 ## User flow (핵심)
 

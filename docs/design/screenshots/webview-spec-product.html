@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="ko"><head><meta charset="UTF-8"><title>Spec PRODUCT</title>
+<style>
+*{box-sizing:border-box}html,body{margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;font-weight:500;color:#1d1d1f;background:radial-gradient(circle at 12% 8%,rgba(0,122,255,.18) 0%,transparent 35%),radial-gradient(circle at 88% 18%,rgba(255,45,85,.16) 0%,transparent 35%),linear-gradient(180deg,#f5f5f7 0%,#ececef 100%);min-height:100vh}
+.dashboard{max-width:1100px;margin:0 auto;padding:32px 48px 64px}
+.tabs{display:inline-flex;gap:6px;padding:6px;background:rgba(255,255,255,.7);backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,.6);border-radius:16px;margin-bottom:32px}
+.tab{padding:8px 18px;border:none;background:transparent;border-radius:12px;font-family:inherit;font-size:14px;font-weight:700;color:#6e6e73;cursor:pointer}.tab.active{background:#1d1d1f;color:#fff}
+.eyebrow{font-size:13px;font-weight:800;letter-spacing:.14em;color:#0066cc;margin-bottom:10px}
+.title{font-size:42px;font-weight:800;letter-spacing:-.025em;margin:0 0 28px 0}
+.exp{display:grid;grid-template-columns:280px 1fr;min-height:640px;background:rgba(255,255,255,.55);backdrop-filter:blur(28px) saturate(170%);border-radius:18px;border:1px solid rgba(255,255,255,.55);box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 8px 24px rgba(0,0,0,.07);overflow:hidden}
+.tree{background:rgba(245,245,247,.6);border-right:1px solid rgba(0,0,0,.06);padding:16px 6px;font-size:13px}
+.tree-head{font-size:11px;font-weight:800;letter-spacing:.14em;color:#6e6e73;padding:0 12px 10px;border-bottom:1px solid rgba(0,0,0,.05);margin-bottom:8px}
+.row{display:flex;align-items:center;gap:7px;padding:7px 10px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer}.row:hover{background:rgba(0,0,0,.04)}.row.active{background:rgba(0,102,204,.12);color:#0066cc;font-weight:700}
+.chevron{width:12px;font-size:9px;color:#6e6e73}.chevron.open{transform:rotate(90deg)}
+.icon{width:16px;text-align:center}.label{flex:1}
+.meta{font-size:10px;color:#6e6e73;font-family:ui-monospace,monospace;font-weight:600}
+.sub{padding-left:18px}
+.content{padding:28px 36px 40px;background:rgba(255,255,255,.5)}
+.bc{font-size:12px;color:#6e6e73;font-family:ui-monospace,monospace;font-weight:600;margin-bottom:22px}.bc-sep{margin:0 7px;color:rgba(0,0,0,.25)}.bc-leaf{color:#0066cc;font-weight:700}
+.cb{font-size:15px;line-height:1.7}.cb h2{font-size:32px;font-weight:800;letter-spacing:-.02em;margin:0 0 22px 0}.cb blockquote{margin:0 0 16px 0;padding:13px 18px;border-left:4px solid #0066cc;background:rgba(0,102,204,.06);border-radius:0 10px 10px 0;color:#424245;font-style:italic}
+.ng-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin:16px 0}
+.ng-card{display:flex;gap:12px;padding:16px 18px;background:linear-gradient(180deg,rgba(255,245,246,.85),rgba(255,235,237,.85));border:1px solid rgba(215,0,21,.25);border-radius:12px;font-size:14px;font-weight:500;line-height:1.55;align-items:flex-start}
+.ng-x{color:#d70015;font-weight:800;font-size:18px;flex-shrink:0}
+</style></head><body>
+<div class="dashboard">
+<div class="tabs"><button class="tab">Plan</button><button class="tab active">Spec</button><button class="tab">Preview</button><button class="tab">Errors</button></div>
+<div class="eyebrow">SPEC · EXPLORER</div>
+<h1 class="title">기획 명세 — 폴더 탐색</h1>
+<div class="exp">
+<aside class="tree"><div class="tree-head">DOCS</div>
+<div class="row" style="font-weight:700"><span class="chevron open">▶</span><span class="icon">📁</span><span class="label">PRODUCT.md</span><span class="meta">7</span></div>
+<div class="sub">
+<div class="row"><span class="chevron"></span><span class="icon">📄</span><span class="label">One-liner</span></div>
+<div class="row"><span class="chevron"></span><span class="icon">📄</span><span class="label">Target user</span></div>
+<div class="row"><span class="chevron"></span><span class="icon">📄</span><span class="label">Jobs-to-be-done</span></div>
+<div class="row active"><span class="chevron"></span><span class="icon">🚫</span><span class="label">NON-GOALS</span><span class="meta">7</span></div>
+<div class="row"><span class="chevron"></span><span class="icon">📄</span><span class="label">Success metric</span></div>
+<div class="row"><span class="chevron"></span><span class="icon">📄</span><span class="label">Narrowest wedge</span></div>
+<div class="row"><span class="chevron"></span><span class="icon">📄</span><span class="label">Versions</span></div></div>
+<div class="row" style="font-weight:700"><span class="chevron">▶</span><span class="icon">📁</span><span class="label">DESIGN.md</span><span class="meta">7</span></div>
+<div class="row" style="font-weight:700"><span class="chevron">▶</span><span class="icon">📁</span><span class="label">ARCHITECTURE.md</span><span class="meta">8</span></div>
+<div class="row" style="font-weight:700"><span class="chevron">▶</span><span class="icon">📁</span><span class="label">adr/</span><span class="meta">10</span></div>
+<div class="row" style="font-weight:700"><span class="chevron">▶</span><span class="icon">📁</span><span class="label">design/screenshots/</span><span class="meta">7</span></div>
+</aside>
+<main class="content">
+<div class="bc"><span>docs/</span><span class="bc-sep">›</span><span>PRODUCT.md</span><span class="bc-sep">›</span><span class="bc-leaf">NON-GOALS</span></div>
+<div class="cb">
+<h2>NON-GOALS</h2>
+<blockquote>이게 비면 Claude가 자체 판단으로 기능 추가하기 시작한다.</blockquote>
+<div class="ng-grid">
+<div class="ng-card"><span class="ng-x">✗</span><span><strong>AI 호출을 직접 하지 않는다.</strong></span></div>
+<div class="ng-card"><span class="ng-x">✗</span><span>/blueprint 자체를 대체하지 않는다.</span></div>
+<div class="ng-card"><span class="ng-x">✗</span><span>임의 마크다운 generic 프리뷰 안 함.</span></div>
+<div class="ng-card"><span class="ng-x">✗</span><span>사용자 모드 선택 prompt 없음.</span></div>
+<div class="ng-card"><span class="ng-x">✗</span><span>Antigravity 외 IDE 미지원.</span></div>
+<div class="ng-card"><span class="ng-x">✗</span><span>팀 협업 기능 없음. 1인용.</span></div>
+<div class="ng-card"><span class="ng-x">✗</span><span>분석/통계 대시보드 없음.</span></div>
+</div></div></main></div></div></body></html>
