@@ -2,136 +2,83 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>Sidebar 시안</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Sidebar 시안 — 안 A</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
 <style>
-* { box-sizing: border-box; }
-html, body {
-  margin: 0; padding: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Pretendard", system-ui, sans-serif;
-  font-size: 13px; font-weight: 500;
-  color: #1d1d1f; line-height: 1.45;
-  -webkit-font-smoothing: antialiased;
-  background:
-    radial-gradient(circle at 15% 10%, rgba(0, 122, 255, 0.32) 0%, transparent 35%),
-    radial-gradient(circle at 90% 25%, rgba(255, 45, 85, 0.26) 0%, transparent 35%),
-    radial-gradient(circle at 80% 70%, rgba(175, 82, 222, 0.26) 0%, transparent 35%),
-    radial-gradient(circle at 20% 90%, rgba(52, 199, 89, 0.26) 0%, transparent 35%),
-    linear-gradient(180deg, #f5f5f7 0%, #ececef 100%);
-  background-attachment: fixed;
-  min-height: 100vh;
+:root{
+  --bg:#f2f2f7;--bg2:#e9e9ee;--card:#fff;
+  --sep:rgba(60,60,67,.10);--sep2:rgba(60,60,67,.06);
+  --t1:#1c1c1e;--t2:#8e8e93;--t3:#aeaeb2;
+  --blue:#007aff;--green:#34c759;--red:#ff3b30;--orange:#ff9500;
+  --font:"Pretendard Variable",-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;
 }
-.shell { max-width: 280px; padding: 16px 12px 32px; display: flex; flex-direction: column; gap: 14px; }
-
-.hero {
-  position: relative;
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(30px) saturate(180%);
-  -webkit-backdrop-filter: blur(30px) saturate(180%);
-  border-radius: 18px; padding: 20px 18px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.95),
-    0 1px 2px rgba(0,0,0,0.06),
-    0 8px 24px rgba(0,0,0,0.1),
-    0 32px 64px rgba(0,0,0,0.08);
-  isolation: isolate;
-}
-.hero::before {
-  content: ""; position: absolute; inset: 0; border-radius: 18px;
-  background: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, transparent 45%);
-  pointer-events: none; z-index: 1;
-}
-.hero > * { position: relative; z-index: 2; }
-
-.hero-folder { display: flex; align-items: flex-start; gap: 6px; font-size: 12px; font-weight: 600; line-height: 1.45; word-break: break-all; }
-.hero-folder-path { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 11px; color: #424245; word-break: break-all; }
-.hero-divider { height: 1px; background: rgba(0,0,0,0.08); margin: 14px 0; }
-.hero-phase-id { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; color: #0066cc; margin-bottom: 2px; }
-.hero-title { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 16px 0; line-height: 1.05; }
-.progress-bar {
-  position: relative; height: 10px;
-  background: rgba(0,0,0,0.08);
-  border-radius: 999px; overflow: hidden;
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.14), inset 0 -1px 0 rgba(255,255,255,0.5);
-  margin-bottom: 8px;
-}
-.progress-fill {
-  position: absolute; left: 0; top: 0; bottom: 0; width: 57%;
-  background-image: linear-gradient(90deg, #34c759 0%, #aacc00 25%, #ffcc00 50%, #ff9500 75%, #ff3b30 100%);
-  background-size: 175% 100%;
-  border-radius: 999px;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), 0 0 8px rgba(255,149,0,0.3);
-}
-.progress-meta { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: #6e6e73; font-family: ui-monospace, monospace; }
-
-.card {
-  position: relative;
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(24px) saturate(170%);
-  -webkit-backdrop-filter: blur(24px) saturate(170%);
-  border-radius: 14px; padding: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,0.85),
-    0 1px 2px rgba(0,0,0,0.05),
-    0 6px 16px rgba(0,0,0,0.07),
-    0 16px 36px rgba(0,0,0,0.04);
-  isolation: isolate;
-}
-.card::before {
-  content: ""; position: absolute; inset: 0; border-radius: 14px;
-  background: linear-gradient(135deg, rgba(255,255,255,0.35) 0%, transparent 50%);
-  pointer-events: none; z-index: 1;
-}
-.card > * { position: relative; z-index: 2; }
-.card-heading { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; color: #6e6e73; margin: 0 0 12px 0; }
-
-.phase-row { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 8px; font-size: 13px; font-weight: 600; margin: 0 -4px; }
-.phase-row.pending { opacity: 0.55; }
-.phase-row.in_progress { background: rgba(0, 102, 204, 0.1); font-weight: 700; }
-.phase-circle { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800; color: white; }
-.phase-circle.done { background: #34c759; }
-.phase-circle.done::before { content: "✓"; }
-.phase-circle.in_progress { background: #0066cc; box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.25); }
-.phase-circle.pending { background: transparent; border: 1.5px solid #c7c7cc; }
-.phase-id { font-family: ui-monospace, monospace; font-size: 10px; font-weight: 700; color: #6e6e73; }
-.phase-name { flex: 1; }
-.phase-meta { font-family: ui-monospace, monospace; font-size: 10px; font-weight: 600; color: #6e6e73; }
-
-.focus-label { font-size: 11px; font-weight: 800; letter-spacing: 0.04em; color: #0066cc; margin-bottom: 6px; text-transform: uppercase; }
-.focus-text { font-size: 13px; font-weight: 500; line-height: 1.5; }
+*{box-sizing:border-box;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+html,body{margin:0;padding:0;font-family:var(--font);color:var(--t1);
+  background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);min-height:100vh;font-size:13px;line-height:1.45}
+.shell{max-width:300px;padding:18px 14px 36px;display:flex;flex-direction:column;gap:8px}
+.kick{font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--t3);padding:14px 6px 7px}
+.kick:first-child{padding-top:0}
+.group{background:var(--card);border-radius:14px;box-shadow:0 1px 2px rgba(0,0,0,.04);overflow:hidden}
+.row{padding:13px 16px;border-bottom:1px solid var(--sep2)}
+.row:last-child{border-bottom:none}
+.lab{font-size:11px;font-weight:700;letter-spacing:.05em;color:var(--t2);text-transform:uppercase;margin-bottom:6px}
+.path{font-size:12px;font-weight:500;color:var(--t2);word-break:break-all}
+.phase-id{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--blue);margin-bottom:3px}
+.phase-h{font-size:25px;font-weight:700;letter-spacing:-.025em;margin:0;line-height:1.04}
+.bar{height:6px;border-radius:99px;background:#e5e5ea;margin-top:14px;overflow:hidden}
+.bar i{display:block;height:100%;width:57%;border-radius:99px;background:linear-gradient(90deg,var(--green),var(--orange))}
+.meta{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--t2);margin-top:9px;font-feature-settings:"tnum"}
+.p-row{display:flex;align-items:center;gap:10px;padding:11px 16px;border-bottom:1px solid var(--sep2);font-size:14px;font-weight:500}
+.p-row:last-child{border-bottom:none}
+.p-row.cur{font-weight:700}
+.p-row.todo{color:var(--t3)}
+.dot{width:16px;height:16px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.dot.done{background:var(--green)}
+.dot.cur{background:var(--blue);box-shadow:0 0 0 4px rgba(0,122,255,.16)}
+.dot.todo{border:1.5px solid #d1d1d6}
+.pid{font-size:11px;font-weight:600;color:var(--t3);font-feature-settings:"tnum"}
+.pname{flex:1}
+.pdate{font-size:11px;color:var(--t3);font-weight:500;font-feature-settings:"tnum"}
+.focus .fl{font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--blue);text-transform:uppercase;margin-bottom:7px}
+.focus .ft{font-size:14px;line-height:1.55;font-weight:500}
+.chk{width:9px;height:9px}
 </style>
 </head>
 <body>
 <div class="shell">
 
-  <div class="hero">
-    <div class="hero-folder">
-      <span>📁</span>
-      <span class="hero-folder-path">c:\Users\snu90\Desktop\claude projects\대시보드 확장 프로그램</span>
+  <div class="kick">BLUEPRINT</div>
+  <div class="group">
+    <div class="row">
+      <div class="lab">Workspace</div>
+      <div class="path">c:\Users\snu90\Desktop\claude projects\대시보드 확장 프로그램</div>
     </div>
-    <div class="hero-divider"></div>
-    <div class="hero-phase-id">PHASE 3</div>
-    <h1 class="hero-title">IMPLEMENT</h1>
-    <div class="progress-bar"><div class="progress-fill"></div></div>
-    <div class="progress-meta"><span>4 / 7</span><span>57%</span></div>
+    <div class="row">
+      <div class="phase-id">PHASE 3</div>
+      <h1 class="phase-h">IMPLEMENT</h1>
+      <div class="bar"><i></i></div>
+      <div class="meta"><span>4 / 7 phases</span><span>57%</span></div>
+    </div>
   </div>
 
-  <div class="card">
-    <div class="card-heading">PHASES</div>
-    <div class="phase-row done"><div class="phase-circle done"></div><span class="phase-id">P0</span><span class="phase-name">PRODUCT</span><span class="phase-meta">2026-05-22</span></div>
-    <div class="phase-row done"><div class="phase-circle done"></div><span class="phase-id">P1</span><span class="phase-name">DESIGN</span><span class="phase-meta">2026-05-22</span></div>
-    <div class="phase-row done"><div class="phase-circle done"></div><span class="phase-id">P2</span><span class="phase-name">ARCHITECTURE</span><span class="phase-meta">2026-05-22</span></div>
-    <div class="phase-row in_progress"><div class="phase-circle in_progress"></div><span class="phase-id">P3</span><span class="phase-name">IMPLEMENT</span><span class="phase-meta"></span></div>
-    <div class="phase-row pending"><div class="phase-circle pending"></div><span class="phase-id">P4</span><span class="phase-name">REVIEW</span><span class="phase-meta"></span></div>
-    <div class="phase-row pending"><div class="phase-circle pending"></div><span class="phase-id">P5</span><span class="phase-name">SHIP</span><span class="phase-meta"></span></div>
-    <div class="phase-row pending"><div class="phase-circle pending"></div><span class="phase-id">P6</span><span class="phase-name">POST-SHIP</span><span class="phase-meta"></span></div>
+  <div class="kick">PHASES</div>
+  <div class="group">
+    <div class="p-row"><span class="dot done"><svg class="chk" viewBox="0 0 10 10"><path d="M1.5 5.2 4 7.5 8.5 2.5" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="pid">P0</span><span class="pname">PRODUCT</span><span class="pdate">05-22</span></div>
+    <div class="p-row"><span class="dot done"><svg class="chk" viewBox="0 0 10 10"><path d="M1.5 5.2 4 7.5 8.5 2.5" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="pid">P1</span><span class="pname">DESIGN</span><span class="pdate">05-22</span></div>
+    <div class="p-row"><span class="dot done"><svg class="chk" viewBox="0 0 10 10"><path d="M1.5 5.2 4 7.5 8.5 2.5" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="pid">P2</span><span class="pname">ARCHITECTURE</span><span class="pdate">05-22</span></div>
+    <div class="p-row cur"><span class="dot cur"></span><span class="pid">P3</span><span class="pname">IMPLEMENT</span><span class="pdate"></span></div>
+    <div class="p-row todo"><span class="dot todo"></span><span class="pid">P4</span><span class="pname">REVIEW</span><span class="pdate"></span></div>
+    <div class="p-row todo"><span class="dot todo"></span><span class="pid">P5</span><span class="pname">SHIP</span><span class="pdate"></span></div>
+    <div class="p-row todo"><span class="dot todo"></span><span class="pid">P6</span><span class="pname">POST-SHIP</span><span class="pdate"></span></div>
   </div>
 
-  <div class="card">
-    <div class="card-heading">CURRENT FOCUS</div>
-    <div class="focus-label">PHASE 3 · IMPLEMENT</div>
-    <div class="focus-text">단위 8: 가운데 webview 4페이지 멀티탭 완료. 단위 9 V0+ 최종 동작 검증 진행 중.</div>
+  <div class="kick">CURRENT FOCUS</div>
+  <div class="group">
+    <div class="row focus">
+      <div class="fl">PHASE 3 · IMPLEMENT</div>
+      <div class="ft">단위 8: 가운데 webview 4페이지 멀티탭 완료. 단위 9 V0+ 최종 동작 검증 진행 중.</div>
+    </div>
   </div>
 
 </div>

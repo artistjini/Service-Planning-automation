@@ -3,6 +3,8 @@
 docs/**
 plans/**
 .blueprint/**
+skills/**
+SETUP.md
 src/**
 tsconfig.json
 esbuild.config.js

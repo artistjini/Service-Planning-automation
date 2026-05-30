@@ -6,6 +6,18 @@
  * 사이드바보다 큰 캔버스 — padding 더 큼, 폰트 더 큼.
  */
 
+@font-face {
+  font-family: "Pretendard Variable";
+  font-weight: 45 920;
+  font-style: normal;
+  font-display: swap;
+  src: url("../fonts/PretendardVariable.woff2") format("woff2-variations");
+}
+
+:root {
+  --font: "Pretendard Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -102,15 +114,15 @@ html, body {
   border-radius: 50%;
 }
 
-.tab-dot-blue { background: #0066cc; box-shadow: 0 0 6px rgba(0, 102, 204, 0.6); }
+.tab-dot-blue { background: #007aff; box-shadow: 0 0 6px rgba(0, 122, 255, 0.6); }
 
 .tab-count {
   font-size: 10px;
   font-weight: 800;
   padding: 2px 7px;
   border-radius: 999px;
-  background: rgba(0, 102, 204, 0.15);
-  color: #0066cc;
+  background: rgba(0, 122, 255, 0.15);
+  color: #007aff;
   letter-spacing: 0;
 }
 
@@ -143,7 +155,7 @@ html, body {
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.14em;
-  color: #0066cc;
+  color: #007aff;
   margin-bottom: 10px;
 }
 
@@ -163,7 +175,7 @@ html, body {
   letter-spacing: -0.01em;
   margin: 0 0 6px 0;
   color: #1d1d1f;
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
 }
 
 .page-subtitle {
@@ -180,12 +192,12 @@ html, body {
 }
 
 .page-subtitle code {
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   background: rgba(0, 0, 0, 0.06);
   padding: 2px 8px;
   border-radius: 6px;
   font-size: 14px;
-  color: #0066cc;
+  color: #007aff;
   font-weight: 700;
 }
 
@@ -330,8 +342,8 @@ li.spec-folder.open > ul.spec-children {
 }
 
 .spec-row.active {
-  background: rgba(0, 102, 204, 0.12);
-  color: #0066cc;
+  background: rgba(0, 122, 255, 0.12);
+  color: #007aff;
   font-weight: 700;
 }
 
@@ -368,7 +380,7 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 .spec-meta {
   font-size: 10px;
   color: #6e6e73;
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   font-weight: 600;
 }
 
@@ -381,7 +393,7 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 .spec-breadcrumb {
   font-size: 12px;
   color: #6e6e73;
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   font-weight: 600;
   margin-bottom: 22px;
 }
@@ -392,7 +404,7 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 }
 
 .spec-bc-leaf {
-  color: #0066cc;
+  color: #007aff;
   font-weight: 700;
 }
 
@@ -463,12 +475,12 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 }
 
 .spec-content-body code {
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   background: rgba(0, 0, 0, 0.06);
   padding: 2px 7px;
   border-radius: 5px;
   font-size: 13px;
-  color: #d70015;
+  color: #ff3b30;
   font-weight: 600;
 }
 
@@ -492,8 +504,8 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 .spec-content-body blockquote {
   margin: 0 0 16px 0;
   padding: 13px 18px;
-  border-left: 4px solid #0066cc;
-  background: rgba(0, 102, 204, 0.06);
+  border-left: 4px solid #007aff;
+  background: rgba(0, 122, 255, 0.06);
   border-radius: 0 10px 10px 0;
   color: #424245;
   font-style: italic;
@@ -630,7 +642,7 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 }
 
 .spec-gallery-path {
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   font-size: 10px;
   color: #6e6e73;
   font-weight: 500;
@@ -666,7 +678,7 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 }
 
 .spec-gallery-viewer-path {
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   font-size: 12px;
   font-weight: 600;
   color: #6e6e73;
@@ -709,7 +721,7 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
   font-size: 13px;
   font-weight: 800;
   letter-spacing: 0.16em;
-  color: #0066cc;
+  color: #007aff;
   margin-bottom: 24px;
 }
 
@@ -746,8 +758,8 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 .spec-section-flat .markdown-body blockquote {
   margin: 0 0 16px 0;
   padding: 14px 20px;
-  border-left: 4px solid #0066cc;
-  background: rgba(0, 102, 204, 0.06);
+  border-left: 4px solid #007aff;
+  background: rgba(0, 122, 255, 0.06);
   border-radius: 0 12px 12px 0;
   color: #424245;
   font-style: italic;
@@ -791,12 +803,12 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 }
 
 .spec-section-flat .markdown-body code {
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   background: rgba(0, 0, 0, 0.06);
   padding: 2px 7px;
   border-radius: 5px;
   font-size: 13px;
-  color: #d70015;
+  color: #ff3b30;
   font-weight: 600;
 }
 
@@ -884,8 +896,8 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 .spec-section blockquote {
   margin: 0 0 16px 0;
   padding: 14px 20px;
-  border-left: 4px solid #0066cc;
-  background: rgba(0, 102, 204, 0.06);
+  border-left: 4px solid #007aff;
+  background: rgba(0, 122, 255, 0.06);
   border-radius: 0 12px 12px 0;
   color: #424245;
   font-style: italic;
@@ -1004,7 +1016,7 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
   font-size: 12px;
   font-weight: 800;
   letter-spacing: 0.16em;
-  color: #0066cc;
+  color: #007aff;
   margin-bottom: 20px;
 }
 
@@ -1048,12 +1060,12 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 }
 
 .spec-section code {
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   background: rgba(0, 0, 0, 0.06);
   padding: 2px 7px;
   border-radius: 5px;
   font-size: 13px;
-  color: #d70015;
+  color: #ff3b30;
   font-weight: 600;
 }
 
@@ -1126,11 +1138,11 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 }
 
 .preview-category-count {
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   font-size: 11px;
   font-weight: 700;
-  color: #0066cc;
-  background: rgba(0, 102, 204, 0.12);
+  color: #007aff;
+  background: rgba(0, 122, 255, 0.12);
   padding: 2px 8px;
   border-radius: 999px;
   font-variant-numeric: tabular-nums;
@@ -1232,7 +1244,7 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 }
 
 .preview-tile-path {
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   font-size: 11px;
   color: #6e6e73;
   font-weight: 500;
@@ -1275,7 +1287,7 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 
 .preview-detail-path {
   flex: 1;
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   font-size: 13px;
   font-weight: 600;
   color: #1d1d1f;
@@ -1283,7 +1295,7 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 }
 
 .preview-detail-time {
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   font-size: 12px;
   font-weight: 600;
   color: #6e6e73;
@@ -1378,8 +1390,8 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 }
 
 .preview-file-row.active {
-  background: rgba(0, 102, 204, 0.12);
-  color: #0066cc;
+  background: rgba(0, 122, 255, 0.12);
+  color: #007aff;
 }
 
 .preview-file-icon {
@@ -1396,7 +1408,7 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 }
 
 .preview-file-path {
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   font-size: 10px;
   color: #6e6e73;
   font-weight: 500;
@@ -1428,13 +1440,13 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 }
 
 .preview-viewer-path {
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   font-weight: 600;
   color: #1d1d1f;
 }
 
 .preview-viewer-time {
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   color: #6e6e73;
   font-weight: 600;
 }
@@ -1473,11 +1485,11 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 }
 
 .preview-viewer-empty-sub code {
-  background: rgba(0, 102, 204, 0.1);
-  color: #0066cc;
+  background: rgba(0, 122, 255, 0.1);
+  color: #007aff;
   padding: 2px 8px;
   border-radius: 5px;
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   font-size: 12px;
   font-weight: 700;
 }
@@ -1500,7 +1512,7 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
   align-items: center;
   gap: 8px;
   padding: 14px 28px;
-  background: linear-gradient(180deg, #0073e6 0%, #0066cc 100%);
+  background: linear-gradient(180deg, #0073e6 0%, #007aff 100%);
   color: white;
   border: none;
   border-radius: 12px;
@@ -1511,8 +1523,8 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
   margin-top: 18px;
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.25),
-    0 2px 4px rgba(0, 102, 204, 0.2),
-    0 8px 20px rgba(0, 102, 204, 0.25);
+    0 2px 4px rgba(0, 122, 255, 0.2),
+    0 8px 20px rgba(0, 122, 255, 0.25);
   transition: all 180ms ease;
   letter-spacing: -0.01em;
 }
@@ -1521,8 +1533,8 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
   transform: translateY(-1px);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.3),
-    0 4px 8px rgba(0, 102, 204, 0.25),
-    0 12px 28px rgba(0, 102, 204, 0.3);
+    0 4px 8px rgba(0, 122, 255, 0.25),
+    0 12px 28px rgba(0, 122, 255, 0.3);
 }
 
 .cta-button:active { transform: translateY(0); }
@@ -1543,7 +1555,7 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 }
 
 .errors-body a {
-  color: #0066cc;
+  color: #007aff;
   text-decoration: none;
 }
 
@@ -1554,7 +1566,7 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
  * ═══════════════════════════════════════════════════════════════ */
 
 .markdown-body a {
-  color: #0066cc;
+  color: #007aff;
   text-decoration: none;
 }
 
@@ -1615,7 +1627,7 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.14em;
-  color: #0066cc;
+  color: #007aff;
   margin-bottom: 16px;
   text-transform: uppercase;
 }
@@ -1674,12 +1686,12 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 .ds-card .markdown-body tr:last-child td { border-bottom: none; }
 
 .ds-card .markdown-body code {
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   background: rgba(0, 0, 0, 0.06);
   padding: 2px 7px;
   border-radius: 5px;
   font-size: 13px;
-  color: #d70015;
+  color: #ff3b30;
   font-weight: 600;
 }
 
@@ -1703,8 +1715,8 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 .ds-card .markdown-body blockquote {
   margin: 0 0 12px 0;
   padding: 12px 18px;
-  border-left: 4px solid #0066cc;
-  background: rgba(0, 102, 204, 0.06);
+  border-left: 4px solid #007aff;
+  background: rgba(0, 122, 255, 0.06);
   border-radius: 0 10px 10px 0;
   color: #424245;
   font-style: italic;
@@ -1869,7 +1881,7 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 }
 
 .gallery-label-link:hover {
-  background: rgba(0, 102, 204, 0.05);
+  background: rgba(0, 122, 255, 0.05);
 }
 
 .gallery-label-title {
@@ -1881,7 +1893,7 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 }
 
 .gallery-label-path {
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   font-size: 11px;
   font-weight: 500;
   color: #6e6e73;
@@ -1904,7 +1916,7 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
   gap: 12px;
   padding: 16px 18px;
   background: linear-gradient(180deg, rgba(255, 245, 246, 0.85) 0%, rgba(255, 235, 237, 0.85) 100%);
-  border: 1px solid rgba(215, 0, 21, 0.25);
+  border: 1px solid rgba(255, 59, 48, 0.25);
   border-radius: 12px;
   font-size: 14px;
   font-weight: 500;
@@ -1915,11 +1927,11 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 
 .non-goal-card:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(215, 0, 21, 0.15);
+  box-shadow: 0 4px 14px rgba(255, 59, 48, 0.15);
 }
 
 .non-goal-icon {
-  color: #d70015;
+  color: #ff3b30;
   font-weight: 800;
   font-size: 18px;
   line-height: 1.2;
@@ -1931,11 +1943,11 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 }
 
 .non-goal-text code {
-  background: rgba(215, 0, 21, 0.1);
-  color: #d70015;
+  background: rgba(255, 59, 48, 0.1);
+  color: #ff3b30;
 }
 
-.non-goal-text strong { color: #d70015; }
+.non-goal-text strong { color: #ff3b30; }
 
 /* ═══════════════════════════════════════════════════════════════
  * Color swatch — `<code>#hex</code>` 옆에 자동 삽입되는 색깔 박스
@@ -1981,3 +1993,61 @@ html {
   font-size: 14px;
   font-weight: 500;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+ * 안 A — iOS Settings 플랫 스킨 (V0.9.4 리디자인)
+ * 글래스 blur·5색 blob·핑크 그라데 제거 → 흰 카드 + 헤어라인 + Pretendard.
+ * 이 블록이 위 글래스 룰을 덮어씀.
+ * ═══════════════════════════════════════════════════════════════ */
+
+html, body {
+  font-family: var(--font) !important;
+  background: linear-gradient(180deg, #f2f2f7 0%, #e9e9ee 100%) !important;
+  background-attachment: fixed;
+}
+
+/* 모든 글래스 표면 → 흰 플랫 카드 + 헤어라인 + 약한 그림자 */
+.ds-card, .empty-card, .roadmap-container, .errors-body, .preview-frame-wrap,
+.spec-explorer, .tab-nav, .anchor-nav, .preview-category-header,
+.preview-detail-bar, .spec-gallery-viewer-bar, .preview-explorer {
+  background: #ffffff !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid rgba(60, 60, 67, 0.1) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+}
+.ds-card::before, .empty-card::before,
+.roadmap-container::before, .errors-body::before { display: none !important; }
+.ds-card:hover {
+  transform: none !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 6px 18px -8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* explorer/listing 패널 평탄화 */
+.spec-tree-pane, .preview-listing {
+  background: #fbfbfd !important;
+  border-right: 1px solid rgba(60, 60, 67, 0.1) !important;
+}
+.spec-content-pane, .preview-viewer { background: #ffffff !important; }
+
+/* 탭 정리 — 큰 hero 타이틀 tracking */
+.page-title { letter-spacing: -0.035em !important; }
+.tab.active, .anchor-link.active { background: #1d1d1f !important; }
+
+/* progress flat */
+.hero-progress { background: #e5e5ea !important; box-shadow: none !important; }
+
+/* NON-GOALS: 핑크 그라데 → 흰 카드 + iOS 빨강 minus */
+.non-goal-card {
+  background: #ffffff !important;
+  border: 1px solid rgba(255, 59, 48, 0.25) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+}
+.non-goal-card:hover {
+  transform: none !important;
+  box-shadow: 0 4px 14px -6px rgba(255, 59, 48, 0.18) !important;
+}
+.non-goal-icon { color: #ff3b30 !important; }
+
+/* swatch 보더 살짝 */
+.color-swatch { border: 1px solid rgba(60, 60, 67, 0.12) !important; }

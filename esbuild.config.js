@@ -23,6 +23,8 @@ function copyWebviewAssets() {
   const assets = [
     { src: 'src/webview/styles.css', dst: 'out/webview/styles.css' },
     { src: 'src/sidebar/sidebar-styles.css', dst: 'out/sidebar/sidebar-styles.css' },
+    // Pretendard 폰트 번들 — 오프라인에서도 SF Pro급 한글. 사이드바·webview 공유 (out/fonts).
+    { src: 'src/fonts/PretendardVariable.woff2', dst: 'out/fonts/PretendardVariable.woff2' },
   ];
   for (const { src, dst } of assets) {
     const srcAbs = path.join(__dirname, src);

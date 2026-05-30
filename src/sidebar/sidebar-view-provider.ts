@@ -45,6 +45,7 @@ export class SidebarViewProvider implements vscode.WebviewViewProvider {
       enableScripts: true,
       localResourceRoots: [
         vscode.Uri.file(path.join(this.extensionUri.fsPath, 'out', 'sidebar')),
+        vscode.Uri.file(path.join(this.extensionUri.fsPath, 'out', 'fonts')),
       ],
     };
 
@@ -86,7 +87,7 @@ export class SidebarViewProvider implements vscode.WebviewViewProvider {
     const nonce = makeNonce();
     // 'unsafe-inline' 필수 — progress-fill 의 inline width style 적용을 위해.
     // 빠뜨리면 fill 안 차오름 (track만 보이고 빈 회색).
-    const csp = `default-src 'none'; style-src ${this.view.webview.cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}'; img-src ${this.view.webview.cspSource} data:;`;
+    const csp = `default-src 'none'; style-src ${this.view.webview.cspSource} 'unsafe-inline'; font-src ${this.view.webview.cspSource}; script-src 'nonce-${nonce}'; img-src ${this.view.webview.cspSource} data:;`;
 
     const body = this.payload?.state
       ? this.renderBody(this.payload)

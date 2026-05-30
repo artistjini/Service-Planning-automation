@@ -4,6 +4,15 @@
 
 형식: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](https://semver.org/).
 
+## [0.9.4] — 2026-05-30
+
+### Changed (디자인 리디자인 — 안 A "iOS Settings")
+- **글래스 → 플랫 iOS Settings 룩 전면 교체**. 5색 blob 배경·backdrop-filter blur·`::before` sheen·핑크 NON-GOALS 그라데 제거 → `#f2f2f7` 그룹 배경 + 흰 카드 + 1px 헤어라인 + 약한 그림자. 사이드바·webview 양쪽 CSS 말미에 "안 A 플랫 스킨" override 블록.
+- **Pretendard 폰트 번들** — `out/fonts/PretendardVariable.woff2` (2MB) 동봉. `@font-face` + `font-src` CSP + `out/fonts` localResourceRoot. Windows에서도 SF Pro급 또렷함, CDN 의존 없음.
+- **monospace 전면 폐지** — hex·파일경로·카운터까지 전부 Pretendard로 통일 (`var(--vscode-editor-font-family)` → `var(--font)`). 숫자는 `tabular-nums`.
+- **accent 팔레트 iOS화** — `#0066cc → #007aff` (systemBlue), `#d70015 → #ff3b30` (systemRed), rgba 변형 포함.
+- DESIGN.md 디자인 철학·색·타이포·입체감 섹션 갱신.
+
 ## [0.9.3] — 2026-05-30
 
 ### Fixed (진짜 root cause)

@@ -4,11 +4,14 @@
 >
 > 와이어프레임 ASCII는 제거함. *실제 동작하는 사이드바 + 가운데 webview*가 가장 정확한 디자인 미리보기.
 
-## 디자인 철학
-**Antigravity 다크 IDE 위에 떠있는 밝은 글래스 카드.** Notion + Apple 풍.
+## 디자인 철학 (V0.9.4 리디자인 — 안 A)
+**아이폰 설정앱처럼 조용하고 정돈되게.** 플랫 iOS Settings 풍.
 - VS Code 토큰 *사용 안 함* — 항상 같은 룩 (다크/라이트 테마 무관). 본인용 dogfooding 우선.
-- 검은 IDE 배경 + 흰/옅은 그레이 webview/사이드바 = 강한 대비 + "이건 IDE랑 별개 콘텐츠" 시각 분리.
-- 진짜 글래스 효과를 위해 페이지 배경에 컬러 blob (radial-gradient) 5개 + 카드에 `backdrop-filter: blur` + saturate.
+- **글래스·blob·이모지·monospace 노이즈 제거.** `#f2f2f7` 그룹 배경 위 흰 카드 + 1px 헤어라인.
+- 색은 *데이터에만* (state, trigger, hex swatch). 장식 색 0.
+- 폰트는 **Pretendard 번들** — Windows에서도 SF Pro급 또렷함 (CDN 의존 없이 `out/fonts/`에 동봉).
+
+> 옛 글래스 룩(backdrop-filter blur + 5색 blob + ::before sheen)은 폐기. CSS 말미 "안 A 플랫 스킨" 블록이 덮어씀.
 
 ## 5대 가시성 원칙
 1. **한 번에 한 가지만 강조** — 현재 phase 이름이 압도적으로 큼 (28~56px)
@@ -17,44 +20,47 @@
 4. **데이터 = 시각, 장식 = 0** — 아이콘/이모지/장식 색 없음. 데이터에만 색 (state, trigger, hex swatch).
 5. **폰트 두껍게** — 본문 500, 헤딩 700~800. 글래스 위에서 가독성.
 
-## 색 (V0+ 확정)
+## 색 (V0.9.4 — iOS Settings 팔레트)
 
 | 용도 | 값 | 비고 |
 |---|---|---|
-| 페이지 배경 (그라데이션 시작) | `#f5f5f7` | Apple 옅은 그레이 |
-| 페이지 배경 (그라데이션 끝) | `#ececef` | 살짝 더 어둡게 (위→아래) |
-| 카드 배경 | `rgba(255, 255, 255, 0.55~0.7)` | 반투명 — backdrop-filter blur로 글래스 |
-| 카드 보더 | `rgba(255, 255, 255, 0.5)` | 위쪽 inset highlight 효과 |
-| 카드 그림자 (2~3단) | `0 1px 2px rgba(0,0,0,0.05), 0 8px 24px rgba(0,0,0,0.07), 0 32px 60px rgba(0,0,0,0.05)` | near + mid + far |
+| 페이지 배경 (시작) | `#f2f2f7` | iOS systemGroupedBackground |
+| 페이지 배경 (끝) | `#e9e9ee` | 살짝 더 어둡게 (위→아래) |
+| 카드 배경 | `#ffffff` | 불투명 흰색 (blur 없음) |
+| 카드 보더 (헤어라인) | `rgba(60, 60, 67, 0.1)` | iOS separator |
+| 카드 그림자 | `0 1px 2px rgba(0,0,0,0.04)` | 아주 약하게 (플랫) |
 | 텍스트 (메인) | `#1d1d1f` | Apple 다크 |
-| 텍스트 (흐림, 라벨) | `#6e6e73` | Apple secondary |
-| Accent (progress 시작, link, in_progress phase) | `#0066cc` | Apple blue |
-| Trigger 빨강 | `#d70015` | Apple red |
-| Done 초록 | `#34c759` | Apple green |
+| 텍스트 (흐림, 라벨) | `#8e8e93` | iOS secondaryLabel |
+| Accent (link, in_progress, label) | `#007aff` | iOS systemBlue |
+| Trigger 빨강 | `#ff3b30` | iOS systemRed |
+| Done 초록 | `#34c759` | iOS systemGreen |
 | Progress 그라데이션 | `#34c759 → #aacc00 → #ffcc00 → #ff9500 → #ff3b30` | 진행도 차오를수록 빨강 도달 |
 
-페이지 배경에 컬러 blob 5개 (파랑/빨강/보라/초록/주황 radial-gradient, opacity 0.16~0.28) → backdrop-filter가 흐릿하게 만들어 글래스 효과.
+배경은 단색 그라데이션 1개. **컬러 blob·backdrop-filter 없음.**
 
-## 입체감 룰
-- **카드 radius**: 14~18px (Apple 풍)
-- **카드 전환**: `transition: box-shadow 200ms ease, transform 200ms ease`
-- **카드 hover**: `transform: translateY(-2px)` + 더 깊은 그림자
-- **inset highlight (상단)**: `inset 0 1px 0 rgba(255,255,255,0.85)` — 위쪽 빛 받는 느낌
-- **글래스 sheen (좌상단)**: 카드 `::before`에 `linear-gradient(135deg, rgba(255,255,255,0.4), transparent 50%)` 깔아 광택
+## 입체감 룰 (플랫)
+- **카드 radius**: 12~16px (iOS 풍)
+- **카드 = 흰 배경 + 1px 헤어라인 + 약한 그림자.** blur·sheen·hover translate 없음.
+- **그룹화**: 데이터 묶음을 흰 카드로, 카드 안은 헤어라인으로 행 구분 (설정앱 그룹 리스트).
+- 강조는 *형태/크기/색 대비*로 — 그림자 깊이로 띄우지 않음.
 
 ## 타이포그래피
 
 | 용도 | 크기 | weight | family |
 |---|---|---|---|
-| Page hero title (가운데 webview) | 52px | 800 | system |
-| Sidebar hero phase title | 28px | 800 | system |
-| Spec section h1 | 36px | 800 | system |
-| Card heading (uppercase 라벨) | 11~13px | 700~800 | system, letter-spacing 0.12~0.16em |
-| 본문 | 14~17px | 500 | system |
-| Counter / progress 숫자 | monospace | 500~700 | `var(--vscode-editor-font-family)` |
-| 폴더 경로, 파일 경로 | 11~12px | 600 | monospace |
+| Page hero title (가운데 webview) | 52px | 800 | Pretendard, tracking -0.035em |
+| Sidebar hero phase title | 28px | 800 | Pretendard, tracking -0.03em |
+| Spec section h1 | 36px | 800 | Pretendard |
+| Card heading (uppercase 라벨) | 11~13px | 700~800 | Pretendard, letter-spacing 0.12~0.16em |
+| 본문 | 14~17px | 500 | Pretendard |
+| Counter / progress 숫자 | 11~22px | 600~700 | Pretendard + `font-variant-numeric: tabular-nums` |
+| 폴더 경로, 파일 경로 | 11~14px | 500~600 | **Pretendard** (monospace 폐지) |
 
-`system` = `-apple-system, BlinkMacSystemFont, "Segoe UI", "Pretendard", system-ui, sans-serif`
+**monospace 전면 폐지** — hex·경로·카운터까지 전부 Pretendard로 통일 (선명함·일관성). 숫자는 `tabular-nums`로 정렬.
+
+폰트 = `"Pretendard Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif`
+- `out/fonts/PretendardVariable.woff2` 로 **번들** (CDN 의존 없음, 오프라인 OK).
+- `@font-face` + `font-src ${cspSource}` CSP + `out/fonts` localResourceRoot 로 webview에 로드.
 
 ## 레이아웃
 - **사이드바**: padding 16px 12px, gap 14px (좁은 폭 대응)

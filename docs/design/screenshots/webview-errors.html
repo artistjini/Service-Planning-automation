@@ -1,54 +1,71 @@
 <!DOCTYPE html>
-<html lang="ko"><head><meta charset="UTF-8"><title>Errors</title>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Errors — 안 A</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.min.css">
 <style>
-*{box-sizing:border-box}html,body{margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,sans-serif;font-weight:500;color:#1d1d1f;background:radial-gradient(circle at 90% 25%,rgba(255,45,85,.22) 0%,transparent 35%),radial-gradient(circle at 15% 10%,rgba(0,122,255,.18) 0%,transparent 35%),linear-gradient(180deg,#f5f5f7 0%,#ececef 100%);min-height:100vh}
-.dashboard{max-width:1000px;margin:0 auto;padding:32px 48px 64px}
-.tabs{display:inline-flex;gap:6px;padding:6px;background:rgba(255,255,255,.7);backdrop-filter:blur(30px);border:1px solid rgba(255,255,255,.6);border-radius:16px;margin-bottom:32px}
-.tab{padding:8px 18px;border:none;background:transparent;border-radius:12px;font-family:inherit;font-size:14px;font-weight:700;color:#6e6e73;cursor:pointer}.tab.active{background:#1d1d1f;color:#fff}
-.tab .badge{font-size:10px;font-weight:800;background:rgba(255,255,255,.2);color:#fff;padding:2px 6px;border-radius:999px;margin-left:6px}
-.tab:not(.active) .badge{background:rgba(0,102,204,.15);color:#0066cc}
-.eyebrow{font-size:13px;font-weight:800;letter-spacing:.14em;color:#0066cc;margin-bottom:10px}
-.title{font-size:52px;font-weight:800;letter-spacing:-.025em;line-height:1.05;margin:0 0 14px 0}
-.subtitle{font-size:17px;font-weight:500;color:#424245;margin:0 0 28px 0}
-.subtitle code{background:rgba(0,0,0,.06);padding:2px 8px;border-radius:6px;font-family:ui-monospace,monospace;font-size:14px;font-weight:600}
-.body{background:rgba(255,255,255,.6);backdrop-filter:blur(28px) saturate(170%);border-radius:18px;padding:32px;border:1px solid rgba(255,255,255,.55);box-shadow:inset 0 1px 0 rgba(255,255,255,.85),0 8px 24px rgba(0,0,0,.07),0 32px 60px rgba(0,0,0,.04)}
-.body h1{font-size:32px;font-weight:800;margin:0 0 24px 0;letter-spacing:-.02em}
-.body h2{font-size:22px;font-weight:700;margin:32px 0 14px 0;padding-top:16px;border-top:1px solid rgba(0,0,0,.08)}
-.body h2:first-of-type{margin-top:0;padding-top:0;border-top:none}
-.body p{margin:0 0 12px 0;line-height:1.7;color:#1d1d1f}
-.body blockquote{margin:0 0 16px 0;padding:13px 18px;border-left:4px solid #0066cc;background:rgba(0,102,204,.06);border-radius:0 10px 10px 0;color:#424245;font-style:italic;font-size:14px}
-.body ul{padding-left:24px}.body li{margin-bottom:6px;line-height:1.6}
-.body code{font-family:ui-monospace,monospace;background:rgba(0,0,0,.06);padding:2px 7px;border-radius:5px;font-size:13px;color:#d70015;font-weight:600}
-.body strong{font-weight:700;color:#1d1d1f}
-.body hr{border:none;border-top:1px solid rgba(0,0,0,.08);margin:32px 0}
-</style></head><body>
-<div class="dashboard">
-<div class="tabs"><button class="tab">Plan</button><button class="tab">Spec</button><button class="tab">Preview</button><button class="tab active">Errors <span class="badge">4</span></button></div>
-<div class="eyebrow">ERRORS</div>
-<h1 class="title">에러 히스토리</h1>
-<p class="subtitle"><code>docs/error.history.md</code> · 최근 에러가 위에 누적됩니다.</p>
-<div class="body">
-<h1>Error History — 대시보드 확장 프로그램</h1>
-<blockquote>에러·트러블슈팅 일지. 발생한 시점·원인·해결을 시간순(역시간순)으로 기록.</blockquote>
+:root{
+  --bg:#f2f2f7;--bg2:#e9e9ee;--card:#fff;
+  --sep:rgba(60,60,67,.10);--sep2:rgba(60,60,67,.06);
+  --t1:#1c1c1e;--t2:#8e8e93;--t3:#aeaeb2;
+  --blue:#007aff;--green:#34c759;--red:#ff3b30;--orange:#ff9500;--radius:16px;
+  --font:"Pretendard Variable",-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,sans-serif;
+}
+*{box-sizing:border-box;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+html,body{margin:0;padding:0;font-family:var(--font);color:var(--t1);
+  background:linear-gradient(180deg,var(--bg) 0%,var(--bg2) 100%);min-height:100vh}
+.dash{max-width:1000px;margin:0 auto;padding:40px 48px 72px}
+.seg{display:inline-flex;background:#e3e3e8;border-radius:11px;padding:3px;gap:2px;margin-bottom:36px}
+.seg button{border:none;background:transparent;font-family:inherit;font-size:14px;font-weight:600;color:var(--t2);padding:7px 18px;border-radius:8px;cursor:pointer;letter-spacing:-.01em}
+.seg button.on{background:#fff;color:var(--t1);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.seg .badge{font-size:11px;font-weight:700;background:rgba(255,59,48,.16);color:var(--red);padding:1px 7px;border-radius:99px;margin-left:7px;font-feature-settings:"tnum"}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.02em;color:var(--red);margin-bottom:8px}
+.title{font-size:46px;font-weight:700;letter-spacing:-.03em;line-height:1.04;margin:0 0 10px}
+.subtitle{font-size:16px;font-weight:500;color:var(--t2);margin:0 0 32px}
+.subtitle code{font-family:var(--font);background:rgba(60,60,67,.08);padding:2px 8px;border-radius:6px;font-size:14px;color:var(--t1);font-weight:600}
+.intro{background:var(--card);border-radius:var(--radius);box-shadow:0 1px 2px rgba(0,0,0,.05);padding:18px 22px;margin-bottom:18px;font-size:14px;color:var(--t2);line-height:1.55}
+.entry{background:var(--card);border-radius:var(--radius);box-shadow:0 1px 2px rgba(0,0,0,.05);padding:20px 22px;margin-bottom:14px}
+.e-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.e-date{font-size:12px;font-weight:600;color:var(--t3);font-feature-settings:"tnum"}
+.e-title{font-size:18px;font-weight:700;letter-spacing:-.02em;margin:2px 0 0;flex-basis:100%;order:3;line-height:1.3}
+.pill{font-size:11px;font-weight:700;letter-spacing:.03em;padding:3px 10px;border-radius:99px}
+.pill.resolved{background:rgba(52,199,89,.15);color:#1f9d4d}
+.pill.ignored{background:rgba(142,142,147,.16);color:var(--t2)}
+.kv{display:flex;gap:10px;font-size:14px;line-height:1.6;margin-bottom:7px}
+.kv:last-child{margin-bottom:0}
+.k{font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--t3);text-transform:uppercase;min-width:54px;padding-top:2px}
+.v{flex:1;color:var(--t1)}
+.v code{font-family:var(--font);background:rgba(60,60,67,.08);padding:1px 6px;border-radius:5px;font-size:13px;color:var(--blue);font-weight:600}
+</style>
+</head>
+<body>
+<div class="dash">
+  <div class="seg"><button>Plan</button><button>Spec</button><button>Preview</button><button class="on">Errors<span class="badge">3</span></button></div>
+  <div class="eyebrow">ERRORS · 히스토리</div>
+  <h1 class="title">에러 히스토리</h1>
+  <p class="subtitle"><code>docs/error.history.md</code> · 최근 에러가 위에 누적됩니다</p>
 
-<h2>2026-05-30 — Go 바이너리 못 찾음 알림 재발</h2>
-<ul>
-<li><strong>Status</strong>: IGNORED (Antigravity 자체 문제)</li>
-<li><strong>원인</strong>: Antigravity의 내장 Go 관련 기능이 Go 1.x 설치 요구. 우리 extension은 TypeScript 기반이라 Go 사용 0%.</li>
-<li><strong>해결</strong>: 무시. X로 닫음.</li>
-</ul>
+  <div class="intro">에러·트러블슈팅 일지. 발생 시점·원인·해결을 역시간순으로 기록합니다.</div>
 
-<h2>2026-05-22 — Extension Development Host에서 우리 extension 활성화 안 됨</h2>
-<ul>
-<li><strong>Status</strong>: RESOLVED</li>
-<li><strong>원인</strong>: <code>activationEvents: ["workspaceContains:.blueprint/state.md"]</code> 가 워크스페이스 폴더가 열려 있을 때만 트리거되는데, EDH가 폴더 없이 환영 화면 상태로 떠서 조건이 안 걸림.</li>
-<li><strong>해결</strong>: <code>.vscode/launch.json</code> args 마지막에 <code>"${workspaceFolder}"</code> 추가.</li>
-</ul>
+  <div class="entry">
+    <div class="e-head"><span class="pill ignored">IGNORED</span><span class="e-date">2026-05-30</span><h2 class="e-title">Go 바이너리 못 찾음 알림 재발</h2></div>
+    <div class="kv"><span class="k">원인</span><span class="v">Antigravity의 내장 Go 관련 기능이 Go 1.x 설치 요구. 우리 extension은 TypeScript 기반이라 Go 사용 0%.</span></div>
+    <div class="kv"><span class="k">해결</span><span class="v">무시. X로 닫음. (Antigravity 자체 문제)</span></div>
+  </div>
 
-<h2>2026-05-22 — Google.securecoder activation 실패 (Antigravity 내장)</h2>
-<ul>
-<li><strong>Status</strong>: IGNORED (Antigravity 자체 문제, 우리 코드 무관)</li>
-<li><strong>원인</strong>: Antigravity IDE의 내장 extension <code>Google.securecoder</code> 디렉터리에 <code>out/extension.js</code> 파일이 누락됨.</li>
-<li><strong>해결</strong>: 우리가 고칠 수 없음. 다이얼로그를 X로 닫고 진행.</li>
-</ul>
-</div></div></body></html>
+  <div class="entry">
+    <div class="e-head"><span class="pill resolved">RESOLVED</span><span class="e-date">2026-05-22</span><h2 class="e-title">Extension Development Host에서 활성화 안 됨</h2></div>
+    <div class="kv"><span class="k">원인</span><span class="v"><code>activationEvents: ["workspaceContains:.blueprint/state.md"]</code> 가 워크스페이스 폴더가 열려 있을 때만 트리거되는데, EDH가 폴더 없이 환영 화면으로 떠서 조건이 안 걸림.</span></div>
+    <div class="kv"><span class="k">해결</span><span class="v"><code>.vscode/launch.json</code> args 마지막에 <code>"${workspaceFolder}"</code> 추가.</span></div>
+  </div>
+
+  <div class="entry">
+    <div class="e-head"><span class="pill ignored">IGNORED</span><span class="e-date">2026-05-22</span><h2 class="e-title">Google.securecoder activation 실패</h2></div>
+    <div class="kv"><span class="k">원인</span><span class="v">Antigravity IDE의 내장 extension <code>Google.securecoder</code> 디렉터리에 <code>out/extension.js</code> 누락.</span></div>
+    <div class="kv"><span class="k">해결</span><span class="v">우리가 고칠 수 없음. 다이얼로그 X로 닫고 진행. (우리 코드 무관)</span></div>
+  </div>
+</div>
+</body>
+</html>

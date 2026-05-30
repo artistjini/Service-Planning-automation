@@ -6,6 +6,18 @@
  * 입체감: multi-layer shadow + inset highlight.
  */
 
+@font-face {
+  font-family: "Pretendard Variable";
+  font-weight: 45 920;
+  font-style: normal;
+  font-display: swap;
+  src: url("../fonts/PretendardVariable.woff2") format("woff2-variations");
+}
+
+:root {
+  --font: "Pretendard Variable", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -95,7 +107,7 @@ html, body {
 }
 
 .hero-folder-path {
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   font-size: 11px;
   color: #424245;
   word-break: break-all;
@@ -111,7 +123,7 @@ html, body {
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.12em;
-  color: #0066cc;
+  color: #007aff;
   margin-bottom: 2px;
 }
 
@@ -167,7 +179,7 @@ html, body {
   font-size: 11px;
   font-weight: 700;
   color: #6e6e73;
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   font-variant-numeric: tabular-nums;
 }
 
@@ -216,7 +228,7 @@ html, body {
 
 .card-alert {
   background: linear-gradient(180deg, rgba(255, 245, 246, 0.85) 0%, rgba(255, 230, 232, 0.85) 100%);
-  border-color: rgba(215, 0, 21, 0.3);
+  border-color: rgba(255, 59, 48, 0.3);
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -245,7 +257,7 @@ html, body {
 }
 
 .phase-row.in_progress {
-  background: rgba(0, 102, 204, 0.1);
+  background: rgba(0, 122, 255, 0.1);
   font-weight: 700;
 }
 
@@ -268,8 +280,8 @@ html, body {
 }
 
 .phase-circle.in_progress {
-  background: #0066cc;
-  box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.25);
+  background: #007aff;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.25);
 }
 
 .phase-circle.done {
@@ -283,7 +295,7 @@ html, body {
 }
 
 .phase-id {
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   font-size: 10px;
   font-weight: 700;
   color: #6e6e73;
@@ -296,7 +308,7 @@ html, body {
 }
 
 .phase-meta {
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   font-size: 10px;
   font-weight: 600;
   color: #6e6e73;
@@ -311,7 +323,7 @@ html, body {
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.04em;
-  color: #0066cc;
+  color: #007aff;
   margin-bottom: 6px;
   text-transform: uppercase;
 }
@@ -337,15 +349,15 @@ html, body {
 .kpi-block {
   text-align: center;
   padding: 10px 8px;
-  background: rgba(0, 102, 204, 0.06);
+  background: rgba(0, 122, 255, 0.06);
   border-radius: 10px;
 }
 
 .kpi-value {
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   font-size: 22px;
   font-weight: 700;
-  color: #0066cc;
+  color: #007aff;
   line-height: 1.1;
   margin-bottom: 4px;
   font-variant-numeric: tabular-nums;
@@ -360,7 +372,7 @@ html, body {
 }
 
 .kpi-meta {
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   font-size: 11px;
   font-weight: 600;
   color: #6e6e73;
@@ -383,9 +395,9 @@ html, body {
 .triggers-list li {
   padding: 10px 12px;
   background: rgba(255, 255, 255, 0.6);
-  border: 1px solid rgba(215, 0, 21, 0.3);
+  border: 1px solid rgba(255, 59, 48, 0.3);
   border-radius: 10px;
-  color: #d70015;
+  color: #ff3b30;
   font-size: 12px;
   font-weight: 700;
 }
@@ -408,7 +420,7 @@ html, body {
 
 .active-file-path {
   flex: 1;
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   font-size: 12px;
   font-weight: 600;
   color: #1d1d1f;
@@ -422,8 +434,8 @@ html, body {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  color: #0066cc;
-  background: rgba(0, 102, 204, 0.1);
+  color: #007aff;
+  background: rgba(0, 122, 255, 0.1);
   padding: 2px 7px;
   border-radius: 6px;
 }
@@ -456,7 +468,7 @@ html, body {
 .recent-time {
   flex-shrink: 0;
   width: 52px;
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   font-size: 10px;
   font-weight: 700;
   color: #6e6e73;
@@ -514,11 +526,53 @@ html, body {
 }
 
 .empty code {
-  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-family: var(--font);
   background: rgba(0, 0, 0, 0.08);
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 11px;
   font-weight: 700;
-  color: #0066cc;
+  color: #007aff;
 }
+
+/* ═══════════════════════════════════════════════════════════════
+ * 안 A — iOS Settings 플랫 스킨 (V0.9.4 리디자인)
+ * 글래스/blob/이모지 노이즈 제거 → 흰 그룹 카드 + 헤어라인 + Pretendard.
+ * 색은 데이터에만. 이 블록이 위 글래스 룰을 덮어씀.
+ * ═══════════════════════════════════════════════════════════════ */
+
+html, body {
+  font-family: var(--font) !important;
+  background: linear-gradient(180deg, #f2f2f7 0%, #e9e9ee 100%) !important;
+  background-attachment: fixed;
+}
+
+/* 카드: 글래스 → 흰 카드 + 헤어라인 + 약한 그림자 */
+.hero, .card {
+  background: #ffffff !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: 1px solid rgba(60, 60, 67, 0.1) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04) !important;
+}
+.hero::before, .card::before { display: none !important; }
+
+/* trigger 카드 — 흰 배경 + iOS 빨강 보더 */
+.card-alert { background: #ffffff !important; border-color: rgba(255, 59, 48, 0.28) !important; }
+.triggers-list li {
+  background: #ffffff !important;
+  border-color: rgba(255, 59, 48, 0.28) !important;
+  color: #1d1d1f !important;
+  font-weight: 600 !important;
+}
+
+/* accent → iOS blue, 라벨 톤 정리 */
+.hero-phase-id, .focus-label { color: #007aff !important; }
+.active-file-lang { color: #007aff !important; background: rgba(0, 122, 255, 0.1) !important; }
+.phase-row.in_progress { background: rgba(0, 122, 255, 0.1) !important; }
+.phase-circle.in_progress { background: #007aff !important; box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.22) !important; }
+.hero-title { letter-spacing: -0.03em !important; }
+
+/* progress: 더 얇고 차분하게 */
+.progress-bar { background: #e5e5ea !important; box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.04) !important; }
+.progress-meta { color: #8e8e93 !important; }

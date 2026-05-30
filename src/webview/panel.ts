@@ -91,6 +91,7 @@ export class BlueprintWebviewPanel {
         retainContextWhenHidden: true,
         localResourceRoots: [
           vscode.Uri.file(path.join(this.context.extensionPath, 'out', 'webview')),
+          vscode.Uri.file(path.join(this.context.extensionPath, 'out', 'fonts')),
           this.workspaceFolder.uri, // 워크스페이스 이미지 (DESIGN.md 시안 등) 렌더링 위해
         ],
       },
@@ -208,7 +209,7 @@ export class BlueprintWebviewPanel {
     );
     const cssUri = this.panel.webview.asWebviewUri(cssOnDisk);
     const nonce = makeNonce();
-    const csp = `default-src 'none'; style-src ${this.panel.webview.cspSource} 'unsafe-inline'; script-src 'nonce-${nonce}'; img-src ${this.panel.webview.cspSource} data:; frame-src data:; child-src data:;`;
+    const csp = `default-src 'none'; style-src ${this.panel.webview.cspSource} 'unsafe-inline'; font-src ${this.panel.webview.cspSource}; script-src 'nonce-${nonce}'; img-src ${this.panel.webview.cspSource} data:; frame-src data:; child-src data:;`;
 
     const tabsHtml = this.renderTabs();
     const pageHtml = this.rewriteImageUris(this.renderActivePage());
