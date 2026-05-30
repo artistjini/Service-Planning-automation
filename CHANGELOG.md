@@ -4,6 +4,18 @@
 
 형식: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](https://semver.org/).
 
+## [0.9.3] — 2026-05-30
+
+### Fixed (진짜 root cause)
+- **사이드바 progress bar 안 차오름** — CSP의 `style-src`에 `'unsafe-inline'` 누락. `<div style="width: X%">` 인라인 스타일이 CSP로 BLOCK되어 fill width가 0이었음. *10번 말해도 안 고쳐진 진짜 이유*. webview panel은 이미 `'unsafe-inline'` 있어서 정상 작동했지만 사이드바만 누락. 추가 후 즉시 해결.
+
+### Changed
+- **디자인 시안을 Preview 탭으로 통합 + 카테고리별 자동 분류**:
+  - 사이드바 / Plan / Spec / Preview / Errors / Mockups (검증 단계) / 기타 — 7개 카테고리
+  - 파일명 prefix 기반 자동 분류 (예: `webview-spec-*.html` → Spec 카테고리)
+  - 각 카테고리는 글래스 헤더 + 카운트 배지 + 그 아래 카드 그리드
+- **DESIGN.md `## 디자인 시안` 섹션 축약** — 시안 link list 제거, Preview 탭 안내로 대체. Spec/DESIGN 페이지에서 빈 placeholder 카드 더 이상 안 보임.
+
 ## [0.9.2] — 2026-05-30
 
 ### Fixed

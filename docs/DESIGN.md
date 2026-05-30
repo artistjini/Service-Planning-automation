@@ -102,24 +102,21 @@
 
 V1 이후: 폰트 family 자동 샘플 렌더, mermaid 다이어그램, `docs/design/*.html` 갤러리.
 
-## 디자인 시안 (스크린샷)
+## 디자인 시안
 
-> 캡처 방법: `Win+Shift+S` (Windows 캡처 도구) → 영역 선택 → 클립보드 → 캡처 도구에서 저장.
-> 또는 OS 단축키로 직접 파일 저장.
->
-> 저장 위치: `docs/design/screenshots/` 폴더. 파일명 아래와 일치시키면 자동 표시.
->
-> 시안이 없으면 (파일 없을 때) 그냥 빈 자리. 캡처 후 추가하면 webview에 자동 렌더링.
+**시안 미리보기는 가운데 webview의 Preview 탭**에서 카테고리별로 자동 분류되어 표시됩니다.
 
-실제 동작하는 HTML 시안 7개. **가운데 webview의 Spec → `design/screenshots/` 폴더에서 큰 카드로 미리보기**.
+- 위치: `docs/design/screenshots/` (자동 listing)
+- 분류 (파일명 prefix 기준):
+  - `sidebar*.html` → 사이드바
+  - `webview-plan*.html` → Plan
+  - `webview-spec-*.html` → Spec
+  - `webview-preview*.html` → Preview
+  - `webview-errors*.html` → Errors
+  - `*-mockup-*.html` → 검증 단계 mockup
+- 클릭 → 풀-너비 미리보기. `← 그리드로` 로 복귀.
 
-- [Sidebar — 왼쪽 패널 (Hero + Phases + Current focus + Recent)](design/screenshots/sidebar.html)
-- [Center webview — Plan (roadmap + 현재 phase 위치)](design/screenshots/webview-plan.html)
-- [Center webview — Spec / PRODUCT (NON-GOALS 빨간 ✗ grid)](design/screenshots/webview-spec-product.html)
-- [Center webview — Spec / DESIGN (색 swatch 자동 시각화)](design/screenshots/webview-spec-design.html)
-- [Center webview — Spec / ARCHITECTURE (도메인 맵 카드)](design/screenshots/webview-spec-architecture.html)
-- [Center webview — Preview (디자인 시안 큰 카드 그리드)](design/screenshots/webview-preview.html)
-- [Center webview — Errors (error.history.md 렌더)](design/screenshots/webview-errors.html)
+새 시안 추가 = `screenshots/` 폴더에 `.html` 파일 떨구기. 자동 표시.
 
 ## User flow (핵심)
 

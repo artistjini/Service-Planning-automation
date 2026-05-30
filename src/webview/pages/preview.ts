@@ -55,29 +55,19 @@ export function renderPreviewPage(
       </div>`;
   }
 
-  const tilesHtml = designFiles.map(f => {
-    const hue = simpleHash(f.relativePath) % 360;
-    const accent = `hsl(${hue}, 70%, 75%)`;
-    const accent2 = `hsl(${(hue + 60) % 360}, 70%, 85%)`;
-    // 실제 콘텐츠 있으면 iframe 썸네일, 없으면 placeholder
-    const thumbInner = f.content
-      ? `<iframe class="preview-tile-frame" srcdoc="${escapeHtml(f.content)}" sandbox="allow-same-origin" scrolling="no" tabindex="-1"></iframe>
-         <div class="preview-tile-click-shield"></div>
-         <div class="preview-tile-html-label">HTML</div>`
-      : `<div class="preview-tile-placeholder" style="background: linear-gradient(135deg, ${accent} 0%, ${accent2} 100%);">
-           <div class="preview-tile-icon">🖼️</div>
-           <div class="preview-tile-html-label">HTML</div>
-         </div>`;
+  // 카테고리별로 그룹화 (파일명 prefix 기반 자동 분류)
+  const grouped = groupByCategory(designFiles);
+  const groupsHtml = grouped.map(group => {
+    const tiles = group.files.map(f => renderTile(f)).join('');
     return `
-    <button type="button" class="preview-tile" data-preview-file="${escapeHtml(f.relativePath)}">
-      <div class="preview-tile-thumb">
-        ${thumbInner}
+    <section class="preview-category">
+      <div class="preview-category-header">
+        <span class="preview-category-icon">${group.icon}</span>
+        <span class="preview-category-name">${escapeHtml(group.name)}</span>
+        <span class="preview-category-count">${group.files.length}</span>
       </div>
-      <div class="preview-tile-body">
-        <div class="preview-tile-name">${escapeHtml(f.name)}</div>
-        <div class="preview-tile-path">${escapeHtml(f.relativePath.replace(/^docs\/design\//, ''))}</div>
-      </div>
-    </button>`;
+      <div class="preview-grid">${tiles}</div>
+    </section>`;
   }).join('');
 
   return `
@@ -85,13 +75,97 @@ export function renderPreviewPage(
       <div class="page-eyebrow">PREVIEW · 디자인 시안</div>
       <h1 class="page-title">${designFiles.length}개 시안</h1>
       <p class="page-subtitle">
-        <code>docs/design/</code> 폴더 자동 listing · 큰 카드 클릭으로 확대
+        <code>docs/design/</code> 폴더 자동 listing · 카테고리별 분리 · 큰 카드 클릭으로 확대
       </p>
     </div>
 
-    <div class="preview-grid">
-      ${tilesHtml}
-    </div>`;
+    ${groupsHtml}`;
+}
+
+function renderTile(f: PreviewDesignFile): string {
+  const hue = simpleHash(f.relativePath) % 360;
+  const accent = `hsl(${hue}, 70%, 75%)`;
+  const accent2 = `hsl(${(hue + 60) % 360}, 70%, 85%)`;
+  const thumbInner = f.content
+    ? `<iframe class="preview-tile-frame" srcdoc="${escapeHtml(f.content)}" sandbox="allow-same-origin" scrolling="no" tabindex="-1"></iframe>
+       <div class="preview-tile-click-shield"></div>
+       <div class="preview-tile-html-label">HTML</div>`
+    : `<div class="preview-tile-placeholder" style="background: linear-gradient(135deg, ${accent} 0%, ${accent2} 100%);">
+         <div class="preview-tile-icon">🖼️</div>
+         <div class="preview-tile-html-label">HTML</div>
+       </div>`;
+  return `
+    <button type="button" class="preview-tile" data-preview-file="${escapeHtml(f.relativePath)}">
+      <div class="preview-tile-thumb">${thumbInner}</div>
+      <div class="preview-tile-body">
+        <div class="preview-tile-name">${escapeHtml(f.name)}</div>
+        <div class="preview-tile-path">${escapeHtml(f.relativePath.replace(/^docs\/design\//, ''))}</div>
+      </div>
+    </button>`;
+}
+
+interface PreviewGroup {
+  key: string;
+  name: string;
+  icon: string;
+  order: number;
+  files: PreviewDesignFile[];
+}
+
+/**
+ * 파일명 prefix 기반 자동 카테고리 분류.
+ *
+ * - sidebar*.html              → 사이드바
+ * - webview-plan*.html         → Plan 페이지
+ * - webview-spec-*.html        → Spec 페이지
+ * - webview-preview*.html      → Preview 페이지
+ * - webview-errors*.html       → Errors 페이지
+ * - *-mockup-*.html            → 검증 단계 mockup
+ * - 그 외                       → 기타
+ */
+function groupByCategory(files: PreviewDesignFile[]): PreviewGroup[] {
+  const groups = new Map<string, PreviewGroup>();
+
+  for (const f of files) {
+    const cat = categorizeFile(f.name);
+    if (!groups.has(cat.key)) {
+      groups.set(cat.key, { ...cat, files: [] });
+    }
+    groups.get(cat.key)!.files.push(f);
+  }
+
+  // 정렬 — order 작은 순 → 같으면 파일명
+  return Array.from(groups.values()).sort((a, b) => {
+    if (a.order !== b.order) return a.order - b.order;
+    return a.name.localeCompare(b.name);
+  });
+}
+
+function categorizeFile(name: string): { key: string; name: string; icon: string; order: number } {
+  const n = name.toLowerCase();
+
+  if (n.includes('mockup')) {
+    return { key: 'mockup', name: 'Mockup · 검증 단계', icon: '🧪', order: 90 };
+  }
+  if (n.startsWith('sidebar')) {
+    return { key: 'sidebar', name: '사이드바', icon: '📊', order: 10 };
+  }
+  if (n.startsWith('webview-plan')) {
+    return { key: 'plan', name: 'Webview · Plan', icon: '🗺️', order: 20 };
+  }
+  if (n.startsWith('webview-spec')) {
+    return { key: 'spec', name: 'Webview · Spec', icon: '📋', order: 30 };
+  }
+  if (n.startsWith('webview-preview')) {
+    return { key: 'preview', name: 'Webview · Preview', icon: '🖼️', order: 40 };
+  }
+  if (n.startsWith('webview-errors')) {
+    return { key: 'errors', name: 'Webview · Errors', icon: '⚠️', order: 50 };
+  }
+  if (n.startsWith('webview')) {
+    return { key: 'webview', name: 'Webview · 기타', icon: '🪟', order: 60 };
+  }
+  return { key: 'other', name: '기타', icon: '📄', order: 100 };
 }
 
 function simpleHash(s: string): number {
