@@ -4,6 +4,20 @@
 
 형식: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](https://semver.org/).
 
+## [0.9.1] — 2026-05-30
+
+### Changed (`/blueprint` 스킬)
+- **디자인 시안 승인 루프** Phase 1 안의 *필수 sub-step* 으로 박음:
+  1. Claude가 시안 2~3개 HTML 생성 → `docs/design/screenshots/{화면-id}-mockup-{N}-{스타일}.html`
+  2. 사용자에게 "Spec → design/screenshots/ 큰 카드 / Preview에서 확인 후 채택안 알려주세요" 안내
+  3. 채택안 파일명에 `-ADOPTED` 추가 또는 DESIGN.md `## 디자인 시안` 섹션에 ✓ 표시
+  4. **Hard gate**: 채택 시안 없이 Phase 3 IMPLEMENT의 해당 UI 작업 진입 금지
+- Phase 3 IMPLEMENT 진입 hard gate에 *"해당 화면 채택 시안 존재"* 추가.
+
+### Notes
+- 이 룰로 *추측 구현* 차단. 시안 → 사용자 결정 → 구현으로 책임 명확.
+- 사용자 의도가 자연어로만 흘러서 추측되는 게 아니라 *시안 단계에서 확정*.
+
 ## [0.9.0] — 2026-05-30
 
 ### Added
