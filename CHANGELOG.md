@@ -4,6 +4,24 @@
 
 형식: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](https://semver.org/).
 
+## [0.4.0] — 2026-05-30
+
+### Changed (Major UX)
+- **Spec 페이지 완전 재구조** — 단순 탭 전환 → **폴더 탐색기 풍** (시안 1 채택).
+  - 좌측: 트리 (PRODUCT/DESIGN/ARCHITECTURE 폴더 → 각 ## 섹션을 file로)
+  - 우측: 선택한 섹션 풀-너비 마크다운 렌더 (## 카드 변환 안 함 — 이미 섹션 단위)
+  - 클릭 → postMessage('spec-select') → panel이 active 갱신 → refresh
+  - 폴더 토글은 클라이언트 측 DOM (서버 round-trip 없음)
+- 섹션 아이콘 자동 매핑: NON-GOALS=🚫, 색=🎨, 타이포=🔤, 디자인 시안=🖼️, Stack=⚙️, Domain map=🗺️, Performance=⚡, ADR=📋
+
+### Added
+- `shared.ts` — `extractSections`, `renderMarkdownSection` (## 카드 변환 제외 버전), `MarkdownSection` 타입
+
+### Files updated
+- `src/webview/pages/spec.ts` (완전 재작성)
+- `src/webview/panel.ts` (specActive 상태, spec-select 메시지 처리)
+- `src/webview/styles.css` (`.spec-explorer`, `.spec-tree-pane`, `.spec-row` 등)
+
 ## [0.3.0] — 2026-05-24
 
 ### Added

@@ -21,6 +21,51 @@ export function renderMarkdown(markdown: string): string {
 }
 
 /**
+ * Spec Explorer 용 — ## 헤딩 카드 변환은 *건너뜀*.
+ * 이미 섹션 단위로 분리된 상태로 풀-너비 렌더. swatch/NON-GOALS/디자인 시안만 적용.
+ */
+export function renderMarkdownSection(markdown: string): string {
+  let html = md.render(markdown);
+  html = injectColorSwatches(html);
+  html = transformNonGoals(html);
+  html = transformDesignGallery(html);
+  return html;
+}
+
+/**
+ * 마크다운에서 ## 섹션들을 추출.
+ * 첫 # 헤딩 + 그 직후 (intro)는 별도, 그 다음 ## 헤딩부터 다음 ## 직전까지가 한 섹션.
+ */
+export interface MarkdownSection {
+  id: string;        // slug — 예: "non-goals"
+  heading: string;   // 표시 텍스트 — 예: "NON-GOALS"
+  content: string;   // 본문 (## 헤딩 포함)
+}
+
+export function extractSections(markdown: string): MarkdownSection[] {
+  const sections: MarkdownSection[] = [];
+  // ## 헤딩 단위 분할 (^ 시작 + ## )
+  const parts = markdown.split(/(?=^##\s+)/m);
+  for (const part of parts) {
+    const m = part.match(/^##\s+(.+)$/m);
+    if (!m) continue;
+    const heading = m[1].trim();
+    const id = slugify(heading);
+    sections.push({ id, heading, content: part.trim() });
+  }
+  return sections;
+}
+
+function slugify(s: string): string {
+  return s
+    .toLowerCase()
+    .replace(/[^\w가-힣\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+}
+
+/**
  * "## 디자인 시안" 헤딩 다음의 (h3 + img) 쌍들을 자동으로 카드 그리드로 변환.
  *
  * 원본:

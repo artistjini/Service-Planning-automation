@@ -20,7 +20,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { BlueprintState, PhaseId } from '../types';
 import { renderPlanPage } from './pages/plan';
-import { renderSpecPage, SpecArtifacts } from './pages/spec';
+import { renderSpecPage, SpecArtifacts, SpecActiveSelection, SpecFolderKey } from './pages/spec';
 import { renderPreviewPage, PreviewContent, PreviewDesignFile } from './pages/preview';
 import { renderErrorsPage } from './pages/errors';
 import { makeNonce, escapeHtml } from './shared';
@@ -54,7 +54,8 @@ export class BlueprintWebviewPanel {
   private currentState: BlueprintState | null = null;
   private roadmapMd: string | null = null;
   private specArtifacts: SpecArtifacts = { product: null, design: null, architecture: null };
-  private specFocus?: 'product' | 'design' | 'architecture';
+  private specFocus?: SpecFolderKey;
+  private specActive?: SpecActiveSelection;
   private preview: PreviewContent = { html: null, sourcePath: null, pushedAt: null };
   private designFiles: PreviewDesignFile[] = [];
   private errorHistoryMd: string | null = null;
@@ -137,10 +138,11 @@ export class BlueprintWebviewPanel {
     if (this.panel && this.activeTab === 'errors') this.refresh();
   }
 
-  /** Phase 클릭 시 — Spec 탭으로 이동 + 해당 섹션 강조 */
+  /** Phase 클릭 시 — Spec 탭으로 이동 + 해당 폴더 자동 펼침 */
   async showArtifact(phaseId: PhaseId): Promise<void> {
     const section = artifactSectionForPhase(phaseId);
     this.specFocus = section;
+    this.specActive = undefined; // 폴더의 첫 섹션으로 리셋
     this.activeTab = 'spec';
     this.show();
   }
@@ -180,6 +182,12 @@ export class BlueprintWebviewPanel {
       await this.callbacks.onCreateErrorHistory();
     } else if (msg.type === 'preview-file-click' && typeof msg.path === 'string') {
       await this.callbacks.onPreviewFileClick(msg.path);
+    } else if (msg.type === 'spec-select' && typeof msg.selection === 'string') {
+      this.specActive = msg.selection;
+      this.refresh();
+    } else if (msg.type === 'spec-folder-toggle' && typeof msg.folder === 'string') {
+      // 폴더 토글은 클라이언트 JS에서 직접 처리 (DOM 토글). 서버 round-trip 불필요.
+      // 메시지 받아도 무시.
     }
   }
 
@@ -233,6 +241,22 @@ export class BlueprintWebviewPanel {
     document.querySelectorAll('[data-preview-file]').forEach(el => {
       el.addEventListener('click', () => {
         vscode.postMessage({ type: 'preview-file-click', path: el.getAttribute('data-preview-file') });
+      });
+    });
+
+    // Spec explorer — 섹션 클릭
+    document.querySelectorAll('[data-spec-select]').forEach(el => {
+      el.addEventListener('click', () => {
+        vscode.postMessage({ type: 'spec-select', selection: el.getAttribute('data-spec-select') });
+      });
+    });
+
+    // Spec explorer — 폴더 토글 (클라이언트 측 DOM 토글)
+    document.querySelectorAll('[data-spec-folder-toggle]').forEach(el => {
+      el.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const li = el.closest('.spec-folder');
+        if (li) li.classList.toggle('open');
       });
     });
 
@@ -293,7 +317,7 @@ export class BlueprintWebviewPanel {
       case 'plan':
         return renderPlanPage(this.currentState, this.roadmapMd);
       case 'spec':
-        return renderSpecPage(this.specArtifacts, this.specFocus);
+        return renderSpecPage(this.specArtifacts, this.specActive, this.specFocus);
       case 'preview':
         return renderPreviewPage(this.preview, this.designFiles);
       case 'errors':

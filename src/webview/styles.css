@@ -252,7 +252,271 @@ html, body {
 }
 
 /* ═══════════════════════════════════════════════════════════════
- * Spec page — 카드 없이 풀-너비 마크다운 (사용자 요청)
+ * Spec page — Explorer 풍 (V0.4+ 폴더 탐색기)
+ * ═══════════════════════════════════════════════════════════════ */
+
+.spec-explorer {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 0;
+  min-height: 640px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(28px) saturate(170%);
+  -webkit-backdrop-filter: blur(28px) saturate(170%);
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 1px 2px rgba(0, 0, 0, 0.05),
+    0 8px 24px rgba(0, 0, 0, 0.07),
+    0 32px 60px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.spec-tree-pane {
+  background: rgba(245, 245, 247, 0.6);
+  border-right: 1px solid rgba(0, 0, 0, 0.06);
+  padding: 16px 6px;
+  overflow-y: auto;
+  font-size: 13px;
+}
+
+.spec-tree-header {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #6e6e73;
+  padding: 0 12px 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  margin-bottom: 8px;
+}
+
+ul.spec-tree, ul.spec-children {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.spec-children {
+  padding-left: 18px;
+  display: none;
+}
+
+li.spec-folder.open > ul.spec-children {
+  display: block;
+}
+
+.spec-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  padding: 7px 10px;
+  border: none;
+  background: transparent;
+  border-radius: 7px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  color: #1d1d1f;
+  text-align: left;
+  transition: background 100ms ease;
+  margin-bottom: 1px;
+}
+
+.spec-row:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
+
+.spec-row.active {
+  background: rgba(0, 102, 204, 0.12);
+  color: #0066cc;
+  font-weight: 700;
+}
+
+.spec-folder-row {
+  font-weight: 700;
+}
+
+.spec-chevron {
+  width: 12px;
+  font-size: 9px;
+  color: #6e6e73;
+  display: inline-block;
+  transition: transform 150ms ease;
+}
+
+li.spec-folder.open > .spec-folder-row > .spec-chevron {
+  transform: rotate(90deg);
+}
+
+.spec-icon {
+  font-size: 13px;
+  flex-shrink: 0;
+  width: 16px;
+  text-align: center;
+}
+
+.spec-label {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.spec-meta {
+  font-size: 10px;
+  color: #6e6e73;
+  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-weight: 600;
+}
+
+.spec-content-pane {
+  padding: 28px 36px 40px;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.spec-breadcrumb {
+  font-size: 12px;
+  color: #6e6e73;
+  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  font-weight: 600;
+  margin-bottom: 22px;
+}
+
+.spec-bc-sep {
+  margin: 0 7px;
+  color: rgba(0, 0, 0, 0.25);
+}
+
+.spec-bc-leaf {
+  color: #0066cc;
+  font-weight: 700;
+}
+
+.spec-content-body {
+  font-size: 15px;
+  line-height: 1.7;
+  font-weight: 500;
+}
+
+.spec-content-body h2 {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0 0 22px 0;
+  line-height: 1.1;
+  color: #1d1d1f;
+}
+
+.spec-content-body h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin: 24px 0 12px 0;
+  color: #1d1d1f;
+}
+
+.spec-content-body p {
+  margin: 0 0 14px 0;
+  line-height: 1.7;
+  color: #1d1d1f;
+}
+
+.spec-content-body ul, .spec-content-body ol {
+  padding-left: 22px;
+  margin: 0 0 14px 0;
+}
+
+.spec-content-body li {
+  margin-bottom: 6px;
+}
+
+.spec-content-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 14px 0;
+  font-size: 14px;
+}
+
+.spec-content-body th {
+  text-align: left;
+  padding: 11px 14px;
+  background: rgba(0, 0, 0, 0.04);
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #424245;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.spec-content-body td {
+  padding: 11px 14px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  vertical-align: top;
+}
+
+.spec-content-body tr:last-child td {
+  border-bottom: none;
+}
+
+.spec-content-body code {
+  font-family: var(--vscode-editor-font-family, "SF Mono", Menlo, Consolas, monospace);
+  background: rgba(0, 0, 0, 0.06);
+  padding: 2px 7px;
+  border-radius: 5px;
+  font-size: 13px;
+  color: #d70015;
+  font-weight: 600;
+}
+
+.spec-content-body pre {
+  background: rgba(0, 0, 0, 0.04);
+  padding: 18px 22px;
+  border-radius: 10px;
+  overflow-x: auto;
+  margin: 0 0 14px 0;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.spec-content-body pre code {
+  background: transparent;
+  padding: 0;
+  color: #1d1d1f;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.spec-content-body blockquote {
+  margin: 0 0 16px 0;
+  padding: 13px 18px;
+  border-left: 4px solid #0066cc;
+  background: rgba(0, 102, 204, 0.06);
+  border-radius: 0 10px 10px 0;
+  color: #424245;
+  font-style: italic;
+}
+
+.spec-content-body strong {
+  font-weight: 700;
+  color: #1d1d1f;
+}
+
+.spec-empty-detail {
+  padding: 60px 20px;
+  text-align: center;
+  font-size: 14px;
+  color: #6e6e73;
+  font-style: italic;
+}
+
+/* 옛 .spec-section-flat (탭 토글 형식) — V0.4부터 미사용. 유지하되 hide */
+.spec-section-flat { display: none !important; }
+
+/* ═══════════════════════════════════════════════════════════════
+ * (옛) Spec section flat — V0.3까지의 형태, V0.4부터 제거
  * ═══════════════════════════════════════════════════════════════ */
 
 /* Spec 섹션: 한 번에 한 섹션만 보임 (탭 형태) */
