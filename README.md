@@ -22,6 +22,10 @@
 1. https://github.com/snu9026-Chris/SERVICE-PLANNING/raw/main/blueprint-dashboard-0.1.0.vsix 다운로드
 2. Antigravity → `Ctrl+Shift+P` → "VSIX에서 설치" → 다운받은 파일
 
+## 전체 워크플로 설치 (다른 컴퓨터)
+확장만이 아니라 `/blueprint` 워크플로까지 새 머신에서 바로 쓰려면 → **[SETUP.md](SETUP.md)** 참고.
+gstack 설치 → `skills/blueprint` 복사 → vsix 설치 3단계.
+
 ## 사용
 1. 워크스페이스에 `.blueprint/state.md` 가 있어야 활성화 (없으면 `/blueprint` 스킬로 init)
 2. Activity bar의 [체크리스트] 아이콘 클릭 → 사이드바 펼침
