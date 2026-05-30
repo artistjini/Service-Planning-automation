@@ -61,6 +61,7 @@ function renderHero(state: BlueprintState): string {
 
 function progressFillStyle(percent: number): string {
   if (percent <= 0) return 'width: 0';
+  if (percent >= 100) return 'width: 100%; background-size: 100% 100%';
   const bgSize = Math.min((100 / percent) * 100, 5000);
   return `width: ${percent}%; background-size: ${bgSize.toFixed(2)}% 100%`;
 }

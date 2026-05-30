@@ -4,6 +4,18 @@
 
 형식: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](https://semver.org/).
 
+## [0.9.2] — 2026-05-30
+
+### Fixed
+- **Progress bar 100% 안 차오름** — `progressFillStyle()`에서 `percent >= 100` 명시적 분기 추가. width: 100% + background-size: 100% 100% 단순 박음. sidebar + Plan hero 둘 다 적용.
+
+### Changed
+- **DESIGN.md `## 디자인 시안` 섹션이 Preview 처럼 큰 카드 그리드로 표시**. `transformDesignGallery()` 확장 — 이전엔 `h3 + p>img` 패턴만 매칭. 이제 `ul > li > a[href$=.html]` 패턴도 매칭해서 큰 카드로 변환:
+  - 큰 컬러 그라데이션 placeholder + 🎨 아이콘 + HTML 배지
+  - 라벨 = 시안 이름, 그 아래 모노스페이스 파일명
+  - 카드 클릭 → .html 파일 직접 열기
+- 결과: Spec/DESIGN 페이지의 디자인 시안 섹션이 노이즈 list 대신 시각 갤러리.
+
 ## [0.9.1] — 2026-05-30
 
 ### Changed (`/blueprint` 스킬)

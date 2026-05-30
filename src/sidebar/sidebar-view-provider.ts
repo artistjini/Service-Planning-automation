@@ -356,6 +356,9 @@ function categorize(rel: string): { icon: string; label: string } {
 
 function progressFillStyle(percent: number): string {
   if (percent <= 0) return 'width: 0';
+  // 100% 이상은 명시적으로 단순화 — 그라데이션 전체가 fill에 가득 (녹→빨강)
+  if (percent >= 100) return 'width: 100%; background-size: 100% 100%';
+  // 일반 케이스: percent에 따라 그라데이션의 좌측 일부만 fill에 보임
   const bgSize = Math.min((100 / percent) * 100, 5000);
   return `width: ${percent}%; background-size: ${bgSize.toFixed(2)}% 100%`;
 }

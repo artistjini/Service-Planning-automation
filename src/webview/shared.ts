@@ -96,29 +96,77 @@ function transformDesignGallery(html: string): string {
   // h2 "디자인 시안" 또는 "Design Gallery" 다음부터 다음 h2 직전까지의 콘텐츠 추출
   const re = /(<h2[^>]*>\s*디자인\s*시안[\s\S]*?<\/h2>)([\s\S]*?)(?=<h2|$)/i;
   return html.replace(re, (match, heading, body) => {
-    // body 안에서 (h3 + p>img) 쌍들 추출
-    const cardRe = /<h3[^>]*>([\s\S]*?)<\/h3>\s*<p>\s*<img\s+([^>]*?)>\s*<\/p>/g;
     const cards: string[] = [];
+
+    // 패턴 A — h3 + p>img (옛 스크린샷 PNG 양식)
+    const imgRe = /<h3[^>]*>([\s\S]*?)<\/h3>\s*<p>\s*<img\s+([^>]*?)>\s*<\/p>/g;
     let m: RegExpExecArray | null;
-    while ((m = cardRe.exec(body)) !== null) {
+    while ((m = imgRe.exec(body)) !== null) {
       const label = stripTags(m[1]).trim();
       const imgAttrs = m[2];
-      const altMatch = imgAttrs.match(/alt="([^"]*)"/);
-      const alt = altMatch ? altMatch[1] : label;
-      cards.push(`<div class="gallery-card">
-  <div class="gallery-image-wrap">
-    <div class="gallery-placeholder">
-      <div class="gallery-placeholder-label">${escapeHtml(label)}</div>
-      <div class="gallery-placeholder-sub">시안 추가 예정</div>
-    </div>
-    <img ${imgAttrs} class="gallery-image" data-fallback="show">
-  </div>
-  <div class="gallery-label">${escapeHtml(label)}</div>
-</div>`);
+      cards.push(buildGalleryCard(label, undefined, imgAttrs));
     }
+
+    // 패턴 B — ul > li > a[href ending .html] (HTML 시안 리스트)
+    // 마크다운 `- [라벨](design/screenshots/foo.html)` → <ul><li><a href="...">라벨</a></li></ul>
+    const ulRe = /<ul>\s*([\s\S]*?)\s*<\/ul>/g;
+    while ((m = ulRe.exec(body)) !== null) {
+      const ulInner = m[1];
+      const liRe = /<li>\s*<a\s+href="([^"]+\.html)"[^>]*>([\s\S]*?)<\/a>\s*<\/li>/g;
+      let li: RegExpExecArray | null;
+      while ((li = liRe.exec(ulInner)) !== null) {
+        const href = li[1];
+        const label = stripTags(li[2]).trim();
+        cards.push(buildGalleryCard(label, href, undefined));
+      }
+    }
+
     if (cards.length === 0) return match;
     return `${heading}\n<div class="design-gallery">${cards.join('\n')}</div>`;
   });
+}
+
+/**
+ * 갤러리 카드 한 개 — 라벨 + (선택) 썸네일 또는 이모지 placeholder.
+ * - href: .html 파일 링크 (있으면 클릭 가능)
+ * - imgAttrs: img 태그 속성 (있으면 PNG 시안 표시)
+ */
+function buildGalleryCard(
+  label: string,
+  href: string | undefined,
+  imgAttrs: string | undefined,
+): string {
+  const safe = escapeHtml(label);
+  const path = href ? escapeHtml(href) : '';
+  const filename = href ? href.replace(/^.*\//, '') : '';
+  const safeFile = escapeHtml(filename);
+
+  const thumb = imgAttrs
+    ? `<div class="gallery-image-wrap">
+        <div class="gallery-placeholder">
+          <div class="gallery-placeholder-label">${safe}</div>
+          <div class="gallery-placeholder-sub">시안 추가 예정</div>
+        </div>
+        <img ${imgAttrs} class="gallery-image" data-fallback="show">
+      </div>`
+    : `<div class="gallery-image-wrap gallery-image-wrap-html">
+        <div class="gallery-placeholder">
+          <div class="gallery-icon-large">🎨</div>
+        </div>
+        <div class="gallery-html-badge">HTML</div>
+      </div>`;
+
+  const labelBlock = href
+    ? `<a class="gallery-label gallery-label-link" href="${path}">
+        <div class="gallery-label-title">${safe}</div>
+        <div class="gallery-label-path">${safeFile}</div>
+      </a>`
+    : `<div class="gallery-label">${safe}</div>`;
+
+  return `<div class="gallery-card">
+    ${thumb}
+    ${labelBlock}
+  </div>`;
 }
 
 /**
