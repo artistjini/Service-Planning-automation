@@ -148,12 +148,13 @@ async function handleFileChange(event: FileChangeEvent): Promise<void> {
       await reloadErrorHistory();
       break;
     default:
-      if (rel.startsWith('docs/design/')) {
+      if (rel.startsWith('docs/design/screenshots/') && rel.endsWith('.html')) {
+        await reloadDesignFiles();
+        await reloadSpecExtras();
+      } else if (rel.startsWith('docs/design/')) {
         await reloadArtifact('design');
-        // .html 파일 변경 시 design files listing도 다시
-        if (rel.endsWith('.html')) {
-          await reloadDesignFiles();
-        }
+      } else if (rel.startsWith('docs/adr/') && rel.endsWith('.md')) {
+        await reloadSpecExtras();
       }
       break;
   }
@@ -175,8 +176,53 @@ async function loadAll(): Promise<void> {
     reloadArtifact('architecture'),
     reloadErrorHistory(),
     reloadDesignFiles(),
+    reloadSpecExtras(),
   ]);
   refreshSidebar();
+}
+
+async function reloadSpecExtras(): Promise<void> {
+  if (!currentFolder) return;
+  const root = currentFolder.uri.fsPath;
+  const [adrFiles, designHtmlFiles] = await Promise.all([
+    collectMdFiles(path.join(root, 'docs', 'adr'), root),
+    collectHtmlFilesWithContent(path.join(root, 'docs', 'design', 'screenshots'), root),
+  ]);
+  webviewPanel?.setSpecArtifacts({ adrFiles, designHtmlFiles });
+}
+
+async function collectMdFiles(dir: string, rootFs: string): Promise<Array<{ relativePath: string; name: string; content?: string }>> {
+  const result: Array<{ relativePath: string; name: string; content?: string }> = [];
+  try {
+    const entries = await fs.promises.readdir(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      if (entry.isFile() && entry.name.toLowerCase().endsWith('.md')) {
+        const full = path.join(dir, entry.name);
+        const rel = path.relative(rootFs, full).replace(/\\/g, '/');
+        let content: string | undefined;
+        try { content = await fs.promises.readFile(full, 'utf-8'); } catch { /* skip */ }
+        result.push({ relativePath: rel, name: entry.name, content });
+      }
+    }
+  } catch { /* 폴더 없음 */ }
+  return result.sort((a, b) => a.name.localeCompare(b.name));
+}
+
+async function collectHtmlFilesWithContent(dir: string, rootFs: string): Promise<Array<{ relativePath: string; name: string; content?: string }>> {
+  const result: Array<{ relativePath: string; name: string; content?: string }> = [];
+  try {
+    const entries = await fs.promises.readdir(dir, { withFileTypes: true });
+    for (const entry of entries) {
+      if (entry.isFile() && entry.name.toLowerCase().endsWith('.html')) {
+        const full = path.join(dir, entry.name);
+        const rel = path.relative(rootFs, full).replace(/\\/g, '/');
+        let content: string | undefined;
+        try { content = await fs.promises.readFile(full, 'utf-8'); } catch { /* skip */ }
+        result.push({ relativePath: rel, name: entry.name, content });
+      }
+    }
+  } catch { /* 폴더 없음 */ }
+  return result.sort((a, b) => a.name.localeCompare(b.name));
 }
 
 async function reloadDesignFiles(): Promise<void> {

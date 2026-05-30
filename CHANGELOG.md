@@ -4,6 +4,19 @@
 
 형식: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](https://semver.org/).
 
+## [0.6.0] — 2026-05-30
+
+### Added (Spec 트리 확장)
+- **adr/ 폴더** 트리에 자동 표시 — `docs/adr/*.md` 파일들 listing. 각 파일을 클릭하면 우측에 풀-너비 마크다운 렌더 (📜 아이콘).
+- **design/screenshots/ 폴더** 트리에 자동 표시 — 폴더 자체 클릭 시 우측에 *큰 아이콘 그리드* (Windows 탐색기 풍, 색깔 그라데이션 placeholder + 파일명).
+- 그리드 카드 클릭 → 그 자리(Spec 페이지 내부)에서 iframe srcdoc 미리보기. "← 그리드로" 버튼으로 복귀.
+- file-watcher: `docs/adr/*.md` 변경 시 Spec extras 자동 reload.
+
+### Changed
+- `SpecArtifacts` 타입에 `adrFiles`, `designHtmlFiles` (각 파일에 content 포함) 필드 추가.
+- `SpecFolderKey` 에 `adr`, `design-gallery` 추가 (Phase 7개와 무관 — Spec UI 내부 enum).
+- `extension.ts`: `reloadSpecExtras` — adr/ + design/screenshots/ 파일 listing 수집 (content 포함, lazy 아님).
+
 ## [0.5.0] — 2026-05-30
 
 ### Changed (Breaking schema)
