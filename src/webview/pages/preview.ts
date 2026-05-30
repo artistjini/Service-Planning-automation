@@ -1,27 +1,21 @@
 /**
- * Preview 페이지 — Claude push한 디자인 HTML 1개 표시 (적립 X).
+ * Preview 페이지 — 큰 아이콘 그리드 (Windows 탐색기 풍).
  *
- * 데이터: 채팅에서 "프리뷰에 X.html 띄와봐" → extension.ts가 blueprint.preview 명령 받음 → 그 파일 읽어서 페이지 2 콘텐츠 교체.
- *
- * V0+엔 단순: iframe srcdoc으로 HTML 통째로 띄움. (CSP 격리)
- * 단점: 외부 리소스 (이미지, 폰트) 불가. V1에서 webview content를 직접 띄우는 방식 검토.
+ * - 카드 클릭: 풀-너비 viewer
+ * - "← 그리드로" 버튼으로 그리드로 복귀
+ * - 채팅 명령 push도 그대로 (Spec 페이지의 디자인 시안 명령)
  */
 
 import { escapeHtml } from '../shared';
 
 export interface PreviewContent {
-  /** 표시할 HTML 콘텐츠 (없으면 빈 상태) */
   html: string | null;
-  /** 출처 파일 경로 (안내용) */
   sourcePath: string | null;
-  /** push 된 시각 */
   pushedAt: Date | null;
 }
 
 export interface PreviewDesignFile {
-  /** 워크스페이스 기준 상대 경로 (예: docs/design/screenshots/spec-mockup-1-explorer.html) */
   relativePath: string;
-  /** 파일명 (라벨) */
   name: string;
 }
 
@@ -29,50 +23,74 @@ export function renderPreviewPage(
   preview: PreviewContent,
   designFiles: PreviewDesignFile[] = [],
 ): string {
-  const hasContent = !!preview.html;
+  // 1) 활성 콘텐츠 있으면 — 풀-너비 viewer + 상단 그리드로 돌아가기 버튼
+  if (preview.html) {
+    const escapedHtml = escapeHtml(preview.html);
+    const sourceLabel = escapeHtml(preview.sourcePath ?? '(unknown)');
+    const timeLabel = preview.pushedAt ? formatTime(preview.pushedAt) : '';
 
-  // 좌측 listing (파일들)
-  const listingHtml = designFiles.length === 0
-    ? `<div class="preview-empty-listing">docs/design/ 폴더에 .html 파일이 없어요.</div>`
-    : designFiles.map(f => {
-        const active = preview.sourcePath === f.relativePath ? 'active' : '';
-        return `<button type="button" class="preview-file-row ${active}" data-preview-file="${escapeHtml(f.relativePath)}">
-          <span class="preview-file-icon">📄</span>
-          <span class="preview-file-name">${escapeHtml(f.name)}</span>
-          <span class="preview-file-path">${escapeHtml(f.relativePath.replace(/^docs\/design\//, ''))}</span>
-        </button>`;
-      }).join('');
+    return `
+      <div class="preview-detail-bar">
+        <button type="button" class="preview-back-btn" data-action="preview-back">← 그리드로</button>
+        <div class="preview-detail-path">${sourceLabel}</div>
+        <div class="preview-detail-time">${timeLabel}</div>
+      </div>
+      <div class="preview-detail-frame-wrap">
+        <iframe class="preview-detail-frame" srcdoc="${escapedHtml}" sandbox="allow-same-origin"></iframe>
+      </div>`;
+  }
 
-  // 우측 미리보기 영역
-  const viewerHtml = hasContent
-    ? `<div class="preview-viewer-header">
-         <div class="preview-viewer-path">${escapeHtml(preview.sourcePath ?? '')}</div>
-         <div class="preview-viewer-time">${preview.pushedAt ? formatTime(preview.pushedAt) : ''}</div>
-       </div>
-       <iframe class="preview-frame" srcdoc="${escapeHtml(preview.html!)}" sandbox="allow-same-origin"></iframe>`
-    : `<div class="preview-viewer-empty">
-         <div class="preview-viewer-empty-title">왼쪽에서 시안을 골라주세요</div>
-         <div class="preview-viewer-empty-sub">
-           또는 채팅에서 <code>프리뷰에 [파일명] 띄와봐</code> 라고 명령
-         </div>
-       </div>`;
+  // 2) 그리드
+  if (designFiles.length === 0) {
+    return `
+      <div class="page-hero compact">
+        <div class="page-eyebrow">PREVIEW · 디자인 시안</div>
+        <h1 class="page-title">시안이 없어요</h1>
+        <p class="page-subtitle">
+          <code>docs/design/</code> 폴더에 <code>.html</code> 파일이 없습니다.<br/>
+          파일을 추가하거나 채팅에서 <code>프리뷰에 [파일명] 띄와봐</code> 라고 명령해보세요.
+        </p>
+      </div>`;
+  }
+
+  const tilesHtml = designFiles.map(f => {
+    // 파일명에서 컬러 코드 추출 (시각 다양성)
+    const hue = simpleHash(f.relativePath) % 360;
+    const accent = `hsl(${hue}, 70%, 70%)`;
+    const accent2 = `hsl(${(hue + 60) % 360}, 70%, 80%)`;
+    return `
+    <button type="button" class="preview-tile" data-preview-file="${escapeHtml(f.relativePath)}">
+      <div class="preview-tile-thumb" style="background: linear-gradient(135deg, ${accent} 0%, ${accent2} 100%);">
+        <div class="preview-tile-icon">🖼️</div>
+        <div class="preview-tile-html-label">HTML</div>
+      </div>
+      <div class="preview-tile-body">
+        <div class="preview-tile-name">${escapeHtml(f.name)}</div>
+        <div class="preview-tile-path">${escapeHtml(f.relativePath.replace(/^docs\/design\//, ''))}</div>
+      </div>
+    </button>`;
+  }).join('');
 
   return `
     <div class="page-hero compact">
       <div class="page-eyebrow">PREVIEW · 디자인 시안</div>
-      <h1 class="page-title-small">${designFiles.length}개 시안</h1>
-      <p class="page-subtitle small">docs/design/ 폴더의 .html 파일들 자동 listing · 클릭으로 미리보기</p>
+      <h1 class="page-title">${designFiles.length}개 시안</h1>
+      <p class="page-subtitle">
+        <code>docs/design/</code> 폴더 자동 listing · 큰 카드 클릭으로 확대
+      </p>
     </div>
 
-    <div class="preview-explorer">
-      <aside class="preview-listing">
-        <div class="preview-listing-header">DESIGN FILES</div>
-        ${listingHtml}
-      </aside>
-      <main class="preview-viewer">
-        ${viewerHtml}
-      </main>
+    <div class="preview-grid">
+      ${tilesHtml}
     </div>`;
+}
+
+function simpleHash(s: string): number {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) {
+    h = ((h << 5) - h + s.charCodeAt(i)) | 0;
+  }
+  return Math.abs(h);
 }
 
 function formatTime(date: Date): string {

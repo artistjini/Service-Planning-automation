@@ -101,17 +101,23 @@ function parsePhases(text: string): Phase[] {
       }
     }
 
-    // 옛 schema (Phase 5 SHIP, Phase 6 POST-SHIP) → 새 schema (Phase 4, 5) 매핑.
-    // 새 schema의 .md를 쓰면 자연스럽게 0~5가 들어옴.
+    // 호환 매핑:
+    //  v0.5 schema (현재): 0=PRODUCT 1=DESIGN 2=ARCH 3=IMPL 4=REVIEW 5=SHIP 6=POST-SHIP
+    //  v0.2~v0.4 schema (옛): 0~3 동일, 4=SHIP, 5=POST-SHIP
+    //  v0.1 schema (옛옛): 0~3 동일, 4=CHECKPOINT(skip위), 5=SHIP, 6=POST-SHIP
     let id: PhaseId;
     if (rawId >= 0 && rawId <= 3) {
       id = rawId as PhaseId;
-    } else if (rawId === 5 || (rawId === 4 && name === 'SHIP')) {
-      id = 4;
-    } else if (rawId === 6 || (rawId === 5 && name === 'POST-SHIP')) {
-      id = 5;
-    } else if (rawId === 4) {
-      id = 4; // 새 schema의 SHIP
+    } else if (rawId === 4 && name === 'REVIEW') {
+      id = 4; // v0.5 신규
+    } else if (rawId === 4 && name === 'SHIP') {
+      id = 5; // v0.2~v0.4 → v0.5 매핑
+    } else if (rawId === 5 && name === 'SHIP') {
+      id = 5; // v0.5 또는 v0.1 ship
+    } else if (rawId === 5 && name === 'POST-SHIP') {
+      id = 6; // v0.2~v0.4 → v0.5 매핑
+    } else if (rawId === 6 && name === 'POST-SHIP') {
+      id = 6; // v0.5 또는 v0.1
     } else {
       continue;
     }
@@ -125,8 +131,8 @@ function parsePhases(text: string): Phase[] {
     });
   }
 
-  // Phase 0~5 누락 보강 (state.md에 없으면 pending으로)
-  for (let i = 0; i <= 5; i++) {
+  // Phase 0~6 누락 보강 (state.md에 없으면 pending으로)
+  for (let i = 0; i <= 6; i++) {
     if (!phases.find(p => p.id === i)) {
       phases.push({
         id: i as PhaseId,

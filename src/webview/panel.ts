@@ -180,6 +180,10 @@ export class BlueprintWebviewPanel {
       }
     } else if (msg.type === 'action' && msg.action === 'create-error-history') {
       await this.callbacks.onCreateErrorHistory();
+    } else if (msg.type === 'action' && msg.action === 'preview-back') {
+      // 그리드로 복귀 — preview 콘텐츠 비움
+      this.preview = { html: null, sourcePath: null, pushedAt: null };
+      this.refresh();
     } else if (msg.type === 'preview-file-click' && typeof msg.path === 'string') {
       await this.callbacks.onPreviewFileClick(msg.path);
     } else if (msg.type === 'spec-select' && typeof msg.selection === 'string') {

@@ -180,7 +180,8 @@ V0~V3은 `resume` 모드만 실제 동작. 나머지 두 모드는 안내 메시
 | 006 | 2026-05-22 | 가운데 webview 4페이지 멀티탭 (Plan/Spec/Preview/Errors) |
 | 007 | 2026-05-22 | 사이드바 TreeView → WebviewViewProvider 전환 (디자인 자유) |
 | 008 | 2026-05-24 | 마크다운 자동 가공 파이프라인 (swatch/NON-GOALS/디자인 시안/카드) |
-| 009 | 2026-05-24 | CHECKPOINT를 phase 리스트에서 제외 → 사이드바 KPI 카드. Phase 6개 (PRODUCT/DESIGN/ARCH/IMPLEMENT/SHIP/POST-SHIP). |
+| 009 | 2026-05-24 | CHECKPOINT를 phase 리스트에서 제외 → 사이드바 KPI 카드. Phase 6개. |
+| 010 | 2026-05-30 | REVIEW를 phase로 박음 — IMPLEMENT와 SHIP 사이. Phase 7개. SHIP 전 hard gate. |
 
 세부는 `docs/adr/ADR-{NNN}.md` 풀 파일 (006~008은 별도 파일 작성됨)
 

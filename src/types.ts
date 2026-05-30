@@ -3,9 +3,9 @@
  * 이벤트 버스의 payload 시그니처가 곧 도메인 간 계약.
  */
 
-// CHECKPOINT는 cross-cutting trigger라 phase 리스트에서 제외 (ADR-009).
-// 사이드바의 별도 KPI 카드에서 carriage count만 표시.
-export type PhaseId = 0 | 1 | 2 | 3 | 4 | 5;
+// Phase 7개 (v0.5+ schema, ADR-010): REVIEW를 IMPLEMENT와 SHIP 사이에 박음.
+// CHECKPOINT는 그대로 phase 리스트에서 제외 (ADR-009) — 사이드바 KPI 카드.
+export type PhaseId = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 export type PhaseStatus = 'pending' | 'in_progress' | 'done';
 
 export const PHASE_NAMES: Record<PhaseId, string> = {
@@ -13,8 +13,9 @@ export const PHASE_NAMES: Record<PhaseId, string> = {
   1: 'DESIGN',
   2: 'ARCHITECTURE',
   3: 'IMPLEMENT',
-  4: 'SHIP',
-  5: 'POST-SHIP',
+  4: 'REVIEW',
+  5: 'SHIP',
+  6: 'POST-SHIP',
 };
 
 export interface Phase {

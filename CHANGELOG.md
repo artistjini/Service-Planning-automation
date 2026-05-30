@@ -4,6 +4,19 @@
 
 형식: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](https://semver.org/).
 
+## [0.5.0] — 2026-05-30
+
+### Changed (Breaking schema)
+- **Phase 7개로 복귀** — `PRODUCT / DESIGN / ARCHITECTURE / IMPLEMENT / **REVIEW** / SHIP / POST-SHIP`. REVIEW가 IMPLEMENT와 SHIP 사이 정식 phase. ADR-010.
+- `parser/state.ts` 호환 매핑 — v0.1 / v0.2~v0.4 / v0.5 schema 다 인식.
+
+### Added
+- **Preview 페이지 큰 아이콘 그리드** — Windows 탐색기 풍. 색깔 그라데이션 placeholder + 파일명 + 경로. 클릭하면 풀-너비 viewer. "← 그리드로" 버튼으로 복귀.
+
+### Notes
+- /blueprint 스킬의 Phase 4 REVIEW 자동 호출 룰은 별도 작업 (다음 버전).
+- 진짜 썸네일 (iframe srcdoc scaled)은 V0.6에서.
+
 ## [0.4.0] — 2026-05-30
 
 ### Changed (Major UX)

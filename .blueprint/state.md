@@ -5,11 +5,13 @@
 - [x] Phase 1: DESIGN (2026-05-22)
 - [x] Phase 2: ARCHITECTURE (2026-05-22)
 - [x] Phase 3: IMPLEMENT (2026-05-24)
-- [x] Phase 4: SHIP (v0.1.0, 2026-05-24)
-- [x] Phase 5: POST-SHIP (2026-05-24)
+- [x] Phase 4: REVIEW (checkpoint 1회 + ad-hoc, 2026-05-24)
+- [x] Phase 5: SHIP (v0.1.0, 2026-05-24)
+- [x] Phase 6: POST-SHIP (2026-05-24)
 
 > CHECKPOINT는 phase 리스트에서 제외 (ADR-009). cross-cutting trigger라
 > 사이드바 별도 KPI 카드에서 count만 추적.
+> REVIEW는 IMPLEMENT 후 SHIP 전 정식 phase로 박힘 (ADR-010, v0.5+).
 
 ## Next action
 V0+ 전체 phase 완료. 1주 dogfooding 후 V1 결정. 
