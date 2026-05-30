@@ -146,13 +146,20 @@ export function renderSpecPage(
       const tilesHtml = galleryFiles.map(f => {
         const sid = f.name.toLowerCase().replace(/\.html$/, '');
         const hue = simpleHash(f.relativePath) % 360;
-        const accent = `hsl(${hue}, 70%, 70%)`;
-        const accent2 = `hsl(${(hue + 60) % 360}, 70%, 80%)`;
+        const accent = `hsl(${hue}, 70%, 75%)`;
+        const accent2 = `hsl(${(hue + 60) % 360}, 70%, 85%)`;
+        const thumbInner = f.content
+          ? `<iframe class="spec-gallery-frame-thumb" srcdoc="${escapeHtml(f.content)}" sandbox="allow-same-origin" scrolling="no" tabindex="-1"></iframe>
+             <div class="spec-gallery-click-shield"></div>
+             <div class="spec-gallery-html-label">HTML</div>`
+          : `<div class="spec-gallery-placeholder" style="background: linear-gradient(135deg, ${accent} 0%, ${accent2} 100%);">
+               <div class="spec-gallery-icon">🖼️</div>
+               <div class="spec-gallery-html-label">HTML</div>
+             </div>`;
         return `
           <button type="button" class="spec-gallery-tile" data-spec-select="design-gallery:${sid}">
-            <div class="spec-gallery-thumb" style="background: linear-gradient(135deg, ${accent} 0%, ${accent2} 100%);">
-              <div class="spec-gallery-icon">🖼️</div>
-              <div class="spec-gallery-html-label">HTML</div>
+            <div class="spec-gallery-thumb">
+              ${thumbInner}
             </div>
             <div class="spec-gallery-body">
               <div class="spec-gallery-name">${escapeHtml(f.name)}</div>

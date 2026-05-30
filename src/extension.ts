@@ -229,29 +229,31 @@ async function reloadDesignFiles(): Promise<void> {
   if (!currentFolder) return;
   const designDir = path.join(currentFolder.uri.fsPath, 'docs', 'design');
   try {
-    const files = await collectHtmlFiles(designDir, currentFolder.uri.fsPath);
+    const files = await collectHtmlFilesDeep(designDir, currentFolder.uri.fsPath);
     webviewPanel?.setDesignFiles(files);
   } catch {
     webviewPanel?.setDesignFiles([]);
   }
 }
 
-async function collectHtmlFiles(dir: string, rootFs: string): Promise<{ relativePath: string; name: string }[]> {
-  const result: { relativePath: string; name: string }[] = [];
+async function collectHtmlFilesDeep(dir: string, rootFs: string): Promise<{ relativePath: string; name: string; content?: string }[]> {
+  const result: { relativePath: string; name: string; content?: string }[] = [];
   try {
     const entries = await fs.promises.readdir(dir, { withFileTypes: true });
     for (const entry of entries) {
       const full = path.join(dir, entry.name);
       if (entry.isDirectory()) {
-        const sub = await collectHtmlFiles(full, rootFs);
+        const sub = await collectHtmlFilesDeep(full, rootFs);
         result.push(...sub);
       } else if (entry.isFile() && entry.name.toLowerCase().endsWith('.html')) {
         const rel = path.relative(rootFs, full).replace(/\\/g, '/');
-        result.push({ relativePath: rel, name: entry.name });
+        let content: string | undefined;
+        try { content = await fs.promises.readFile(full, 'utf-8'); } catch { /* skip */ }
+        result.push({ relativePath: rel, name: entry.name, content });
       }
     }
   } catch {
-    // 폴더 없거나 접근 불가 — 빈 리스트
+    // 폴더 없거나 접근 불가
   }
   return result.sort((a, b) => a.relativePath.localeCompare(b.relativePath));
 }

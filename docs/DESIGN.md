@@ -112,7 +112,8 @@ V1 이후: 폰트 family 자동 샘플 렌더, mermaid 다이어그램, `docs/de
 > 시안이 없으면 (파일 없을 때) 그냥 빈 자리. 캡처 후 추가하면 webview에 자동 렌더링.
 
 ### Sidebar (왼쪽 패널, 항상 보임)
-![Sidebar — 항상 보이는 process state](design/screenshots/sidebar.png)
+실제 동작하는 HTML 시안: [design/screenshots/sidebar.html](design/screenshots/sidebar.html)
+(Spec 페이지의 `design/screenshots/` 폴더에서 클릭으로 미리보기 가능)
 
 ### Center webview — Plan 탭
 ![Plan 페이지 — roadmap + 현재 위치 마킹](design/screenshots/webview-plan.png)

@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Sidebar 시안</title>
+<style>
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Pretendard", system-ui, sans-serif;
+  font-size: 13px; font-weight: 500;
+  color: #1d1d1f; line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+  background:
+    radial-gradient(circle at 15% 10%, rgba(0, 122, 255, 0.32) 0%, transparent 35%),
+    radial-gradient(circle at 90% 25%, rgba(255, 45, 85, 0.26) 0%, transparent 35%),
+    radial-gradient(circle at 80% 70%, rgba(175, 82, 222, 0.26) 0%, transparent 35%),
+    radial-gradient(circle at 20% 90%, rgba(52, 199, 89, 0.26) 0%, transparent 35%),
+    linear-gradient(180deg, #f5f5f7 0%, #ececef 100%);
+  background-attachment: fixed;
+  min-height: 100vh;
+}
+.shell { max-width: 280px; padding: 16px 12px 32px; display: flex; flex-direction: column; gap: 14px; }
+
+.hero {
+  position: relative;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(30px) saturate(180%);
+  -webkit-backdrop-filter: blur(30px) saturate(180%);
+  border-radius: 18px; padding: 20px 18px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.95),
+    0 1px 2px rgba(0,0,0,0.06),
+    0 8px 24px rgba(0,0,0,0.1),
+    0 32px 64px rgba(0,0,0,0.08);
+  isolation: isolate;
+}
+.hero::before {
+  content: ""; position: absolute; inset: 0; border-radius: 18px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.6) 0%, transparent 45%);
+  pointer-events: none; z-index: 1;
+}
+.hero > * { position: relative; z-index: 2; }
+
+.hero-folder { display: flex; align-items: flex-start; gap: 6px; font-size: 12px; font-weight: 600; line-height: 1.45; word-break: break-all; }
+.hero-folder-path { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: 11px; color: #424245; word-break: break-all; }
+.hero-divider { height: 1px; background: rgba(0,0,0,0.08); margin: 14px 0; }
+.hero-phase-id { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; color: #0066cc; margin-bottom: 2px; }
+.hero-title { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 16px 0; line-height: 1.05; }
+.progress-bar {
+  position: relative; height: 10px;
+  background: rgba(0,0,0,0.08);
+  border-radius: 999px; overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.14), inset 0 -1px 0 rgba(255,255,255,0.5);
+  margin-bottom: 8px;
+}
+.progress-fill {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 57%;
+  background-image: linear-gradient(90deg, #34c759 0%, #aacc00 25%, #ffcc00 50%, #ff9500 75%, #ff3b30 100%);
+  background-size: 175% 100%;
+  border-radius: 999px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), 0 0 8px rgba(255,149,0,0.3);
+}
+.progress-meta { display: flex; justify-content: space-between; font-size: 11px; font-weight: 700; color: #6e6e73; font-family: ui-monospace, monospace; }
+
+.card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(24px) saturate(170%);
+  -webkit-backdrop-filter: blur(24px) saturate(170%);
+  border-radius: 14px; padding: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.85),
+    0 1px 2px rgba(0,0,0,0.05),
+    0 6px 16px rgba(0,0,0,0.07),
+    0 16px 36px rgba(0,0,0,0.04);
+  isolation: isolate;
+}
+.card::before {
+  content: ""; position: absolute; inset: 0; border-radius: 14px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.35) 0%, transparent 50%);
+  pointer-events: none; z-index: 1;
+}
+.card > * { position: relative; z-index: 2; }
+.card-heading { font-size: 11px; font-weight: 800; letter-spacing: 0.12em; color: #6e6e73; margin: 0 0 12px 0; }
+
+.phase-row { display: flex; align-items: center; gap: 8px; padding: 7px 8px; border-radius: 8px; font-size: 13px; font-weight: 600; margin: 0 -4px; }
+.phase-row.pending { opacity: 0.55; }
+.phase-row.in_progress { background: rgba(0, 102, 204, 0.1); font-weight: 700; }
+.phase-circle { width: 14px; height: 14px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 800; color: white; }
+.phase-circle.done { background: #34c759; }
+.phase-circle.done::before { content: "✓"; }
+.phase-circle.in_progress { background: #0066cc; box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.25); }
+.phase-circle.pending { background: transparent; border: 1.5px solid #c7c7cc; }
+.phase-id { font-family: ui-monospace, monospace; font-size: 10px; font-weight: 700; color: #6e6e73; }
+.phase-name { flex: 1; }
+.phase-meta { font-family: ui-monospace, monospace; font-size: 10px; font-weight: 600; color: #6e6e73; }
+
+.focus-label { font-size: 11px; font-weight: 800; letter-spacing: 0.04em; color: #0066cc; margin-bottom: 6px; text-transform: uppercase; }
+.focus-text { font-size: 13px; font-weight: 500; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="shell">
+
+  <div class="hero">
+    <div class="hero-folder">
+      <span>📁</span>
+      <span class="hero-folder-path">c:\Users\snu90\Desktop\claude projects\대시보드 확장 프로그램</span>
+    </div>
+    <div class="hero-divider"></div>
+    <div class="hero-phase-id">PHASE 3</div>
+    <h1 class="hero-title">IMPLEMENT</h1>
+    <div class="progress-bar"><div class="progress-fill"></div></div>
+    <div class="progress-meta"><span>4 / 7</span><span>57%</span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-heading">PHASES</div>
+    <div class="phase-row done"><div class="phase-circle done"></div><span class="phase-id">P0</span><span class="phase-name">PRODUCT</span><span class="phase-meta">2026-05-22</span></div>
+    <div class="phase-row done"><div class="phase-circle done"></div><span class="phase-id">P1</span><span class="phase-name">DESIGN</span><span class="phase-meta">2026-05-22</span></div>
+    <div class="phase-row done"><div class="phase-circle done"></div><span class="phase-id">P2</span><span class="phase-name">ARCHITECTURE</span><span class="phase-meta">2026-05-22</span></div>
+    <div class="phase-row in_progress"><div class="phase-circle in_progress"></div><span class="phase-id">P3</span><span class="phase-name">IMPLEMENT</span><span class="phase-meta"></span></div>
+    <div class="phase-row pending"><div class="phase-circle pending"></div><span class="phase-id">P4</span><span class="phase-name">REVIEW</span><span class="phase-meta"></span></div>
+    <div class="phase-row pending"><div class="phase-circle pending"></div><span class="phase-id">P5</span><span class="phase-name">SHIP</span><span class="phase-meta"></span></div>
+    <div class="phase-row pending"><div class="phase-circle pending"></div><span class="phase-id">P6</span><span class="phase-name">POST-SHIP</span><span class="phase-meta"></span></div>
+  </div>
+
+  <div class="card">
+    <div class="card-heading">CURRENT FOCUS</div>
+    <div class="focus-label">PHASE 3 · IMPLEMENT</div>
+    <div class="focus-text">단위 8: 가운데 webview 4페이지 멀티탭 완료. 단위 9 V0+ 최종 동작 검증 진행 중.</div>
+  </div>
+
+</div>
+</body>
+</html>

@@ -4,6 +4,21 @@
 
 형식: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](https://semver.org/).
 
+## [0.7.0] — 2026-05-30
+
+### Added
+- **Preview/Spec 그리드 카드에 진짜 iframe 썸네일** — `srcdoc` + `transform: scale(0.3125)` + `pointer-events: none` + click-shield 오버레이. Windows 탐색기 풍 큰 아이콘이 *실제 콘텐츠 미리보기*로 동작.
+- **`docs/design/screenshots/sidebar.html`** — 우리 사이드바의 실제 모습을 재현한 정적 HTML 시안 (Notion + Apple 글래스 풍, 컬러 blob 배경, Hero + Phases + Current focus).
+- DESIGN.md의 `### Sidebar` placeholder를 `.html`로 교체 (Spec → DESIGN → 디자인 시안에서 클릭 미리보기).
+
+### Changed
+- `PreviewDesignFile` 타입에 `content` 필드 추가. `reloadDesignFiles` 가 .html content 같이 읽음 (`collectHtmlFilesDeep`).
+- 기존 placeholder 그라데이션 카드는 `content == null` 폴백으로 유지.
+
+### Notes
+- 나머지 6개 시안 HTML (webview-plan, spec-product/design/architecture, preview, errors)은 v0.8+.
+- 사이드바 3섹션 (CHECKPOINTS/TRIGGERS/ACTIVE FILE) 조건부 표시는 사용자 결정 후 별도 ship.
+
 ## [0.6.0] — 2026-05-30
 
 ### Added (Spec 트리 확장)

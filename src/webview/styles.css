@@ -564,6 +564,31 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 11;
+  overflow: hidden;
+  background: #f5f5f7;
+}
+
+.spec-gallery-frame-thumb {
+  position: absolute;
+  top: 0; left: 0;
+  width: 320%;
+  height: 320%;
+  transform: scale(0.3125);
+  transform-origin: top left;
+  border: none;
+  background: white;
+  pointer-events: none;
+}
+
+.spec-gallery-click-shield {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+}
+
+.spec-gallery-placeholder {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -578,7 +603,8 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
   position: absolute;
   bottom: 10px;
   right: 12px;
-  background: rgba(0, 0, 0, 0.5);
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(8px);
   color: white;
   font-size: 9px;
@@ -1089,11 +1115,34 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
   position: relative;
   width: 100%;
   aspect-ratio: 16 / 11;
+  overflow: hidden;
+  background: #f5f5f7;
+}
+
+.preview-tile-frame {
+  position: absolute;
+  top: 0; left: 0;
+  width: 320%;
+  height: 320%;
+  transform: scale(0.3125);
+  transform-origin: top left;
+  border: none;
+  background: white;
+  pointer-events: none;
+}
+
+.preview-tile-click-shield {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+}
+
+.preview-tile-placeholder {
+  position: absolute;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
-  gap: 8px;
 }
 
 .preview-tile-icon {
@@ -1103,9 +1152,10 @@ li.spec-folder.open > .spec-folder-row > .spec-chevron {
 
 .preview-tile-html-label {
   position: absolute;
-  bottom: 12px;
-  right: 14px;
-  background: rgba(0, 0, 0, 0.5);
+  bottom: 10px;
+  right: 12px;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.6);
   backdrop-filter: blur(8px);
   color: white;
   font-size: 10px;

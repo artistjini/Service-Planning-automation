@@ -17,6 +17,8 @@ export interface PreviewContent {
 export interface PreviewDesignFile {
   relativePath: string;
   name: string;
+  /** 카드 썸네일 렌더용 (iframe srcdoc) */
+  content?: string;
 }
 
 export function renderPreviewPage(
@@ -54,15 +56,22 @@ export function renderPreviewPage(
   }
 
   const tilesHtml = designFiles.map(f => {
-    // 파일명에서 컬러 코드 추출 (시각 다양성)
     const hue = simpleHash(f.relativePath) % 360;
-    const accent = `hsl(${hue}, 70%, 70%)`;
-    const accent2 = `hsl(${(hue + 60) % 360}, 70%, 80%)`;
+    const accent = `hsl(${hue}, 70%, 75%)`;
+    const accent2 = `hsl(${(hue + 60) % 360}, 70%, 85%)`;
+    // 실제 콘텐츠 있으면 iframe 썸네일, 없으면 placeholder
+    const thumbInner = f.content
+      ? `<iframe class="preview-tile-frame" srcdoc="${escapeHtml(f.content)}" sandbox="allow-same-origin" scrolling="no" tabindex="-1"></iframe>
+         <div class="preview-tile-click-shield"></div>
+         <div class="preview-tile-html-label">HTML</div>`
+      : `<div class="preview-tile-placeholder" style="background: linear-gradient(135deg, ${accent} 0%, ${accent2} 100%);">
+           <div class="preview-tile-icon">🖼️</div>
+           <div class="preview-tile-html-label">HTML</div>
+         </div>`;
     return `
     <button type="button" class="preview-tile" data-preview-file="${escapeHtml(f.relativePath)}">
-      <div class="preview-tile-thumb" style="background: linear-gradient(135deg, ${accent} 0%, ${accent2} 100%);">
-        <div class="preview-tile-icon">🖼️</div>
-        <div class="preview-tile-html-label">HTML</div>
+      <div class="preview-tile-thumb">
+        ${thumbInner}
       </div>
       <div class="preview-tile-body">
         <div class="preview-tile-name">${escapeHtml(f.name)}</div>
