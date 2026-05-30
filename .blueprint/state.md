@@ -14,8 +14,7 @@
 > REVIEW는 IMPLEMENT 후 SHIP 전 정식 phase로 박힘 (ADR-010, v0.5+).
 
 ## Next action
-V0+ 전체 phase 완료. 1주 dogfooding 후 V1 결정. 
-GitHub Release 페이지에서 v0.1.0 release 만들기 (수동, 선택): https://github.com/snu9026-Chris/SERVICE-PLANNING/releases/new?tag=v0.1.0
+사이드바 정보 위계 정리 중 (TRIGGERS/ACTIVE FILE/CHECKPOINTS 제거, RECENT CHANGES 라벨 의미화).
 
 ## Decisions log
 - 2026-05-22: 산출물 = Antigravity extension, 시각화·알림 레이어 (단방향 .md → UI, AI 호출 X)

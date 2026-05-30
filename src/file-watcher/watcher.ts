@@ -101,12 +101,27 @@ export class FileWatcher extends EventEmitter {
     const relPath = path
       .relative(this.workspaceFolder.uri.fsPath, fsPath)
       .replace(/\\/g, '/');
+    // 임시 파일·빌드 산출물 등 무의미한 변경 무시
+    if (this.shouldIgnoreForRecent(relPath)) return;
     // 같은 파일 이전 항목 제거 (가장 최근만 유지)
     this.recentChanges = this.recentChanges.filter(r => r.relativePath !== relPath);
     this.recentChanges.unshift({ relativePath: relPath, changedAt: new Date(), kind });
     if (this.recentChanges.length > RECENT_BUFFER_SIZE) {
       this.recentChanges.length = RECENT_BUFFER_SIZE;
     }
+  }
+
+  private shouldIgnoreForRecent(rel: string): boolean {
+    const r = rel.toLowerCase();
+    if (r.includes('.tmp.')) return true;       // VS Code 저장 중 임시 파일
+    if (r.endsWith('.swp') || r.endsWith('~')) return true;
+    if (r.endsWith('.map')) return true;        // source map
+    if (r.includes('/node_modules/')) return true;
+    if (r.includes('/out/')) return true;       // 빌드 산출물
+    if (r.includes('/.git/')) return true;
+    if (r.endsWith('.vsix')) return true;
+    if (r === 'package-lock.json') return true;
+    return false;
   }
 
   dispose(): void {

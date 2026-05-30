@@ -4,6 +4,20 @@
 
 형식: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](https://semver.org/).
 
+## [0.8.0] — 2026-05-30
+
+### Removed (사이드바 정보 위계 정리)
+- **TRIGGERS 카드** — REVIEW phase가 trigger 역할 흡수.
+- **ACTIVE FILE 카드** — 코드 편집 아닌 webview 위주 워크플로엔 노이즈.
+- **CHECKPOINTS KPI 카드** — v0.5의 REVIEW phase가 같은 역할. ADR-009 흔적 제거.
+
+### Changed
+- **사이드바 4섹션**으로 정리: Hero / PHASES / CURRENT FOCUS / RECENT CHANGES
+- **RECENT CHANGES 라벨 의미화** — `src/webview/styles.css` → 💅 webview 스타일, `docs/PRODUCT.md` → 📋 PRODUCT 명세 등. 25개 카테고리 매핑.
+- **임시 파일 필터** — `.tmp.XX`, `.swp`, `.map`, `out/`, `node_modules/`, `.git/`, `*.vsix` 등 변경 무시.
+- 같은 카테고리는 가장 최근만 표시 (dedup).
+- state.md `## Next action` 추상화 권고 — 디테일한 sub-task가 아닌 *현재 작업 영역*으로.
+
 ## [0.7.0] — 2026-05-30
 
 ### Added

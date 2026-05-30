@@ -127,9 +127,6 @@ export class SidebarViewProvider implements vscode.WebviewViewProvider {
       renderHero(state, workspaceFolderName, workspaceFolderPath),
       renderPhases(state.phases),
       renderCurrentFocus(state.nextAction, state.phases),
-      renderCheckpointKpi(state),
-      renderTriggers(state.triggers),
-      renderActiveFile(activeFile),
       renderRecentChanges(recentChanges),
     ].join('\n');
   }
@@ -256,7 +253,10 @@ function renderActiveFile(info: ActiveFileInfo): string {
 }
 
 function renderRecentChanges(changes: RecentChange[]): string {
-  if (changes.length === 0) {
+  // 임시 파일 + 무의미한 변경 필터
+  const filtered = changes.filter(c => !isIgnoredPath(c.relativePath));
+
+  if (filtered.length === 0) {
     return `
       <div class="card">
         <div class="card-heading">RECENT CHANGES</div>
@@ -264,13 +264,26 @@ function renderRecentChanges(changes: RecentChange[]): string {
       </div>`;
   }
 
-  const rows = changes
+  // 같은 *카테고리*는 가장 최근만 (예: webview 스타일이 3번 변경되면 1번만)
+  const seenCategories = new Set<string>();
+  const deduped = filtered.filter(c => {
+    const cat = categorize(c.relativePath).label;
+    if (seenCategories.has(cat)) return false;
+    seenCategories.add(cat);
+    return true;
+  });
+
+  const rows = deduped
     .slice(0, 6)
-    .map(c => `
+    .map(c => {
+      const { icon, label } = categorize(c.relativePath);
+      return `
       <div class="recent-row">
         <span class="recent-time">${escapeHtml(formatRelativeTime(c.changedAt))}</span>
-        <span class="recent-path">${escapeHtml(shortPath(c.relativePath))}</span>
-      </div>`)
+        <span class="recent-icon">${icon}</span>
+        <span class="recent-label">${escapeHtml(label)}</span>
+      </div>`;
+    })
     .join('');
 
   return `
@@ -278,6 +291,63 @@ function renderRecentChanges(changes: RecentChange[]): string {
       <div class="card-heading">RECENT CHANGES</div>
       <div class="recent-list">${rows}</div>
     </div>`;
+}
+
+/** 임시 파일·메타 변경 무시 — VS Code 저장 중 .tmp.XX 파일, .git 메타 등 */
+function isIgnoredPath(rel: string): boolean {
+  const r = rel.toLowerCase();
+  if (r.includes('.tmp.')) return true;
+  if (r.endsWith('.swp') || r.endsWith('~')) return true;
+  if (r.endsWith('.map')) return true;
+  if (r.includes('/node_modules/')) return true;
+  if (r.includes('/out/')) return true;
+  if (r.includes('/.git/')) return true;
+  if (r.endsWith('.vsix')) return true;
+  if (r.endsWith('package-lock.json')) return true;
+  return false;
+}
+
+/** 파일 경로 → 의미 있는 카테고리 라벨 */
+function categorize(rel: string): { icon: string; label: string } {
+  const r = rel.replace(/\\/g, '/');
+
+  // 산출물 .md
+  if (r === 'docs/PRODUCT.md') return { icon: '📋', label: 'PRODUCT 명세' };
+  if (r === 'docs/DESIGN.md') return { icon: '🎨', label: 'DESIGN 명세' };
+  if (r === 'docs/ARCHITECTURE.md') return { icon: '🏗️', label: 'ARCHITECTURE' };
+  if (r === '.blueprint/state.md') return { icon: '📍', label: 'Blueprint state' };
+  if (r === 'plans/roadmap.md') return { icon: '🗺️', label: 'Roadmap' };
+  if (r === 'docs/error.history.md') return { icon: '⚠️', label: '에러 히스토리' };
+
+  // 폴더별 카테고리
+  if (r.startsWith('docs/adr/')) return { icon: '📜', label: 'ADR 갱신' };
+  if (r.startsWith('docs/design/screenshots/')) return { icon: '🖼️', label: '디자인 시안' };
+  if (r.startsWith('docs/design/')) return { icon: '🎨', label: 'design 자산' };
+  if (r.startsWith('docs/checkpoint')) return { icon: '✅', label: 'Checkpoint 기록' };
+  if (r.startsWith('docs/reviews/')) return { icon: '🔍', label: 'Code review 결과' };
+  if (r.startsWith('docs/')) return { icon: '📄', label: 'docs 변경' };
+
+  // 코드
+  if (r.startsWith('src/webview/pages/')) return { icon: '🪟', label: 'webview 페이지' };
+  if (r.startsWith('src/webview/') && r.endsWith('.css')) return { icon: '💅', label: 'webview 스타일' };
+  if (r.startsWith('src/webview/')) return { icon: '🪟', label: 'webview 로직' };
+  if (r.startsWith('src/sidebar/') && r.endsWith('.css')) return { icon: '💅', label: '사이드바 스타일' };
+  if (r.startsWith('src/sidebar/')) return { icon: '📊', label: '사이드바 로직' };
+  if (r.startsWith('src/parser/')) return { icon: '🔣', label: 'state 파서' };
+  if (r.startsWith('src/file-watcher/')) return { icon: '👁️', label: 'file watcher' };
+  if (r === 'src/extension.ts') return { icon: '⚡', label: 'extension orchestrator' };
+  if (r === 'src/types.ts') return { icon: '📐', label: '공유 타입' };
+  if (r.startsWith('src/')) return { icon: '⚙️', label: '소스 코드' };
+
+  // 빌드/메타
+  if (r === 'package.json') return { icon: '📦', label: '프로젝트 메타' };
+  if (r === 'tsconfig.json') return { icon: '🔧', label: 'TS 설정' };
+  if (r === 'esbuild.config.js') return { icon: '🔧', label: '빌드 설정' };
+  if (r === 'README.md') return { icon: '📖', label: 'README' };
+  if (r === 'CHANGELOG.md') return { icon: '📋', label: 'CHANGELOG' };
+
+  // 기타
+  return { icon: '📄', label: r };
 }
 
 // ─────────────────────────────────────────────────────────────────
