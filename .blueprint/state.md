@@ -14,8 +14,10 @@
 > REVIEW는 IMPLEMENT 후 SHIP 전 정식 phase로 박힘 (ADR-010, v0.5+).
 
 ## Next action
-jinilog/ 학습 가이드 3종 + 작성 프롬프트 작성 완료. README.md v0.9.5 기준 전면 업데이트 완료.
+jinilog/ 학습 가이드 3종 + 작성 프롬프트 작성 완료. README.md 업데이트 완료.
+PRODUCT.md V5 로드맵 등록 (blueprint 문서 자동 업데이트).
 다음 세션: V1 개발 시작 — ① 활동바 trigger 배지 ② markdown-it 토큰 처리 안정화 ③ (선택) 인지성 도식화(mermaid)
+V5 진입 전: 단방향 원칙 재검토 ADR 작성 필요.
 
 ## Decisions log
 - 2026-05-22: 산출물 = Antigravity extension, 시각화·알림 레이어 (단방향 .md → UI, AI 호출 X)
@@ -27,6 +29,7 @@ jinilog/ 학습 가이드 3종 + 작성 프롬프트 작성 완료. README.md v0
 - 2026-05-24: Phase 4 checkpoint 1회 완료 — checkpoint-2026-05-24.md
 - 2026-06-01: jinilog/ 학습 가이드 3종 작성 (dev_guide, user_guide, dev_user_blog, guide_write_prompt)
 - 2026-06-01: README.md v0.9.5 기준 전면 업데이트 (구 URL 수정, 정식 배포 문구 제거)
+- 2026-06-01: PRODUCT.md — JBT 6번 추가 (blueprint 문서 자동 업데이트), V5 버전 로드맵 등록
 
 ## Counters
 - ships_since_checkpoint: 1

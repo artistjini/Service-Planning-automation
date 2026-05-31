@@ -8,8 +8,9 @@
 - guide_write_prompt.md: 가이드 3종 작성 지침 + blog 컨텍스트 프롬프트 (재사용 가능)
 - jinilog/README.md 추가 — 폴더 파일 목록 및 프로젝트 배경 안내
 - README.md 전면 업데이트 — v0.9.5 기준, 구 GitHub URL 수정, 정식 배포 문구 제거
-- 핵심 결정: 프로젝트 분석·문서화를 통한 학습 기록 체계 확립
-- 다음에 이어갈 것: V1 개발 시작 — ① 활동바 trigger 배지 ② markdown-it 토큰 처리 안정화 ③ 인지성 도식화(mermaid) 선택
+- PRODUCT.md 업데이트 — JBT 6번 추가 (blueprint 문서 자동 업데이트), V5 버전 로드맵 등록
+- 핵심 결정: blueprint 문서 자동 업데이트를 V5 개발 목표로 공식 등록. 진입 전 단방향 원칙 재검토 ADR 필요.
+- 다음에 이어갈 것: V1 개발 시작 → V5 진입 전 ADR 작성
 
 ## 2026-06-01 (1차)
 - 사이드바 3섹션 단순화 (v0.9.5) — BLUEPRINT / PHASES / CURRENT FOCUS만 남김, iOS Settings 구조 적용
