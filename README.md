@@ -114,4 +114,4 @@ jinilog/                   ← 학습 기록 및 가이드 모음
 
 ## License
 
-Private (dogfooding 단계). 정식 배포 시 결정.
+Private (dogfooding 단계).
