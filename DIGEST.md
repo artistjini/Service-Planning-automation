@@ -1,14 +1,11 @@
 # DIGEST — 대시보드 확장 프로그램
 
-## 2026-06-01 (2)
-- .vsix 패키징 완료 (blueprint-dashboard-0.9.5.vsix, 2.05 MB) + Antigravity IDE 설치 테스트 통과
-- 핵심 결정: .claude/** .vscodeignore에 추가 (settings.local.json 유출 방지), GitHub 저장소 artistjini/Service-Planning-automation 신규 생성 후 push
-- 다음에 이어갈 것: 마켓플레이스 배포 또는 추가 기능 개발
-
 ## 2026-06-01
-- 사이드바 정보 위계 정리 완료 (v0.9.5) — TRIGGERS/ACTIVE FILE/CHECKPOINTS/RECENT CHANGES 제거, iOS Settings 목업 구조 적용
-- 핵심 결정: kick 라벨 + group 카드 구조로 전환 (BLUEPRINT / PHASES / CURRENT FOCUS 3섹션만)
-- 다음에 이어갈 것: .vsix 패키징 → 설치 테스트
+- 사이드바 3섹션 단순화 (v0.9.5) — BLUEPRINT / PHASES / CURRENT FOCUS만 남김, iOS Settings 구조 적용
+- GitHub 저장소 신규 생성 (artistjini/Service-Planning-automation) + remote URL 수정 후 push
+- .vsix 패키징 (blueprint-dashboard-0.9.5.vsix, 2.05 MB) + Antigravity IDE 설치 테스트 통과
+- 핵심 결정: .claude/** .vscodeignore 추가로 settings.local.json 유출 차단
+- 다음에 이어갈 것: 마켓플레이스 배포 또는 추가 기능 개발
 
 ## 2026-05-30 14:51
 - 플랫 iOS Settings 시안 전면 적용 (v0.9.4) — 글래스모피즘 폐기, Pretendard 번들, HTML 10종 재작성
