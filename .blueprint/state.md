@@ -14,7 +14,7 @@
 > REVIEW는 IMPLEMENT 후 SHIP 전 정식 phase로 박힘 (ADR-010, v0.5+).
 
 ## Next action
-.vsix 패키징 + Antigravity IDE 설치 테스트 완료 (v0.9.5). 다음: 마켓플레이스 배포 또는 추가 기능 개발.
+.vsix 패키징 + Antigravity IDE 설치 테스트 완료 (v0.9.5). 다음: 추가 기능 개발.
 
 ## Decisions log
 - 2026-05-22: 산출물 = Antigravity extension, 시각화·알림 레이어 (단방향 .md → UI, AI 호출 X)
