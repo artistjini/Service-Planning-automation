@@ -1,13 +1,23 @@
 # DIGEST — 대시보드 확장 프로그램
 
-## 2026-06-01
+## 2026-06-01 (2차)
+- jinilog/ 폴더 생성 — dev_guide.md, user_guide.md, dev_user_blog.md, guide_write_prompt.md 작성
+- dev_guide.md: 초등학생 눈높이 개발 교과서 (개념·SOP·에러·팁 9챕터)
+- user_guide.md: 설치·사용 설명서 (단계별·표·FAQ·빠른 참조 카드)
+- dev_user_blog.md: 문토 Chris 님 프로젝트 분석 블로그 (Jini 학습 기록, 배움 10가지)
+- guide_write_prompt.md: 가이드 3종 작성 지침 + blog 컨텍스트 프롬프트 (재사용 가능)
+- jinilog/README.md 추가 — 폴더 파일 목록 및 프로젝트 배경 안내
+- README.md 전면 업데이트 — v0.9.5 기준, 구 GitHub URL 수정, 정식 배포 문구 제거
+- 핵심 결정: 프로젝트 분석·문서화를 통한 학습 기록 체계 확립
+- 다음에 이어갈 것: V1 개발 시작 — ① 활동바 trigger 배지 ② markdown-it 토큰 처리 안정화 ③ 인지성 도식화(mermaid) 선택
+
+## 2026-06-01 (1차)
 - 사이드바 3섹션 단순화 (v0.9.5) — BLUEPRINT / PHASES / CURRENT FOCUS만 남김, iOS Settings 구조 적용
 - GitHub 저장소 신규 생성 (artistjini/Service-Planning-automation) + remote URL 수정 후 push
 - .vsix 패키징 (blueprint-dashboard-0.9.5.vsix, 2.05 MB) + Antigravity IDE 설치 테스트 통과
 - 핵심 결정: .claude/** .vscodeignore 추가로 settings.local.json 유출 차단
 - GitHub Release v0.9.5 생성 (.vsix Assets 첨부)
-- 다음에 이어갈 것: V1 개발 시작 — ① 활동바 trigger 배지 ② markdown-it 토큰 처리 안정화 ③ 인지성 도식화(mermaid) 선택
-- ⚠️ 유의사항: *.vsix는 빌드 결과물이지만 V0+ dogfooding 기간 동안 의도적으로 git에 포함 중. dogfooding = 개발하면서 직접 설치해 쓰는 단계. 마켓플레이스 배포 전까지 git을 임시 배포 채널로 활용하는 것이므로, 배포 후에는 .gitignore에 추가할 것.
+- ⚠️ 유의사항: *.vsix는 빌드 결과물이지만 V0+ dogfooding 기간 동안 의도적으로 git에 포함 중.
 
 ## 2026-05-30 14:51
 - 플랫 iOS Settings 시안 전면 적용 (v0.9.4) — 글래스모피즘 폐기, Pretendard 번들, HTML 10종 재작성
