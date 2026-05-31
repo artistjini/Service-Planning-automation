@@ -61,7 +61,7 @@
 - [x] /ship 수동 — 최종 .vsix 빌드 (blueprint-dashboard-0.1.0.vsix, 91KB)
 - [x] git commit + push
 - [x] git tag v0.1.0 + push tag
-- [ ] (선택) GitHub Release 페이지 만들기 — https://github.com/snu9026-Chris/SERVICE-PLANNING/releases/new?tag=v0.1.0
+- [x] GitHub Release 페이지 생성 — https://github.com/artistjini/Service-Planning-automation/releases/tag/v0.9.5
 
 ## Phase 6 — POST-SHIP (2026-05-24 — 일부 Phase 5와 동시)
 - [x] README.md v0.1.0 반영 (설치/사용/dev 흐름)
