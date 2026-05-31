@@ -4,6 +4,14 @@
 
 형식: [Keep a Changelog](https://keepachangelog.com/) + [Semantic Versioning](https://semver.org/).
 
+## [0.9.5] — 2026-06-01
+
+### Changed (사이드바 정보 위계 정리)
+- **사이드바 3섹션으로 단순화** — TRIGGERS / ACTIVE FILE / CHECKPOINTS / RECENT CHANGES 제거. BLUEPRINT / PHASES / CURRENT FOCUS만 남김.
+- **iOS Settings 구조 적용** — `kick` 라벨(BLUEPRINT 등) + `group` 카드 + `row` 헤어라인 구조로 HTML 완전 재작성. 기존 `card-heading` 방식 대체.
+- **CSS 클린업** — 글래스모피즘 override 블록 제거, 플랫 스킨을 단일 CSS로 통합. 사용하지 않는 `.card`, `.triggers-*`, `.active-file-*`, `.recent-*`, `.kpi-*` 클래스 모두 제거.
+- `sidebar-view-provider.ts` — dead code 함수(`renderCheckpointKpi`, `renderTriggers`, `renderActiveFile`, `renderRecentChanges`, `isIgnoredPath`, `categorize`, `formatRelativeTime`, `shortPath`) 삭제.
+
 ## [0.9.4] — 2026-05-30
 
 ### Changed (디자인 리디자인 — 안 A "iOS Settings")

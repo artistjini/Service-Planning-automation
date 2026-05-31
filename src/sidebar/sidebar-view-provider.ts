@@ -1,13 +1,10 @@
 /**
- * Sidebar WebviewView Provider — V0+ 최종 6섹션 구조.
+ * Sidebar WebviewView Provider — iOS Settings 플랫 구조.
  *
  * 섹션 (위→아래):
- *  1. Hero    — 프로젝트명 + 폴더 경로 + 현재 phase + progress bar
- *  2. Phases  — 7개 phase 리스트 (현재 강조)
- *  3. Current focus — state.md의 next action 텍스트 (지금 다루는 것)
- *  4. Triggers — fired 알림
- *  5. Active file — 지금 편집 중인 파일 경로
- *  6. Recent changes — 최근 변경된 파일들 (최대 6개, 시간순)
+ *  BLUEPRINT    — Workspace path + current phase + progress bar
+ *  PHASES       — 7개 phase 리스트 (클릭 → webview)
+ *  CURRENT FOCUS — state.md next action
  *
  * 데이터: extension.ts가 SidebarPayload 빌드해서 update() 호출.
  * 클릭: Phase row 클릭 → 가운데 webview에 산출물 띄움.
@@ -19,12 +16,12 @@ import {
   SidebarPayload,
   Phase,
   PhaseId,
-  RecentChange,
-  ActiveFileInfo,
   getProgress,
 } from '../types';
 
 export const SIDEBAR_VIEW_ID = 'blueprintState';
+
+const output = vscode.window.createOutputChannel('Blueprint Dashboard');
 
 export class SidebarViewProvider implements vscode.WebviewViewProvider {
   private view?: vscode.WebviewView;
@@ -40,26 +37,34 @@ export class SidebarViewProvider implements vscode.WebviewViewProvider {
     _context: vscode.WebviewViewResolveContext,
     _token: vscode.CancellationToken,
   ): void | Thenable<void> {
-    this.view = view;
-    view.webview.options = {
-      enableScripts: true,
-      localResourceRoots: [
-        vscode.Uri.file(path.join(this.extensionUri.fsPath, 'out', 'sidebar')),
-        vscode.Uri.file(path.join(this.extensionUri.fsPath, 'out', 'fonts')),
-      ],
-    };
+    try {
+      this.view = view;
+      view.webview.options = {
+        enableScripts: true,
+        localResourceRoots: [
+          vscode.Uri.file(path.join(this.extensionUri.fsPath, 'out', 'sidebar')),
+          vscode.Uri.file(path.join(this.extensionUri.fsPath, 'out', 'fonts')),
+        ],
+      };
 
-    view.webview.onDidReceiveMessage(msg => {
-      if (msg?.type === 'phase-click' && typeof msg.phaseId === 'number') {
-        this.onPhaseClick(msg.phaseId as PhaseId);
-      }
-    });
+      view.webview.onDidReceiveMessage(msg => {
+        if (msg?.type === 'phase-click' && typeof msg.phaseId === 'number') {
+          this.onPhaseClick(msg.phaseId as PhaseId);
+        } else {
+          output.appendLine(`[WARN] unknown message: ${JSON.stringify(msg)}`);
+        }
+      });
 
-    view.onDidDispose(() => {
-      this.view = undefined;
-    });
+      view.onDidDispose(() => {
+        this.view = undefined;
+      });
 
-    this.refresh();
+      this.refresh();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      output.appendLine(`[ERROR] resolveWebviewView: ${msg}`);
+      output.show(true);
+    }
   }
 
   update(payload: SidebarPayload): void {
@@ -74,7 +79,13 @@ export class SidebarViewProvider implements vscode.WebviewViewProvider {
 
   private refresh(): void {
     if (!this.view) return;
-    this.view.webview.html = this.buildHtml();
+    try {
+      this.view.webview.html = this.buildHtml();
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      output.appendLine(`[ERROR] refresh: ${msg}`);
+      output.show(true);
+    }
   }
 
   private buildHtml(): string {
@@ -85,8 +96,7 @@ export class SidebarViewProvider implements vscode.WebviewViewProvider {
     );
     const cssUri = this.view.webview.asWebviewUri(cssOnDisk);
     const nonce = makeNonce();
-    // 'unsafe-inline' 필수 — progress-fill 의 inline width style 적용을 위해.
-    // 빠뜨리면 fill 안 차오름 (track만 보이고 빈 회색).
+    // 'unsafe-inline' 필수 — progress bar inline width style 적용을 위해.
     const csp = `default-src 'none'; style-src ${this.view.webview.cspSource} 'unsafe-inline'; font-src ${this.view.webview.cspSource}; script-src 'nonce-${nonce}'; img-src ${this.view.webview.cspSource} data:;`;
 
     const body = this.payload?.state
@@ -123,14 +133,13 @@ export class SidebarViewProvider implements vscode.WebviewViewProvider {
   }
 
   private renderBody(payload: SidebarPayload): string {
-    const { state, recentChanges, activeFile, workspaceFolderName, workspaceFolderPath } = payload;
+    const { state, workspaceFolderPath } = payload;
     if (!state) return this.renderEmpty();
 
     return [
-      renderHero(state, workspaceFolderName, workspaceFolderPath),
-      renderPhases(state.phases),
-      renderCurrentFocus(state.nextAction, state.phases),
-      renderRecentChanges(recentChanges),
+      renderBlueprint(state, workspaceFolderPath),
+      renderPhasesSection(state.phases),
+      renderCurrentFocusSection(state.nextAction, state.phases),
     ].join('\n');
   }
 }
@@ -139,9 +148,8 @@ export class SidebarViewProvider implements vscode.WebviewViewProvider {
 // Section renderers
 // ─────────────────────────────────────────────────────────────────
 
-function renderHero(
+function renderBlueprint(
   state: NonNullable<SidebarPayload['state']>,
-  folderName: string,
   folderPath: string,
 ): string {
   const { done, total } = getProgress(state);
@@ -152,236 +160,67 @@ function renderHero(
     state.phases[state.phases.length - 1];
 
   return `
-    <div class="hero">
-      <div class="hero-folder" title="${escapeHtml(folderPath)}">
-        <span class="hero-folder-icon">📁</span>
-        <span class="hero-folder-path">${escapeHtml(folderPath)}</span>
+    <div class="kick">BLUEPRINT</div>
+    <div class="group">
+      <div class="row">
+        <div class="lab">Workspace</div>
+        <div class="path">${escapeHtml(folderPath)}</div>
       </div>
-      <div class="hero-divider"></div>
-      <div class="hero-phase-id">PHASE ${active.id}</div>
-      <h1 class="hero-title">${escapeHtml(active.name)}</h1>
-      <div class="progress-bar">
-        <div class="progress-fill" style="${progressFillStyle(percent)}"></div>
-      </div>
-      <div class="progress-meta">
-        <span>${done} / ${total}</span>
-        <span>${percent}%</span>
+      <div class="row">
+        <div class="phase-id">PHASE ${active.id}</div>
+        <h1 class="phase-h">${escapeHtml(active.name)}</h1>
+        <div class="bar"><span class="bar-fill" style="width: ${percent}%"></span></div>
+        <div class="meta">
+          <span>${done} / ${total} phases</span>
+          <span>${percent}%</span>
+        </div>
       </div>
     </div>`;
 }
 
-function renderPhases(phases: Phase[]): string {
+function renderPhasesSection(phases: Phase[]): string {
   return `
-    <div class="card">
-      <div class="card-heading">PHASES</div>
+    <div class="kick">PHASES</div>
+    <div class="group">
       ${phases.map(renderPhaseRow).join('')}
     </div>`;
 }
 
 function renderPhaseRow(phase: Phase): string {
   const meta = phase.completedAt ?? phase.meta ?? '';
+  const dot =
+    phase.status === 'done'
+      ? `<span class="dot done"><svg width="9" height="9" viewBox="0 0 10 10"><path d="M1.5 5.2 4 7.5 8.5 2.5" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>`
+      : `<span class="dot ${phase.status}"></span>`;
+
   return `
-    <div class="phase-row ${phase.status}" data-phase-id="${phase.id}">
-      <div class="phase-circle ${phase.status}"></div>
-      <span class="phase-id">P${phase.id}</span>
-      <span class="phase-name">${escapeHtml(phase.name)}</span>
-      <span class="phase-meta">${escapeHtml(meta)}</span>
+    <div class="p-row ${phase.status}" data-phase-id="${phase.id}">
+      ${dot}
+      <span class="pid">P${phase.id}</span>
+      <span class="pname">${escapeHtml(phase.name)}</span>
+      <span class="pdate">${escapeHtml(meta)}</span>
     </div>`;
 }
 
-function renderCurrentFocus(nextAction: string, phases: Phase[]): string {
+function renderCurrentFocusSection(nextAction: string, phases: Phase[]): string {
   const active =
     phases.find(p => p.status === 'in_progress') ??
     phases.find(p => p.status === 'pending');
-  const label = active ? `Phase ${active.id} · ${active.name}` : 'No active phase';
+  const label = active ? `PHASE ${active.id} · ${active.name}` : 'ALL DONE';
 
   return `
-    <div class="card">
-      <div class="card-heading">CURRENT FOCUS</div>
-      <div class="focus-label">${escapeHtml(label)}</div>
-      <div class="focus-text">${escapeHtml(nextAction || '—')}</div>
-    </div>`;
-}
-
-function renderCheckpointKpi(state: NonNullable<SidebarPayload['state']>): string {
-  const { checkpoint_count, last_check, ships_since_checkpoint } = state.counters;
-  const dueSoon = ships_since_checkpoint >= 5;
-  return `
-    <div class="card ${dueSoon ? 'card-alert' : ''}">
-      <div class="card-heading">CHECKPOINTS</div>
-      <div class="kpi-row">
-        <div class="kpi-block">
-          <div class="kpi-value">${escapeHtml(String(checkpoint_count))}</div>
-          <div class="kpi-label">runs</div>
-        </div>
-        <div class="kpi-block">
-          <div class="kpi-value">${escapeHtml(String(ships_since_checkpoint))}</div>
-          <div class="kpi-label">ships since</div>
-        </div>
-      </div>
-      <div class="kpi-meta">last: ${escapeHtml(last_check || '—')}</div>
-    </div>`;
-}
-
-function renderTriggers(triggers: string[]): string {
-  const hasAlert = triggers.length > 0;
-  const body = hasAlert
-    ? `<ul class="triggers-list">${triggers.map(t => `<li>${escapeHtml(t)}</li>`).join('')}</ul>`
-    : `<div class="triggers-empty">none fired</div>`;
-  return `
-    <div class="card ${hasAlert ? 'card-alert' : ''}">
-      <div class="card-heading">TRIGGERS</div>
-      ${body}
-    </div>`;
-}
-
-function renderActiveFile(info: ActiveFileInfo): string {
-  if (!info.relativePath) {
-    return `
-      <div class="card">
-        <div class="card-heading">ACTIVE FILE</div>
-        <div class="active-file-empty">no editor focused</div>
-      </div>`;
-  }
-
-  const lang = info.language ? `<span class="active-file-lang">${escapeHtml(info.language)}</span>` : '';
-  return `
-    <div class="card">
-      <div class="card-heading">ACTIVE FILE</div>
-      <div class="active-file-row">
-        <div class="active-file-path">${escapeHtml(info.relativePath)}</div>
-        ${lang}
+    <div class="kick">CURRENT FOCUS</div>
+    <div class="group">
+      <div class="row">
+        <div class="focus-label">${escapeHtml(label)}</div>
+        <div class="focus-text">${escapeHtml(nextAction || '—')}</div>
       </div>
     </div>`;
-}
-
-function renderRecentChanges(changes: RecentChange[]): string {
-  // 임시 파일 + 무의미한 변경 필터
-  const filtered = changes.filter(c => !isIgnoredPath(c.relativePath));
-
-  if (filtered.length === 0) {
-    return `
-      <div class="card">
-        <div class="card-heading">RECENT CHANGES</div>
-        <div class="recent-empty">no changes yet</div>
-      </div>`;
-  }
-
-  // 같은 *카테고리*는 가장 최근만 (예: webview 스타일이 3번 변경되면 1번만)
-  const seenCategories = new Set<string>();
-  const deduped = filtered.filter(c => {
-    const cat = categorize(c.relativePath).label;
-    if (seenCategories.has(cat)) return false;
-    seenCategories.add(cat);
-    return true;
-  });
-
-  const rows = deduped
-    .slice(0, 6)
-    .map(c => {
-      const { icon, label } = categorize(c.relativePath);
-      return `
-      <div class="recent-row">
-        <span class="recent-time">${escapeHtml(formatRelativeTime(c.changedAt))}</span>
-        <span class="recent-icon">${icon}</span>
-        <span class="recent-label">${escapeHtml(label)}</span>
-      </div>`;
-    })
-    .join('');
-
-  return `
-    <div class="card">
-      <div class="card-heading">RECENT CHANGES</div>
-      <div class="recent-list">${rows}</div>
-    </div>`;
-}
-
-/** 임시 파일·메타 변경 무시 — VS Code 저장 중 .tmp.XX 파일, .git 메타 등 */
-function isIgnoredPath(rel: string): boolean {
-  const r = rel.toLowerCase();
-  if (r.includes('.tmp.')) return true;
-  if (r.endsWith('.swp') || r.endsWith('~')) return true;
-  if (r.endsWith('.map')) return true;
-  if (r.includes('/node_modules/')) return true;
-  if (r.includes('/out/')) return true;
-  if (r.includes('/.git/')) return true;
-  if (r.endsWith('.vsix')) return true;
-  if (r.endsWith('package-lock.json')) return true;
-  return false;
-}
-
-/** 파일 경로 → 의미 있는 카테고리 라벨 */
-function categorize(rel: string): { icon: string; label: string } {
-  const r = rel.replace(/\\/g, '/');
-
-  // 산출물 .md
-  if (r === 'docs/PRODUCT.md') return { icon: '📋', label: 'PRODUCT 명세' };
-  if (r === 'docs/DESIGN.md') return { icon: '🎨', label: 'DESIGN 명세' };
-  if (r === 'docs/ARCHITECTURE.md') return { icon: '🏗️', label: 'ARCHITECTURE' };
-  if (r === '.blueprint/state.md') return { icon: '📍', label: 'Blueprint state' };
-  if (r === 'plans/roadmap.md') return { icon: '🗺️', label: 'Roadmap' };
-  if (r === 'docs/error.history.md') return { icon: '⚠️', label: '에러 히스토리' };
-
-  // 폴더별 카테고리
-  if (r.startsWith('docs/adr/')) return { icon: '📜', label: 'ADR 갱신' };
-  if (r.startsWith('docs/design/screenshots/')) return { icon: '🖼️', label: '디자인 시안' };
-  if (r.startsWith('docs/design/')) return { icon: '🎨', label: 'design 자산' };
-  if (r.startsWith('docs/checkpoint')) return { icon: '✅', label: 'Checkpoint 기록' };
-  if (r.startsWith('docs/reviews/')) return { icon: '🔍', label: 'Code review 결과' };
-  if (r.startsWith('docs/')) return { icon: '📄', label: 'docs 변경' };
-
-  // 코드
-  if (r.startsWith('src/webview/pages/')) return { icon: '🪟', label: 'webview 페이지' };
-  if (r.startsWith('src/webview/') && r.endsWith('.css')) return { icon: '💅', label: 'webview 스타일' };
-  if (r.startsWith('src/webview/')) return { icon: '🪟', label: 'webview 로직' };
-  if (r.startsWith('src/sidebar/') && r.endsWith('.css')) return { icon: '💅', label: '사이드바 스타일' };
-  if (r.startsWith('src/sidebar/')) return { icon: '📊', label: '사이드바 로직' };
-  if (r.startsWith('src/parser/')) return { icon: '🔣', label: 'state 파서' };
-  if (r.startsWith('src/file-watcher/')) return { icon: '👁️', label: 'file watcher' };
-  if (r === 'src/extension.ts') return { icon: '⚡', label: 'extension orchestrator' };
-  if (r === 'src/types.ts') return { icon: '📐', label: '공유 타입' };
-  if (r.startsWith('src/')) return { icon: '⚙️', label: '소스 코드' };
-
-  // 빌드/메타
-  if (r === 'package.json') return { icon: '📦', label: '프로젝트 메타' };
-  if (r === 'tsconfig.json') return { icon: '🔧', label: 'TS 설정' };
-  if (r === 'esbuild.config.js') return { icon: '🔧', label: '빌드 설정' };
-  if (r === 'README.md') return { icon: '📖', label: 'README' };
-  if (r === 'CHANGELOG.md') return { icon: '📋', label: 'CHANGELOG' };
-
-  // 기타
-  return { icon: '📄', label: r };
 }
 
 // ─────────────────────────────────────────────────────────────────
 // Helpers
 // ─────────────────────────────────────────────────────────────────
-
-function progressFillStyle(percent: number): string {
-  if (percent <= 0) return 'width: 0';
-  // 100% 이상은 명시적으로 단순화 — 그라데이션 전체가 fill에 가득 (녹→빨강)
-  if (percent >= 100) return 'width: 100%; background-size: 100% 100%';
-  // 일반 케이스: percent에 따라 그라데이션의 좌측 일부만 fill에 보임
-  const bgSize = Math.min((100 / percent) * 100, 5000);
-  return `width: ${percent}%; background-size: ${bgSize.toFixed(2)}% 100%`;
-}
-
-function formatRelativeTime(date: Date): string {
-  const seconds = Math.floor((Date.now() - date.getTime()) / 1000);
-  if (seconds < 60) return '방금';
-  const minutes = Math.floor(seconds / 60);
-  if (minutes < 60) return `${minutes}분 전`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}시간 전`;
-  return `${Math.floor(hours / 24)}일 전`;
-}
-
-function shortPath(relPath: string): string {
-  // 전체 경로 보여주되, 마지막 파일명을 강조 (그냥 표시는 그대로)
-  // 너무 길면 끝부분만
-  if (relPath.length <= 40) return relPath;
-  return '...' + relPath.slice(-37);
-}
 
 function escapeHtml(s: string): string {
   return s
