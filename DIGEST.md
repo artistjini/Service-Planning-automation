@@ -6,6 +6,7 @@
 - .vsix 패키징 (blueprint-dashboard-0.9.5.vsix, 2.05 MB) + Antigravity IDE 설치 테스트 통과
 - 핵심 결정: .claude/** .vscodeignore 추가로 settings.local.json 유출 차단
 - 다음에 이어갈 것: 마켓플레이스 배포 또는 추가 기능 개발
+- ⚠️ 유의사항: *.vsix는 빌드 결과물이지만 V0+ dogfooding 기간 동안 의도적으로 git에 포함 중. dogfooding = 개발하면서 직접 설치해 쓰는 단계. 마켓플레이스 배포 전까지 git을 임시 배포 채널로 활용하는 것이므로, 배포 후에는 .gitignore에 추가할 것.
 
 ## 2026-05-30 14:51
 - 플랫 iOS Settings 시안 전면 적용 (v0.9.4) — 글래스모피즘 폐기, Pretendard 번들, HTML 10종 재작성
