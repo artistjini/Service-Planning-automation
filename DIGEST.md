@@ -1,5 +1,12 @@
 # DIGEST — 대시보드 확장 프로그램
 
+## 2026-06-01 (3차)
+- ADR-011 작성 — blueprint 문서 자동 업데이트 (V5 설계), 조건부 쓰기(Controlled Write) 패턴 채택
+- 핵심 결정: 단방향 원칙(ADR-003) 폐기 아닌 선택적 확장. 허용 범위: state.md Phase·Next action / DIGEST.md 새 항목만. opt-in 기본값(blueprint.autoWrite: false).
+- ARCHITECTURE.md ADR 로그에 011 추가
+- 미해결 질문: V1 완료 후 V5 진입 시 writer/ 도메인 구현 방식 (WorkspaceEdit vs fs.writeFile) 재검토 필요
+- 다음에 이어갈 것: V1 개발 시작 — ① 활동바 trigger 배지 ② markdown-it 토큰 처리 안정화 ③ (선택) mermaid
+
 ## 2026-06-01 (2차)
 - jinilog/ 폴더 생성 — dev_guide.md, user_guide.md, dev_user_blog.md, guide_write_prompt.md 작성
 - dev_guide.md: 초등학생 눈높이 개발 교과서 (개념·SOP·에러·팁 9챕터)
@@ -9,7 +16,7 @@
 - jinilog/README.md 추가 — 폴더 파일 목록 및 프로젝트 배경 안내
 - README.md 전면 업데이트 — v0.9.5 기준, 구 GitHub URL 수정, 정식 배포 문구 제거
 - PRODUCT.md 업데이트 — JBT 6번 추가 (blueprint 문서 자동 업데이트), V5 버전 로드맵 등록
-- 핵심 결정: blueprint 문서 자동 업데이트를 V5 개발 목표로 공식 등록. 진입 전 단방향 원칙 재검토 ADR 필요.
+- 핵심 결정: blueprint 문서 자동 업데이트를 V5 개발 목표로 공식 등록. 진입 전 ADR-011 작성 완료.
 - 다음에 이어갈 것: V1 개발 시작 → V5 진입 전 ADR 작성
 
 ## 2026-06-01 (1차)
