@@ -5,7 +5,8 @@
 - GitHub 저장소 신규 생성 (artistjini/Service-Planning-automation) + remote URL 수정 후 push
 - .vsix 패키징 (blueprint-dashboard-0.9.5.vsix, 2.05 MB) + Antigravity IDE 설치 테스트 통과
 - 핵심 결정: .claude/** .vscodeignore 추가로 settings.local.json 유출 차단
-- 다음에 이어갈 것: 추가 기능 개발 (마켓플레이스 배포는 NON-GOALS 영구 제외)
+- GitHub Release v0.9.5 생성 (.vsix Assets 첨부)
+- 다음에 이어갈 것: V1 개발 시작 — ① 활동바 trigger 배지 ② markdown-it 토큰 처리 안정화 ③ 인지성 도식화(mermaid) 선택
 - ⚠️ 유의사항: *.vsix는 빌드 결과물이지만 V0+ dogfooding 기간 동안 의도적으로 git에 포함 중. dogfooding = 개발하면서 직접 설치해 쓰는 단계. 마켓플레이스 배포 전까지 git을 임시 배포 채널로 활용하는 것이므로, 배포 후에는 .gitignore에 추가할 것.
 
 ## 2026-05-30 14:51

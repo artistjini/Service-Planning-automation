@@ -14,7 +14,8 @@
 > REVIEW는 IMPLEMENT 후 SHIP 전 정식 phase로 박힘 (ADR-010, v0.5+).
 
 ## Next action
-.vsix 패키징 + Antigravity IDE 설치 테스트 완료 (v0.9.5). 다음: 추가 기능 개발.
+GitHub Release v0.9.5 완료. 다음 세션: V1 개발 시작.
+V1 스코프 — ① 활동바 trigger 배지 ② markdown-it 토큰 처리 안정화 ③ (선택) 인지성 도식화(mermaid)
 
 ## Decisions log
 - 2026-05-22: 산출물 = Antigravity extension, 시각화·알림 레이어 (단방향 .md → UI, AI 호출 X)
