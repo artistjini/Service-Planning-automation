@@ -30,6 +30,7 @@ V5 진입 전: 단방향 원칙 재검토 ADR 작성 필요.
 - 2026-06-01: jinilog/ 학습 가이드 3종 작성 (dev_guide, user_guide, dev_user_blog, guide_write_prompt)
 - 2026-06-01: README.md v0.9.5 기준 전면 업데이트 (구 URL 수정, 정식 배포 문구 제거)
 - 2026-06-01: PRODUCT.md — JBT 6번 추가 (blueprint 문서 자동 업데이트), V5 버전 로드맵 등록
+- 2026-06-01: ADR-011 작성 — 조건부 쓰기 패턴 채택, ADR-003 부분 확장, opt-in 기본값
 
 ## Counters
 - ships_since_checkpoint: 1
